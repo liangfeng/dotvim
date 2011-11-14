@@ -1,0 +1,13 @@
+add python fold plugin, improve folding preformance
+rewrite bufexplorer plugin
+add workspace support for projectmgr plugin. Such as, lookupfile plugin support multiple ftags.
+add function param complete by TAB (like Vim script #1764)
+try clang plugin
+add session support.
+add lua support.
+fix empty file encoding issue
+setup colorcolumn
+send plugin patches to orig authors
+customize plugins after load, using VimEnter
+enable vimrc without exit vim
+refactor vimrc to some plugins
