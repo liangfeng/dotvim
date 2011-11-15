@@ -11,7 +11,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-15 15:13:16
+" Last Change: 2011-11-15 16:02:53
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -724,6 +724,7 @@ au BufWritePre *vimrc call s:UpdateLastChangeTime()
 " Plugin - a {{{
 " http://github.com/vim-scripts/a.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'a.vim'
 let g:alternateExtensions_h = "c,cpp,cc"
 let g:alternateExtensions_H = "C,CPP,CC"
 let g:alternateExtensions_cpp = "h,hpp"
@@ -752,6 +753,7 @@ colo miracle
 " TODO: find a better one or write one.
 " TODO: try this one. http://github.com/LStinson/TagmaBufMgr
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'bufexplorer.zip'
 let g:bufExplorerDefaultHelp=0
 let g:bufExplorerSortBy='name'
 let g:bufExplorerShowDirectories=0
@@ -764,6 +766,7 @@ let g:bufExplorerSplitRight=0
 " Plugin - delimitMate {{{
 " http://github.com/Raimondi/delimitMate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Raimondi/delimitMate'
 au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 au FileType python let b:delimitMate_nesting_quotes = ['"']
 au FileType html let b:delimitMate_quotes = "\" '"
@@ -777,6 +780,7 @@ let g:delimitMate_balance_matchpairs = 1
 " Plugin - DoxygenToolkit {{{
 " http://github.com/vim-scripts/DoxygenToolkit.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'DoxygenToolkit.vim'
 " Load doxygen syntax file for c/cpp/idl files
 let g:load_doxygen_syntax = 1
 let g:DoxygenToolkit_commentType = "C++"
@@ -817,6 +821,7 @@ endif
 " Plugin - FencView {{{
 " http://github.com/vim-scripts/FencView.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'FencView.vim'
 
 " End of FencView }}}
 
@@ -835,6 +840,7 @@ Bundle 'c9s/filetype-completion.vim'
 " http://github.com/vim-scripts/genutils
 " TODO: remove it?
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'genutils'
 
 " End of genutils }}}
 
@@ -843,6 +849,7 @@ Bundle 'c9s/filetype-completion.vim'
 " Plugin - LargeFile {{{
 " http://github.com/vim-scripts/LargeFile
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'LargeFile'
 
 " End of LargeFile }}}
 
@@ -853,6 +860,7 @@ Bundle 'c9s/filetype-completion.vim'
 " TODO: try Command-T plugin
 " TODO: remove it?
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'lookupfile'
 let g:LookupFile_DisableDefaultMap = 1
 let g:LookupFile_UsingSpecializedTags = 1
 let g:LookupFile_MinPatLength = 2
@@ -887,6 +895,7 @@ nmap <silent> <unique> <Leader>lw :LUWalk<CR>
 " Plugin - mru {{{
 " http://github.com/vim-scripts/mru.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'mru.vim'
 let g:MRU_Add_Menu = 0
 
 " XXX: Change it. It's just for my environment.
@@ -908,6 +917,7 @@ nnoremap <silent> <unique> <Leader>m :MRU<CR>
 " Plugin - neocomplcache {{{
 " http://github.com/Shougo/neocomplcache
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Shougo/neocomplcache'
 set showfulltag
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_ignore_case = 0
@@ -934,6 +944,7 @@ let g:neocomplcache_omni_patterns.cpp = '.*\.\|->\|::'
 " Plugin - nerdcommenter {{{
 " http://github.com/scrooloose/nerdcommenter
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'scrooloose/nerdcommenter'
 let g:NERDCreateDefaultMappings = 0
 let g:NERDMenuMode = 0
 let g:NERDSpaceDelims = 1
@@ -953,6 +964,7 @@ let g:NERDCustomDelimiters = {
 " Plugin - nerdtree {{{
 " http://github.com/scrooloose/nerdtree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'scrooloose/nerdtree'
 " Set the window position
 let g:NERDTreeWinPos = "right"
 " Exit vim, if only the NERDTree window is present. If there is more than one tab
@@ -992,6 +1004,7 @@ let g:python_fold_imports = 0
 " Plugin - python_match {{{
 " http://github.com/vim-scripts/python_match.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'python_match.vim'
 
 " End of python_match }}}
 
@@ -1000,6 +1013,7 @@ let g:python_fold_imports = 0
 " Plugin - python_syntax {{{
 " http://github.com/vim-scripts/python.vim--Vasiliev
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'python.vim--Vasiliev'
 
 " End of python_syntax }}}
 
@@ -1008,6 +1022,7 @@ let g:python_fold_imports = 0
 " Plugin - startup_profiling {{{
 " http://github.com/vim-scripts/startup_profile
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'startup_profile'
 
 " End of startup_profiling }}}
 
@@ -1016,6 +1031,7 @@ let g:python_fold_imports = 0
 " Plugin - vim-repeat {{{
 " http://github.com/tpope/vim-repeat
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-repeat'
 
 " End of vim-repeat }}}
 
@@ -1024,6 +1040,7 @@ let g:python_fold_imports = 0
 " Plugin - supertab {{{
 " http://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'ervandew/supertab'
 " Since use tags, disable included header files searching to improve
 " performance.
 set complete-=i
@@ -1041,6 +1058,7 @@ let g:SuperTabLeadingSpaceCompletion = 0
 " Plugin - vim-surround {{{
 " http://github.com/tpope/vim-surround
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-surround'
 
 " End of vim-surround }}}
 
@@ -1049,6 +1067,7 @@ let g:SuperTabLeadingSpaceCompletion = 0
 " Plugin - SyntaxAttr {{{
 " http://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'SyntaxAttr.vim'
 nmap <silent> <unique> <Leader>S :call SyntaxAttr()<CR>
 
 " End of SyntaxAttr }}}
@@ -1059,6 +1078,7 @@ nmap <silent> <unique> <Leader>S :call SyntaxAttr()<CR>
 " http://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'majutsushi/tagbar'
 nmap <silent> <unique> <Leader>t :TagbarToggle<CR>
 let g:tagbar_left = 1
 let g:tagbar_width = 30
@@ -1072,6 +1092,7 @@ let g:tagbar_compact = 1
 " http://github.com/vim-scripts/TaskList.vim
 " http://juan.axisym3.net/vim-plugins/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'TaskList.vim'
 map <unique> <Leader>T <Plug>TaskList
 
 " End of TaskList }}}
@@ -1082,16 +1103,9 @@ map <unique> <Leader>T <Plug>TaskList
 " http://github.com/vim-scripts/vimcdoc
 " http://vimcdoc.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-dev-plugin {{{
-" http://github.com/c9s/vim-dev-plugin
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" End of vim-dev-plugin }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1127,6 +1141,7 @@ endif
 " Plugin - vimproc {{{
 " http://github.com/Shougo/vimproc
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Shougo/vimproc'
 
 " End of vimproc }}}
 
@@ -1135,6 +1150,7 @@ endif
 " Plugin - vimshell {{{
 " http://github.com/Shougo/vimshell
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Shougo/vimshell'
 
 " End of vimshell }}}
 
@@ -1152,6 +1168,7 @@ Bundle 'gmarik/vundle'
 " Plugin - xml {{{
 " http://github.com/othree/xml.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'othree/xml.vim'
 
 " End of xml }}}
 
@@ -1160,6 +1177,8 @@ Bundle 'gmarik/vundle'
 " Plugin - xptemplate {{{
 " http://github.com/drmingdrmer/xptemplate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'drmingdrmer/xptemplate'
+
 au BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
 
 " trigger key
