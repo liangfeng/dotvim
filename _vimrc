@@ -11,7 +11,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-14 22:16:06
+" Last Change: 2011-11-15 15:13:16
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -369,7 +369,8 @@ set display=lastline
 set clipboard=unnamed
 
 if has('win32') || has('win64')
-    set shellslash
+    " TODO: should fix vundle plugin to support this options.
+    " set shellslash
 endif
 
 vmap <Tab> >gv
