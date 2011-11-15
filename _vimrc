@@ -3,15 +3,14 @@
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
 " HomePage: http://github.com/liangfeng/vimrc
-" Comments:
-"           has('mac') means Mac version only.
+" Comments: has('mac') means Mac version only.
 "           has('unix') means Mac or Linux version.
 "           has('win32') means Windows 32 verion only.
 "           has('win64') means Windows 64 verion only.
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-15 16:02:53
+" Last Change: 2011-11-15 20:05:31
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -97,6 +96,8 @@ if has('gui_win32') || has('gui_win64')
     au GUIEnter * simalt ~x
     command! Res simalt ~r
     command! Max simalt ~x
+    nnoremap <silent> <unique> <Leader>M :Max<CR>
+    nnoremap <silent> <unique> <Leader>R :Res<CR>
 endif
 
 " XXX: Change it. It's just for my environment.
@@ -369,7 +370,7 @@ set display=lastline
 set clipboard=unnamed
 
 if has('win32') || has('win64')
-    " TODO: should fix vundle plugin to support this options.
+    " TODO: should fix vundle plugin to support this option.
     " set shellslash
 endif
 
