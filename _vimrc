@@ -10,22 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-15 20:05:31
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - startup_profiling {{{
-" http://github.com/vim-scripts/startup_profile
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Comment out profiling by default
-" if has('unix')
-"     let g:startup_profile_csv = $HOME . '/tmp/vim_startup_profile.csv'
-" elseif has('win32') || has('win64')
-"     let g:startup_profile_csv = $VIM . '/vim_startup_profile.csv'
-" endif
-" runtime bundle/startup_profile/macros/startup_profile.vim
-
-" End of startup_profiling }}}
+" Last Change: 2011-11-16 14:40:57
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1017,15 +1002,6 @@ Bundle 'python_match.vim'
 Bundle 'python.vim--Vasiliev'
 
 " End of python_syntax }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - startup_profiling {{{
-" http://github.com/vim-scripts/startup_profile
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'startup_profile'
-
-" End of startup_profiling }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
