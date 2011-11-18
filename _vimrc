@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-18 23:51:02
+" Last Change: 2011-11-19 00:14:50
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1151,7 +1151,10 @@ Bundle 'gmarik/vundle'
 " Plugin - xml {{{
 " http://github.com/othree/xml.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'othree/xml.vim'
+" XXX: Since the original repo dos not suit vundle, use vim-scripts instead.
+" TODO: Should check whether vundle support post-install hook. If support ,uss
+"       original repo, create html.vim as symbol link to xml.vim.
+Bundle 'xml.vim'
 
 " End of xml }}}
 
