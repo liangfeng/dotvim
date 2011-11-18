@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-16 14:40:57
+" Last Change: 2011-11-18 23:51:02
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -21,15 +21,15 @@ if v:version < 700
     quit
 endif
 
-" Remove ALL autocommands for the current group
+" Remove ALL autocommands for the current group.
 au!
 
 " Use Vim settings, rather then Vi settings.
 " This option must be first, because it changes other options.
 set nocompatible
 
-let maplocalleader = ","
-let mapleader = ","
+let g:maplocalleader = ","
+let g:mapleader = ","
 
 " If vim starts without opening file(s),
 " change working directory to $VIM (Windows) or $HOME(Mac, Linux).
@@ -65,8 +65,8 @@ endif
 
 if has('mac') && has('gui_running')
     set fuoptions+=maxhorz
-    nnoremap <silent> <unique> <D-f> :set invfullscreen<CR>
-    inoremap <silent> <unique> <D-f> <C-o>:set invfullscreen<CR>
+    nnoremap <silent> <D-f> :set invfullscreen<CR>
+    inoremap <silent> <D-f> <C-o>:set invfullscreen<CR>
 endif
 
 " End of Init }}}
@@ -81,8 +81,8 @@ if has('gui_win32') || has('gui_win64')
     au GUIEnter * simalt ~x
     command! Res simalt ~r
     command! Max simalt ~x
-    nnoremap <silent> <unique> <Leader>M :Max<CR>
-    nnoremap <silent> <unique> <Leader>R :Res<CR>
+    nnoremap <silent> <Leader>M :Max<CR>
+    nnoremap <silent> <Leader>R :Res<CR>
 endif
 
 " XXX: Change it. It's just for my environment.
@@ -121,22 +121,22 @@ endif
 
 " This function is revised from Wu yongwei's _vimrc.
 " Function to display the current character code in its 'file encoding'
-function s:EchoCharCode()
-    let char_enc = matchstr(getline('.'), '.', col('.') - 1)
-    let char_fenc = iconv(char_enc, &encoding, &fileencoding)
+function! s:EchoCharCode()
+    let _char_enc = matchstr(getline('.'), '.', col('.') - 1)
+    let _char_fenc = iconv(_char_enc, &encoding, &fileencoding)
     let i = 0
-    let len = len(char_fenc)
-    let hex_code = ''
-    while i < len
-        let hex_code .= printf('%.2x',char2nr(char_fenc[i]))
+    let _len = len(_char_fenc)
+    let _hex_code = ''
+    while i < _len
+        let _hex_code .= printf('%.2x',char2nr(_char_fenc[i]))
         let i += 1
     endwhile
-    echo '<' . char_enc . '> Hex ' . hex_code . ' (' .
+    echo '<' . _char_enc . '> Hex ' . _hex_code . ' (' .
           \(&fileencoding != '' ? &fileencoding : &encoding) . ')'
 endfunction
 
 " Key mapping to display the current character in its 'file encoding'
-nmap <silent> <unique> gn :call <SID>EchoCharCode()<CR>
+nmap <silent> gn :call <SID>EchoCharCode()<CR>
 
 " End of Encoding }}}
 
@@ -161,6 +161,10 @@ if !(has('mac') && !has('gui_running'))
 endif
 
 " Switch on syntax highlighting.
+" Delete colors_name for _vimrc re-sourcing.
+if exists("g:colors_name")
+    unlet g:colors_name
+endif
 syntax on
 
 
@@ -195,13 +199,13 @@ set history=400
 set completeopt-=preview
 
 " Disable middlemouse paste
-noremap <silent> <unique> <MiddleMouse> <LeftMouse>
-map <silent> <unique> <2-MiddleMouse> <Nop>
-imap <silent> <unique> <2-MiddleMouse> <Nop>
-map <silent> <unique> <3-MiddleMouse> <Nop>
-imap <silent> <unique> <3-MiddleMouse> <Nop>
-map <silent> <unique> <4-MiddleMouse> <Nop>
-imap <silent> <unique> <4-MiddleMouse> <Nop>
+noremap <silent> <MiddleMouse> <LeftMouse>
+map <silent> <2-MiddleMouse> <Nop>
+imap <silent> <2-MiddleMouse> <Nop>
+map <silent> <3-MiddleMouse> <Nop>
+imap <silent> <3-MiddleMouse> <Nop>
+map <silent> <4-MiddleMouse> <Nop>
+imap <silent> <4-MiddleMouse> <Nop>
 
 " Disable bell on errors
 set noerrorbells
@@ -212,10 +216,10 @@ au VimEnter * set vb t_vb=
 nmap Y y$
 
 " Key mapping for confirmed exiting
-nnoremap <silent> <unique> ZZ :confirm qa<CR>
+nnoremap <silent> ZZ :confirm qa<CR>
 
 " Create a new tabpage
-nnoremap <silent> <unique> <Leader><Tab> :tabnew<CR>
+nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
 " Redirect command output to standard output and temp file
 if has('unix')
@@ -223,6 +227,7 @@ if has('unix')
 endif
 
 " Quote shell if it contains space and is not quoted
+" TODO: check it after re-source _vimrc.
 if &shell =~? '^[^"].* .*[^"]'
     let &shell = '"' . &shell . '"'
 endif
@@ -232,19 +237,19 @@ if has('filterpipe')
 endif
 
 " Execute command without disturbing registers and cursor postion.
-function s:Preserve(command)
+function! s:Preserve(command)
     " Preparation: save last search, and cursor position.
     let _s=@/
-    let l = line(".")
-    let c = col(".")
+    let _l = line(".")
+    let _c = col(".")
     " Do the business.
     execute a:command
     " Clean up: restore previous search history, and cursor position
     let @/=_s
-    call cursor(l, c)
+    call cursor(_l, _c)
 endfunction
 
-function s:RemoveTrailingSpaces()
+function! s:RemoveTrailingSpaces()
     call s:Preserve('%s/\s\+$//e')
 endfunction
 
@@ -279,35 +284,35 @@ nnoremap <silent> gf <C-w>gf
 nnoremap <silent> gF <C-w>gF
 
 " Quick moving between tabs
-nnoremap <silent> <unique> <C-Tab> gt
+nnoremap <silent> <C-Tab> gt
 
 " Quick moving between windows
-nnoremap <silent> <unique> <Leader>w <C-w>w
+nnoremap <silent> <Leader>w <C-w>w
 
 " To make remapping ESC work porperly in console mode by disabling esckeys.
 if !has('gui_running')
     set noesckeys
 endif
 " remap <ESC> to stop searching highlight
-nnoremap <silent> <unique> <ESC> :nohls<CR><ESC>
-imap <silent> <unique> <ESC> <C-o><ESC>
+nnoremap <silent> <ESC> :nohls<CR><ESC>
+imap <silent> <ESC> <C-o><ESC>
 
-nnoremap <silent> <unique> <Up> <Nop>
-nnoremap <silent> <unique> <Down> <Nop>
-nnoremap <silent> <unique> <Left> <Nop>
-nnoremap <silent> <unique> <Right> <Nop>
-inoremap <silent> <unique> <Up> <Nop>
-inoremap <silent> <unique> <Down> <Nop>
-inoremap <silent> <unique> <Left> <Nop>
-inoremap <silent> <unique> <Right> <Nop>
+nnoremap <silent> <Up> <Nop>
+nnoremap <silent> <Down> <Nop>
+nnoremap <silent> <Left> <Nop>
+nnoremap <silent> <Right> <Nop>
+inoremap <silent> <Up> <Nop>
+inoremap <silent> <Down> <Nop>
+inoremap <silent> <Left> <Nop>
+inoremap <silent> <Right> <Nop>
 
 " move around the visual lines
-nnoremap <silent> <unique> j gj
-nnoremap <silent> <unique> k gk
+nnoremap <silent> j gj
+nnoremap <silent> k gk
 
 " move around the quickfix windows
-nmap <silent> <unique> <C-p> :cp<CR>
-nmap <silent> <unique> <C-n> :cn<CR>
+nmap <silent> <C-p> :cp<CR>
+nmap <silent> <C-n> :cn<CR>
 
 " Make cursor move smooth
 set whichwrap+=<,>,h,l
@@ -323,21 +328,21 @@ set wildignore+=*.bak
 set wildignore+=*.exe
 set wildignore+=*.swp
 
-nmap <silent> <unique> <Tab> %
+nmap <silent> <Tab> %
 
-nnoremap <unique> / /\v
-vnoremap <unique> / /\v
+nnoremap / /\v
+vnoremap / /\v
 
 " Support */# in visual mode
-function s:VSetSearch()
+function! s:VSetSearch()
     let temp = @@
     normal! gvy
     let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
     let @@ = temp
 endfunction
 
-vnoremap <silent> <unique> * :<C-u>call <SID>VSetSearch()<CR>//<CR>
-vnoremap <silent> <unique> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
+vnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>//<CR>
+vnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
 " End of Searching/Matching }}}
 
@@ -388,16 +393,16 @@ set laststatus=2
 set fileformats=unix,dos
 
 " Function to insert the current date
-function s:InsertCurrentDate()
-    let curr_date = strftime('%Y-%m-%d', localtime())
-    silent! exec 'normal! gi' .  curr_date . "\<ESC>a"
+function! s:InsertCurrentDate()
+    let _curr_date = strftime('%Y-%m-%d', localtime())
+    silent! exec 'normal! gi' .  _curr_date . "\<ESC>a"
 endfunction
 
 " Key mapping to insert the current date
-imap <silent> <unique> <Leader><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
+imap <silent> <Leader><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
 
 " Eliminate comment leader when joining comment lines
-function s:JoinWithLeader(count, leaderText)
+function! s:JoinWithLeader(count, leaderText)
     let l:linecount = a:count
     " default number of lines to join is 2
     if l:linecount < 2
@@ -432,7 +437,7 @@ function s:JoinWithLeader(count, leaderText)
     let @/ = l:savsearch
 endfunction
 
-function s:MapJoinWithLeaders(leaderText)
+function! s:MapJoinWithLeaders(leaderText)
     let l:leaderText = escape(a:leaderText, '/')
     " visual mode is easy - just remove comment leaders from beginning of lines
     " before using J normally
@@ -472,13 +477,13 @@ let g:is_bash = 1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " C/C++ {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function s:GNUIndent()
+function! s:GNUIndent()
     setlocal cinoptions=>4,n-2,{2,^-2,:2,=2,g0,h2,p5,t0,+2,(0,u0,w1,m1
     setlocal shiftwidth=2
     setlocal tabstop=8
 endfunction
 
-function s:SetSysTags()
+function! s:SetSysTags()
     " include system tags, :help ft-c-omni
     if has('unix')
         set tags+=$HOME/.vim/systags
@@ -487,13 +492,13 @@ function s:SetSysTags()
     endif
 endfunction
 
-function s:HighlightSpaceErrors()
+function! s:HighlightSpaceErrors()
     " Highlight space errors in C/C++ source files.
     " :help ft-c-syntax
     let g:c_space_errors = 1
 endfunction
 
-function s:TuneCHighlight()
+function! s:TuneCHighlight()
     " Tune for C highlighting
     " :help ft-c-syntax
     let g:c_gnu = 1
@@ -501,12 +506,12 @@ function s:TuneCHighlight()
 endfunction
 
 " Setup my favorite C/C++ indent
-function s:SetCPPIndent()
+function! s:SetCPPIndent()
     setlocal cinoptions=(0,t0,w1 shiftwidth=4 tabstop=4
 endfunction
 
 " Setup basic C/C++ development envionment
-function s:SetupCppEnv()
+function! s:SetupCppEnv()
     call s:SetSysTags()
     call s:HighlightSpaceErrors()
     call s:TuneCHighlight()
@@ -552,7 +557,7 @@ au FileType html,xhtml setlocal indentexpr=
 " Lua {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as lua code
-function s:RunAsLuaCode(s, e)
+function! s:RunAsLuaCode(s, e)
     pclose!
     silent exec a:s . ',' . a:e . 'y a'
     belowright new
@@ -565,7 +570,7 @@ function s:RunAsLuaCode(s, e)
     wincmd p
 endfunction
 
-function s:SetupAutoCmdForRunAsLuaCode()
+function! s:SetupAutoCmdForRunAsLuaCode()
     nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsLuaCode('1', '$')<CR>
     command! -range Eval :call s:RunAsLuaCode(<line1>, <line2>)
     vnoremap <buffer> <silent> <Leader>e :Eval<CR>
@@ -592,7 +597,7 @@ au FileType make call s:MapJoinWithLeaders('#\\|\\')
 let g:python_highlight_all = 1
 
 " Run the current buffer as python code
-function s:RunAsPythonCode(s, e)
+function! s:RunAsPythonCode(s, e)
     pclose!
     silent exec a:s . ',' . a:e . 'y a'
     belowright new
@@ -605,7 +610,7 @@ function s:RunAsPythonCode(s, e)
     wincmd p
 endfunction
 
-function s:SetupAutoCmdForRunAsPythonCode()
+function! s:SetupAutoCmdForRunAsPythonCode()
     nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsPythonCode('1', '$')<CR>
     command! -range Eval :call s:RunAsPythonCode(<line1>, <line2>)
     vnoremap <buffer> <silent> <Leader>e :Eval<CR>
@@ -622,14 +627,14 @@ au FileType python call s:MapJoinWithLeaders('#\\|\\')
 "  VimL {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as VimL
-function s:RunAsVimL(s, e)
+function! s:RunAsVimL(s, e)
     pclose!
-    let lines = getline(a:s, a:e)
-    let file = tempname()
-    call writefile(lines, file)
+    let _lines = getline(a:s, a:e)
+    let _file = tempname()
+    call writefile(_lines, _file)
     redir @e
-    silent exec ':source ' . file
-    call delete(file)
+    silent exec ':source ' . _file
+    call delete(_file)
     redraw
     redir END
 
@@ -647,7 +652,7 @@ function s:RunAsVimL(s, e)
     endif
 endfunction
 
-function s:SetupAutoCmdForRunAsVimL()
+function! s:SetupAutoCmdForRunAsVimL()
     nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsVimL('1', '$')<CR>
     command! -range Eval :call s:RunAsVimL(<line1>, <line2>)
     vnoremap <buffer> <silent> <Leader>e :Eval<CR>
@@ -667,7 +672,7 @@ let g:vimsyn_noerror = 1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " If current buffer is noname and empty, use current buffer.
 " Otherwise use new tab
-function s:OpenFileWithProperBuffer(file)
+function! s:OpenFileWithProperBuffer(file)
     if bufname('%') == '' && &modified == 0 && &modifiable == 1
         exec 'edit ' . a:file
     else
@@ -676,7 +681,7 @@ function s:OpenFileWithProperBuffer(file)
 endfunction
 
 " Fast editing of vimrc
-function s:OpenVimrc()
+function! s:OpenVimrc()
     if has('unix')
         call s:OpenFileWithProperBuffer('$HOME/.vimrc')
     elseif has('win32') || has('win64')
@@ -687,17 +692,18 @@ endfunction
 nmap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 " Automatically update change time in vimrc
-function s:UpdateLastChangeTime()
-    let last_change_anchor = '\(" Last Change:\s\+\)\d\{4}-\d\{2}-\d\{2} \d\{2}:\d\{2}:\d\{2}'
-    let last_change_line = search('\%^\_.\{-}\(^\zs' . last_change_anchor . '\)',
+" TODO: Do not change undo tree.
+function! s:UpdateLastChangeTime()
+    let _last_change_anchor = '\(" Last Change:\s\+\)\d\{4}-\d\{2}-\d\{2} \d\{2}:\d\{2}:\d\{2}'
+    let _last_change_line = search('\%^\_.\{-}\(^\zs' . _last_change_anchor . '\)',
                                \'n')
-    if last_change_line != 0
+    if _last_change_line != 0
         let last_change_time = strftime('%Y-%m-%d %H:%M:%S', localtime())
-        let last_change_text = substitute(getline(last_change_line),
-                                       \'^' . last_change_anchor,
+        let last_change_text = substitute(getline(_last_change_line),
+                                       \'^' . _last_change_anchor,
                                        \'\1',
                                        \'') . last_change_time
-        call setline(last_change_line, last_change_text)
+        call setline(_last_change_line, last_change_text)
     endif
 endfunction
 
@@ -856,12 +862,12 @@ let g:LookupFile_OpenWithTab = 1
 let g:LookupFile_FileExplorerOpenMode = 2
 let g:LookupFile_FileExplorerOpenCmd = "NERDTree\nwincmd p"
 
-nmap <silent> <unique> <Leader>f :LookupFile<CR>
-nmap <silent> <unique> <Leader>la :LUArgs<CR>
-nmap <silent> <unique> <Leader>lb :LUBufs<CR>
-nmap <silent> <unique> <Leader>lp :LUPath<CR>
-nmap <silent> <unique> <Leader>lt :LUTags<CR>
-nmap <silent> <unique> <Leader>lw :LUWalk<CR>
+nmap <silent> <Leader>f :LookupFile<CR>
+nmap <silent> <Leader>la :LUArgs<CR>
+nmap <silent> <Leader>lb :LUBufs<CR>
+nmap <silent> <Leader>lp :LUPath<CR>
+nmap <silent> <Leader>lt :LUTags<CR>
+nmap <silent> <Leader>lw :LUWalk<CR>
 
 " End of lookupfile }}}
 
@@ -887,14 +893,14 @@ let g:MRU_Add_Menu = 0
 " XXX: Change it. It's just for my environment.
 " TODO: Should use $TMP as exclude pattern
 if has('mac')
-    let MRU_Exclude_Files = '^/private/var/folders/.*'
+    let g:MRU_Exclude_Files = '^/private/var/folders/.*'
 elseif has('win32') || has('win64')
-    let MRU_Exclude_Files = '^\(h\|H\):\(/\|\\\)temp\(/\|\\\).*'
+    let g:MRU_Exclude_Files = '^\(h\|H\):\(/\|\\\)temp\(/\|\\\).*'
 else
-    let MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
+    let g:MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
 endif
 
-nnoremap <silent> <unique> <Leader>m :MRU<CR>
+nnoremap <silent> <Leader>m :MRU<CR>
 
 " End of mru }}}
 
@@ -965,9 +971,9 @@ let NERDTreeDirArrows = 1
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeIgnore=['^\.svn', '\~$']
 
-nmap <silent> <unique> <Leader>n :NERDTreeToggle<CR>
+nmap <silent> <Leader>n :NERDTreeToggle<CR>
 " command 'NERDTree' will refresh current directory.
-nmap <silent> <unique> <Leader>N :NERDTree<CR>
+nmap <silent> <Leader>N :NERDTree<CR>
 
 " End of nerdtree }}}
 
@@ -1045,7 +1051,7 @@ Bundle 'tpope/vim-surround'
 " http://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'SyntaxAttr.vim'
-nmap <silent> <unique> <Leader>S :call SyntaxAttr()<CR>
+nmap <silent> <Leader>S :call SyntaxAttr()<CR>
 
 " End of SyntaxAttr }}}
 
@@ -1056,7 +1062,7 @@ nmap <silent> <unique> <Leader>S :call SyntaxAttr()<CR>
 " http://ctags.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'majutsushi/tagbar'
-nmap <silent> <unique> <Leader>t :TagbarToggle<CR>
+nmap <silent> <Leader>t :TagbarToggle<CR>
 let g:tagbar_left = 1
 let g:tagbar_width = 30
 let g:tagbar_compact = 1
@@ -1070,7 +1076,7 @@ let g:tagbar_compact = 1
 " http://juan.axisym3.net/vim-plugins/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'TaskList.vim'
-map <unique> <Leader>T <Plug>TaskList
+map <silent> <Leader>T <Plug>TaskList
 
 " End of TaskList }}}
 
