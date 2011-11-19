@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-19 00:14:50
+" Last Change: 2011-11-20 00:07:50
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -78,11 +78,26 @@ endif
 set shortmess+=I
 
 if has('gui_win32') || has('gui_win64')
-    au GUIEnter * simalt ~x
     command! Res simalt ~r
     command! Max simalt ~x
-    nnoremap <silent> <Leader>M :Max<CR>
-    nnoremap <silent> <Leader>R :Res<CR>
+    " Run gvim with max mode by default.
+    au GUIEnter * Max
+
+    function! s:ToogleWindowSize()
+        if exists('g:does_windows_need_max')
+            let g:does_windows_need_max = !g:does_windows_need_max
+        else
+            " Need to restore window, since gvim run into max mode by default.
+            let g:does_windows_need_max = 0
+        endif
+        if g:does_windows_need_max == 1
+            Max
+        else
+            Res
+        endif
+    endfunction
+
+    nnoremap <silent> <Leader>M :call <SID>ToogleWindowSize()<CR>
 endif
 
 " XXX: Change it. It's just for my environment.
@@ -734,9 +749,23 @@ let g:alternateSearchPath = 'sfr:.,sfr:../src,sfr:../include'
 " http://github.com/liangfeng/colorscheme
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'liangfeng/colorscheme'
-colo miracle
+" colorscheme miracle
 
 " End of colorscheme }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-colors-solarized {{{
+" http://github.com/altercation/vim-colors-solarized
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'altercation/vim-colors-solarized'
+if !has('gui_running')
+    let g:solarized_termcolors=256
+endif
+set background=dark
+colorscheme solarized
+
+" End of vim-colors-solarized }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
