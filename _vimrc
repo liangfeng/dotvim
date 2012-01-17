@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2011-11-20 00:07:50
+" Last Change: 2012-01-18 00:12:07
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -242,7 +242,6 @@ if has('unix')
 endif
 
 " Quote shell if it contains space and is not quoted
-" TODO: check it after re-source _vimrc.
 if &shell =~? '^[^"].* .*[^"]'
     let &shell = '"' . &shell . '"'
 endif
@@ -375,8 +374,7 @@ set display=lastline
 set clipboard=unnamed
 
 if has('win32') || has('win64')
-    " TODO: should fix vundle plugin to support this option.
-    " set shellslash
+    set shellslash
 endif
 
 vmap <Tab> >gv
@@ -1172,6 +1170,7 @@ Bundle 'Shougo/vimshell'
 " http://github.com/gmarik/vundle
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'gmarik/vundle'
+au FileType vundle setlocal noshellslash
 
 " End of vundle }}}
 
@@ -1181,7 +1180,7 @@ Bundle 'gmarik/vundle'
 " http://github.com/othree/xml.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " XXX: Since the original repo dos not suit vundle, use vim-scripts instead.
-" TODO: Should check whether vundle support post-install hook. If support ,uss
+" TODO: Should check whether vundle support post-install hook. If support, use
 "       original repo, create html.vim as symbol link to xml.vim.
 Bundle 'xml.vim'
 
