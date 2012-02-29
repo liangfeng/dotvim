@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2012-01-18 00:12:07
+" Last Change: 2012-03-01 00:15:38
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1006,6 +1006,16 @@ nmap <silent> <Leader>N :NERDTree<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - Powerline for vim  {{{
+" http://github.com/Lokaltog/vim-powerline
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Bundle 'Lokaltog/vim-powerline'
+
+" End of Powerline for vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python folding {{{
 " http://habamax.ru/blog/2009/05/python-folding-in-vim/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1214,6 +1224,5 @@ let g:xptemplate_brace_complete = 0
 let g:xptemplate_vars = 'SPop=&SParg='
 
 " End of xptemplate }}}
-
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
