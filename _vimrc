@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2012-03-01 00:15:38
+" Last Change: 2012-03-05 22:13:21
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -396,11 +396,6 @@ set number
 
 set cursorline
 
-set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-6.(%l,%c%V%)\ [%{&ff}]\ %y\ %P
-let &statusline = substitute(&statusline,
-                            \'%=',
-                            \'%=%{winwidth(0)}x%{winheight(0)}   ',
-                            \'')
 set laststatus=2
 
 set fileformats=unix,dos

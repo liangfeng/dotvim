@@ -9,5 +9,3 @@ fix empty file encoding issue
 setup colorcolumn
 send plugin patches to orig authors
 customize plugins after load, using VimEnter
-enable vimrc without exit vim
-refactor vimrc to some plugins
