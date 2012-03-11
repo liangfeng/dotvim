@@ -1,5 +1,4 @@
-add python fold plugin, improve folding preformance
-rewrite bufexplorer plugin
+rewrite/replace bufexplorer plugin
 add workspace support for projectmgr plugin. Such as, lookupfile plugin support multiple ftags.
 add function param complete by TAB (like Vim script #1764)
 try clang plugin
