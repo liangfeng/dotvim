@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2012-03-05 22:13:21
+" Last Change: 2012-03-11 12:36:31
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1012,14 +1012,10 @@ Bundle 'Lokaltog/vim-powerline'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python folding {{{
-" http://habamax.ru/blog/2009/05/python-folding-in-vim/
+" http://github.com/tmhedberg/SimpylFold
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: improve the performance of this plugin
-let g:python_fold_block = "def"
-let g:python_fold_keep_empty_lines = "all"
-let g:python_fold_comments = 0
-let g:python_fold_docstrings = 0
-let g:python_fold_imports = 0
+
+Bundle "tmhedberg/SimpylFold"
 
 " End of python folding }}}
 
