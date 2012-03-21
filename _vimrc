@@ -10,7 +10,7 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2012-03-11 12:36:31
+" Last Change: 2012-03-22 01:11:28
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -63,11 +63,7 @@ if has('win32') || has('win64')
     let $VIM_SYSTEM_HIDECONSOLE = 1
 endif
 
-if has('mac') && has('gui_running')
-    set fuoptions+=maxhorz
-    nnoremap <silent> <D-f> :set invfullscreen<CR>
-    inoremap <silent> <D-f> <C-o>:set invfullscreen<CR>
-endif
+filetype plugin indent on
 
 " End of Init }}}
 
@@ -175,13 +171,19 @@ if !(has('mac') && !has('gui_running'))
     set t_Co=256
 endif
 
+if has('mac') && has('gui_running')
+    set fuoptions+=maxhorz
+    nnoremap <silent> <D-f> :set invfullscreen<CR>
+    inoremap <silent> <D-f> <C-o>:set invfullscreen<CR>
+endif
+
 " Switch on syntax highlighting.
 " Delete colors_name for _vimrc re-sourcing.
 if exists("g:colors_name")
     unlet g:colors_name
 endif
-syntax on
 
+syntax on
 
 " End of UI }}}
 
@@ -189,8 +191,6 @@ syntax on
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editting {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-filetype plugin indent on
-
 if has('unix')
     if isdirectory("$HOME/tmp")
         set directory=$HOME/tmp
@@ -236,18 +236,25 @@ nnoremap <silent> ZZ :confirm qa<CR>
 " Create a new tabpage
 nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
-" Redirect command output to standard output and temp file
-if has('unix')
-    set shellpipe=2>&1\|\ tee
-endif
-
 " Quote shell if it contains space and is not quoted
 if &shell =~? '^[^"].* .*[^"]'
     let &shell = '"' . &shell . '"'
 endif
 
+" Clear up xquote
+set shellxquote=
+
+" Redirect command output to standard output and temp file
+if has('unix')
+    set shellpipe=2>&1\|\ tee
+endif
+
 if has('filterpipe')
     set noshelltemp
+endif
+
+if has('win32') || has('win64')
+    set shellslash
 endif
 
 " Execute command without disturbing registers and cursor postion.
@@ -372,10 +379,6 @@ set autoindent
 set smartindent
 set display=lastline
 set clipboard=unnamed
-
-if has('win32') || has('win64')
-    set shellslash
-endif
 
 vmap <Tab> >gv
 vmap <S-Tab> <gv
