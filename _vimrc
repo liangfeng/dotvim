@@ -10,8 +10,6 @@
 "           has('gui_win32') means Windows 32 bit GUI version.
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
-" Last Change: 2012-03-22 01:11:28
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Init {{{
@@ -701,24 +699,6 @@ function! s:OpenVimrc()
 endfunction
 
 nmap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
-
-" Automatically update change time in vimrc
-" TODO: Do not change undo tree.
-function! s:UpdateLastChangeTime()
-    let _last_change_anchor = '\(" Last Change:\s\+\)\d\{4}-\d\{2}-\d\{2} \d\{2}:\d\{2}:\d\{2}'
-    let _last_change_line = search('\%^\_.\{-}\(^\zs' . _last_change_anchor . '\)',
-                               \'n')
-    if _last_change_line != 0
-        let last_change_time = strftime('%Y-%m-%d %H:%M:%S', localtime())
-        let last_change_text = substitute(getline(_last_change_line),
-                                       \'^' . _last_change_anchor,
-                                       \'\1',
-                                       \'') . last_change_time
-        call setline(_last_change_line, last_change_text)
-    endif
-endfunction
-
-au BufWritePre *vimrc call s:UpdateLastChangeTime()
 
 " End of vimrc }}}
 

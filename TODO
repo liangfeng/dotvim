@@ -6,5 +6,4 @@ add session support.
 add lua support.
 fix empty file encoding issue
 setup colorcolumn
-send plugin patches to orig authors
 customize plugins after load, using VimEnter
