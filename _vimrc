@@ -2,7 +2,7 @@
 " Brief:    This vimrc supports Mac, Linux and Windows(both GUI & console version).
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
-" HomePage: http://github.com/liangfeng/vimrc
+" HomePage: https://github.com/liangfeng/vimrc
 " Comments: has('mac') means Mac version only.
 "           has('unix') means Mac or Linux version.
 "           has('win32') means Windows 32 verion only.
@@ -705,7 +705,7 @@ nmap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - a {{{
-" http://github.com/vim-scripts/a.vim
+" https://github.com/vim-scripts/a.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'a.vim'
 let g:alternateExtensions_h = "c,cpp,cc"
@@ -722,7 +722,7 @@ let g:alternateSearchPath = 'sfr:.,sfr:../src,sfr:../include'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - colorscheme {{{
-" http://github.com/liangfeng/colorscheme
+" https://github.com/liangfeng/colorscheme
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'liangfeng/colorscheme'
 " colorscheme miracle
@@ -732,7 +732,7 @@ Bundle 'liangfeng/colorscheme'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-colors-solarized {{{
-" http://github.com/altercation/vim-colors-solarized
+" https://github.com/altercation/vim-colors-solarized
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'altercation/vim-colors-solarized'
 if !has('gui_running')
@@ -746,9 +746,9 @@ colorscheme solarized
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - bufexplorer {{{
-" http://github.com/vim-scripts/bufexplorer.zip
+" https://github.com/vim-scripts/bufexplorer.zip
 " TODO: find a better one or write one.
-" TODO: try this one. http://github.com/LStinson/TagmaBufMgr
+" TODO: try this one. https://github.com/LStinson/TagmaBufMgr
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'bufexplorer.zip'
 let g:bufExplorerDefaultHelp=0
@@ -761,7 +761,7 @@ let g:bufExplorerSplitRight=0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
-" http://github.com/Raimondi/delimitMate
+" https://github.com/Raimondi/delimitMate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Raimondi/delimitMate'
 au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
@@ -775,7 +775,7 @@ let g:delimitMate_balance_matchpairs = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - DoxygenToolkit {{{
-" http://github.com/vim-scripts/DoxygenToolkit.vim
+" https://github.com/vim-scripts/DoxygenToolkit.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'DoxygenToolkit.vim'
 " Load doxygen syntax file for c/cpp/idl files
@@ -798,7 +798,7 @@ let g:DoxygenToolkit_classTag = "@class: "
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - eclim {{{
-" http://github.com/ervandew/eclim
+" https://github.com/ervandew/eclim
 " http://eclim.org/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:EclimDisabled = 1
@@ -816,7 +816,7 @@ endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FencView {{{
-" http://github.com/vim-scripts/FencView.vim
+" https://github.com/vim-scripts/FencView.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'FencView.vim'
 
@@ -825,7 +825,7 @@ Bundle 'FencView.vim'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - filetype-completion {{{
-" http://github.com/c9s/filetype-completion.vim
+" https://github.com/c9s/filetype-completion.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'c9s/filetype-completion.vim'
 
@@ -834,7 +834,7 @@ Bundle 'c9s/filetype-completion.vim'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - genutils {{{
-" http://github.com/vim-scripts/genutils
+" https://github.com/vim-scripts/genutils
 " TODO: remove it?
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'genutils'
@@ -844,7 +844,7 @@ Bundle 'genutils'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
-" http://github.com/vim-scripts/LargeFile
+" https://github.com/vim-scripts/LargeFile
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'LargeFile'
 
@@ -853,7 +853,7 @@ Bundle 'LargeFile'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - lookupfile {{{
-" http://github.com/vim-scripts/lookupfile
+" https://github.com/vim-scripts/lookupfile
 " TODO: try Command-T plugin
 " TODO: remove it?
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -879,7 +879,7 @@ nmap <silent> <Leader>lw :LUWalk<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - matchit {{{
-" http://github.com/vim-scripts/matchit.zip
+" https://github.com/vim-scripts/matchit.zip
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Since 'matchit' script is included in standard distribution,
 " only need to 'source' it.
@@ -890,7 +890,7 @@ nmap <silent> <Leader>lw :LUWalk<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - mru {{{
-" http://github.com/vim-scripts/mru.vim
+" https://github.com/vim-scripts/mru.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'mru.vim'
 let g:MRU_Add_Menu = 0
@@ -912,7 +912,7 @@ nnoremap <silent> <Leader>m :MRU<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neocomplcache {{{
-" http://github.com/Shougo/neocomplcache
+" https://github.com/Shougo/neocomplcache
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Shougo/neocomplcache'
 set showfulltag
@@ -939,7 +939,7 @@ let g:neocomplcache_omni_patterns.cpp = '.*\.\|->\|::'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdcommenter {{{
-" http://github.com/scrooloose/nerdcommenter
+" https://github.com/scrooloose/nerdcommenter
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'scrooloose/nerdcommenter'
 let g:NERDCreateDefaultMappings = 0
@@ -959,7 +959,7 @@ let g:NERDCustomDelimiters = {
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdtree {{{
-" http://github.com/scrooloose/nerdtree
+" https://github.com/scrooloose/nerdtree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'scrooloose/nerdtree'
 " Set the window position
@@ -985,7 +985,7 @@ nmap <silent> <Leader>N :NERDTree<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - Powerline for vim  {{{
-" http://github.com/Lokaltog/vim-powerline
+" https://github.com/Lokaltog/vim-powerline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Bundle 'Lokaltog/vim-powerline'
@@ -995,7 +995,7 @@ Bundle 'Lokaltog/vim-powerline'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python folding {{{
-" http://github.com/tmhedberg/SimpylFold
+" https://github.com/tmhedberg/SimpylFold
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Bundle "tmhedberg/SimpylFold"
@@ -1005,7 +1005,7 @@ Bundle "tmhedberg/SimpylFold"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_match {{{
-" http://github.com/vim-scripts/python_match.vim
+" https://github.com/vim-scripts/python_match.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'python_match.vim'
 
@@ -1014,7 +1014,7 @@ Bundle 'python_match.vim'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_syntax {{{
-" http://github.com/vim-scripts/python.vim--Vasiliev
+" https://github.com/vim-scripts/python.vim--Vasiliev
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'python.vim--Vasiliev'
 
@@ -1023,7 +1023,7 @@ Bundle 'python.vim--Vasiliev'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-repeat {{{
-" http://github.com/tpope/vim-repeat
+" https://github.com/tpope/vim-repeat
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'tpope/vim-repeat'
 
@@ -1032,7 +1032,7 @@ Bundle 'tpope/vim-repeat'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - supertab {{{
-" http://github.com/ervandew/supertab
+" https://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'ervandew/supertab'
 " Since use tags, disable included header files searching to improve
@@ -1050,7 +1050,7 @@ let g:SuperTabLeadingSpaceCompletion = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-surround {{{
-" http://github.com/tpope/vim-surround
+" https://github.com/tpope/vim-surround
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'tpope/vim-surround'
 
@@ -1059,7 +1059,7 @@ Bundle 'tpope/vim-surround'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SyntaxAttr {{{
-" http://github.com/vim-scripts/SyntaxAttr.vim
+" https://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'SyntaxAttr.vim'
 nmap <silent> <Leader>S :call SyntaxAttr()<CR>
@@ -1069,7 +1069,7 @@ nmap <silent> <Leader>S :call SyntaxAttr()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - tagbar {{{
-" http://github.com/majutsushi/tagbar
+" https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'majutsushi/tagbar'
@@ -1083,7 +1083,7 @@ let g:tagbar_compact = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList {{{
-" http://github.com/vim-scripts/TaskList.vim
+" https://github.com/vim-scripts/TaskList.vim
 " http://juan.axisym3.net/vim-plugins/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'TaskList.vim'
@@ -1094,7 +1094,7 @@ map <silent> <Leader>T <Plug>TaskList
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimcdoc {{{
-" http://github.com/vim-scripts/vimcdoc
+" https://github.com/vim-scripts/vimcdoc
 " http://vimcdoc.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'liangfeng/vimcdoc'
@@ -1104,7 +1104,7 @@ Bundle 'liangfeng/vimcdoc'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimprj (my plugin) {{{
-" http://github.com/liangfeng/vimprj
+" https://github.com/liangfeng/vimprj
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'liangfeng/vimprj'
 
@@ -1133,7 +1133,7 @@ endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimproc {{{
-" http://github.com/Shougo/vimproc
+" https://github.com/Shougo/vimproc
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Shougo/vimproc'
 
@@ -1142,7 +1142,7 @@ Bundle 'Shougo/vimproc'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimshell {{{
-" http://github.com/Shougo/vimshell
+" https://github.com/Shougo/vimshell
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Shougo/vimshell'
 
@@ -1151,7 +1151,7 @@ Bundle 'Shougo/vimshell'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vundle {{{
-" http://github.com/gmarik/vundle
+" https://github.com/gmarik/vundle
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'gmarik/vundle'
 au FileType vundle setlocal noshellslash
@@ -1161,7 +1161,7 @@ au FileType vundle setlocal noshellslash
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xml {{{
-" http://github.com/othree/xml.vim
+" https://github.com/othree/xml.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " XXX: Since the original repo dos not suit vundle, use vim-scripts instead.
 " TODO: Should check whether vundle support post-install hook. If support, use
@@ -1173,7 +1173,7 @@ Bundle 'xml.vim'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xptemplate {{{
-" http://github.com/drmingdrmer/xptemplate
+" https://github.com/drmingdrmer/xptemplate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'drmingdrmer/xptemplate'
 
