@@ -767,6 +767,7 @@ Bundle 'Raimondi/delimitMate'
 au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 au FileType python let b:delimitMate_nesting_quotes = ['"']
 au FileType html let b:delimitMate_quotes = "\" '"
+au FileType c,cpp let b:delimitMate_eol_marker = ";"
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
 
