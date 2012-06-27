@@ -382,6 +382,7 @@ vmap <Tab> >gv
 vmap <S-Tab> <gv
 
 set scrolloff=7
+
 if has('gui_running')
     set guioptions-=m
     set guioptions-=T
@@ -511,7 +512,8 @@ function! s:TuneCHighlight()
     " Tune for C highlighting
     " :help ft-c-syntax
     let g:c_gnu = 1
-    let g:c_no_curly_error = 1
+    " XXX: It's maybe a performance penalty.
+    let g:c_curly_error = 1
 endfunction
 
 " Setup my favorite C/C++ indent
@@ -728,6 +730,14 @@ Bundle 'liangfeng/colorscheme'
 " colorscheme miracle
 
 " End of colorscheme }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - c-syntax {{{
+" https://github.com/liangfeng/c-syntax
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'liangfeng/c-syntax'
+
+" End of c-syntax }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -988,7 +998,6 @@ nmap <silent> <Leader>N :NERDTree<CR>
 " Plugin - Powerline for vim  {{{
 " https://github.com/Lokaltog/vim-powerline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 Bundle 'Lokaltog/vim-powerline'
 
 " End of Powerline for vim }}}
@@ -998,7 +1007,6 @@ Bundle 'Lokaltog/vim-powerline'
 " Plugin - python folding {{{
 " https://github.com/tmhedberg/SimpylFold
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 Bundle "tmhedberg/SimpylFold"
 
 " End of python folding }}}
@@ -1083,6 +1091,18 @@ let g:tagbar_compact = 1
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - TagHighlight {{{
+" https://github.com/vim-scripts/TagHighlight
+" http://ctags.sourceforge.net/
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Doesn't work now, disable it.
+" TODO: Need troubleshooting.
+" Bundle 'TagHighlight'
+
+" End of TagHighlight }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList {{{
 " https://github.com/vim-scripts/TaskList.vim
 " http://juan.axisym3.net/vim-plugins/
@@ -1155,6 +1175,7 @@ Bundle 'Shougo/vimshell'
 " https://github.com/gmarik/vundle
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'gmarik/vundle'
+let g:vundle_default_git_proto = 'http'
 au FileType vundle setlocal noshellslash
 
 " End of vundle }}}
