@@ -748,6 +748,8 @@ Bundle 'altercation/vim-colors-solarized'
 if !has('gui_running')
     let g:solarized_termcolors=256
 endif
+let g:solarized_menu = 0
+let g:solarized_italic = 0
 set background=dark
 colorscheme solarized
 
