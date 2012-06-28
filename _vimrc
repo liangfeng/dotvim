@@ -750,6 +750,7 @@ if !has('gui_running')
 endif
 let g:solarized_menu = 0
 let g:solarized_italic = 0
+let g:solarized_hitrail = 1
 set background=dark
 colorscheme solarized
 
