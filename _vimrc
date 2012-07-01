@@ -119,6 +119,7 @@ let &termencoding = &encoding
 
 set encoding=utf-8
 set ambiwidth=double
+scriptencoding utf-8
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
 if g:legacy_encoding != 'latin1'
     let &fileencodings=substitute(
