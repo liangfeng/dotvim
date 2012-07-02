@@ -19,9 +19,6 @@ if v:version < 700
     quit
 endif
 
-" Remove ALL autocommands for the current group.
-au!
-
 " Use Vim settings, rather then Vi settings.
 " This option must be first, because it changes other options.
 set nocompatible
@@ -91,7 +88,7 @@ if has('gui_win32') || has('gui_win64')
         endif
     endfunction
 
-    nnoremap <silent> <Leader>M :call <SID>ToogleWindowSize()<CR>
+    nnoremap <silent> <Leader>W :call <SID>ToogleWindowSize()<CR>
 endif
 
 " XXX: Change it. It's just for my environment.
@@ -146,7 +143,7 @@ function! s:EchoCharCode()
 endfunction
 
 " Key mapping to display the current character in its 'file encoding'
-nmap <silent> gn :call <SID>EchoCharCode()<CR>
+nnoremap <silent> gn :call <SID>EchoCharCode()<CR>
 
 " End of Encoding }}}
 
@@ -214,12 +211,12 @@ set completeopt-=preview
 
 " Disable middlemouse paste
 noremap <silent> <MiddleMouse> <LeftMouse>
-map <silent> <2-MiddleMouse> <Nop>
-imap <silent> <2-MiddleMouse> <Nop>
+noremap <silent> <2-MiddleMouse> <Nop>
+inoremap <silent> <2-MiddleMouse> <Nop>
 map <silent> <3-MiddleMouse> <Nop>
-imap <silent> <3-MiddleMouse> <Nop>
-map <silent> <4-MiddleMouse> <Nop>
-imap <silent> <4-MiddleMouse> <Nop>
+inoremap <silent> <3-MiddleMouse> <Nop>
+noremap <silent> <4-MiddleMouse> <Nop>
+inoremap <silent> <4-MiddleMouse> <Nop>
 
 " Disable bell on errors
 set noerrorbells
@@ -227,7 +224,7 @@ set novisualbell
 au VimEnter * set vb t_vb=
 
 " remap Y to work properly
-nmap Y y$
+nnoremap <silent> Y y$
 
 " Key mapping for confirmed exiting
 nnoremap <silent> ZZ :confirm qa<CR>
@@ -309,13 +306,13 @@ nnoremap <silent> <C-Tab> gt
 " Quick moving between windows
 nnoremap <silent> <Leader>w <C-w>w
 
-" To make remapping ESC work porperly in console mode by disabling esckeys.
+" To make remapping Esc work porperly in console mode by disabling esckeys.
 if !has('gui_running')
     set noesckeys
 endif
-" remap <ESC> to stop searching highlight
-nnoremap <silent> <ESC> :nohls<CR><ESC>
-imap <silent> <ESC> <C-o><ESC>
+" remap <Esc> to stop searching highlight
+nnoremap <silent> <Esc> :nohls<CR><Esc>
+imap <silent> <Esc> <C-o><Esc>
 
 nnoremap <silent> <Up> <Nop>
 nnoremap <silent> <Down> <Nop>
@@ -329,10 +326,6 @@ inoremap <silent> <Right> <Nop>
 " move around the visual lines
 nnoremap <silent> j gj
 nnoremap <silent> k gk
-
-" move around the quickfix windows
-nmap <silent> <C-p> :cp<CR>
-nmap <silent> <C-n> :cn<CR>
 
 " Make cursor move smooth
 set whichwrap+=<,>,h,l
@@ -379,8 +372,8 @@ set smartindent
 set display=lastline
 set clipboard=unnamed
 
-vmap <Tab> >gv
-vmap <S-Tab> <gv
+vnoremap <silent> <Tab> >gv
+vnoremap <silent> <S-Tab> <gv
 
 set scrolloff=7
 
@@ -406,11 +399,11 @@ set fileformats=unix,dos
 " Function to insert the current date
 function! s:InsertCurrentDate()
     let _curr_date = strftime('%Y-%m-%d', localtime())
-    silent! exec 'normal! gi' .  _curr_date . "\<ESC>a"
+    silent! exec 'normal! gi' .  _curr_date . "\<Esc>a"
 endfunction
 
 " Key mapping to insert the current date
-imap <silent> <Leader><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
+inoremap <silent> <Leader><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
 
 " Eliminate comment leader when joining comment lines
 function! s:JoinWithLeader(count, leaderText)
@@ -701,7 +694,7 @@ function! s:OpenVimrc()
     endif
 endfunction
 
-nmap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
+nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 " End of vimrc }}}
 
@@ -724,15 +717,6 @@ let g:alternateSearchPath = 'sfr:.,sfr:../src,sfr:../include'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - colorscheme {{{
-" https://github.com/liangfeng/colorscheme
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'liangfeng/colorscheme'
-" colorscheme miracle
-
-" End of colorscheme }}}
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - c-syntax {{{
 " https://github.com/liangfeng/c-syntax
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -749,28 +733,12 @@ Bundle 'altercation/vim-colors-solarized'
 if !has('gui_running')
     let g:solarized_termcolors=256
 endif
-let g:solarized_menu = 0
 let g:solarized_italic = 0
 let g:solarized_hitrail = 1
 set background=dark
 colorscheme solarized
 
 " End of vim-colors-solarized }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - bufexplorer {{{
-" https://github.com/vim-scripts/bufexplorer.zip
-" TODO: find a better one or write one.
-" TODO: try this one. https://github.com/LStinson/TagmaBufMgr
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'bufexplorer.zip'
-let g:bufExplorerDefaultHelp=0
-let g:bufExplorerSortBy='name'
-let g:bufExplorerShowDirectories=0
-let g:bufExplorerSplitRight=0
-
-" End of bufexplorer }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -848,16 +816,6 @@ Bundle 'c9s/filetype-completion.vim'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - genutils {{{
-" https://github.com/vim-scripts/genutils
-" TODO: remove it?
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'genutils'
-
-" End of genutils }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
 " https://github.com/vim-scripts/LargeFile
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -867,29 +825,54 @@ Bundle 'LargeFile'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - lookupfile {{{
-" https://github.com/vim-scripts/lookupfile
-" TODO: try Command-T plugin
-" TODO: remove it?
+" Plugin - ctrlp.vim {{{
+" https://github.com/kien/ctrlp.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'lookupfile'
-let g:LookupFile_DisableDefaultMap = 1
-let g:LookupFile_UsingSpecializedTags = 1
-let g:LookupFile_MinPatLength = 2
-let g:LookupFile_AllowNewFiles = 0
-let g:LookupFile_AlwaysAcceptFirst = 1
-let g:LookupFile_OpenWithTab = 1
-let g:LookupFile_FileExplorerOpenMode = 2
-let g:LookupFile_FileExplorerOpenCmd = "NERDTree\nwincmd p"
+Bundle 'kien/ctrlp.vim'
 
-nmap <silent> <Leader>f :LookupFile<CR>
-nmap <silent> <Leader>la :LUArgs<CR>
-nmap <silent> <Leader>lb :LUBufs<CR>
-nmap <silent> <Leader>lp :LUPath<CR>
-nmap <silent> <Leader>lt :LUTags<CR>
-nmap <silent> <Leader>lw :LUWalk<CR>
+nnoremap <silent> <Leader>f :CtrlP<CR>
+nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
+nnoremap <silent> <Leader>m :CtrlPMRU<CR>
+nnoremap <silent> <Leader>a :CtrlP<CR>
 
-" End of lookupfile }}}
+let g:ctrlp_custom_ignore = {
+            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
+            \ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.obj$',
+            \ }
+
+" " XXX: Change it. It's just for my environment.
+" " TODO: Should use $TMP as exclude pattern
+" if has('mac')
+"     let g:MRU_Exclude_Files = '^/private/var/folders/.*'
+" elseif has('win32') || has('win64')
+"     let g:MRU_Exclude_Files = '^\(h\|H\):\(/\|\\\)temp\(/\|\\\).*'
+" else
+"     let g:MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
+" endif
+
+" Do not delete the cache files upon exiting vim.
+let g:ctrlp_clear_cache_on_exit = 0
+
+" Set the max files
+let g:ctrlp_max_files = 10000
+
+" Optimize file searching
+" TODO: 1. Setup proper fallback for Windows.
+"       2. Check if g:ctrlp_user_command is used in mru list. If used, we can
+"          setup #1 item properly by using envionment variable in find/
+"          findstr command.
+if has("unix")
+    let g:ctrlp_user_command = {
+                \ 'types': {
+                \ 1: ['.git/', 'cd %s && git ls-files']
+                \ },
+                \ 'fallback': 'find %s -type f | head -' . g:ctrlp_max_files
+                \ }
+endif
+
+let g:ctrlp_open_new_file = 't'
+
+" End of ctrlp.vim }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -904,28 +887,6 @@ nmap <silent> <Leader>lw :LUWalk<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - mru {{{
-" https://github.com/vim-scripts/mru.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'mru.vim'
-let g:MRU_Add_Menu = 0
-
-" XXX: Change it. It's just for my environment.
-" TODO: Should use $TMP as exclude pattern
-if has('mac')
-    let g:MRU_Exclude_Files = '^/private/var/folders/.*'
-elseif has('win32') || has('win64')
-    let g:MRU_Exclude_Files = '^\(h\|H\):\(/\|\\\)temp\(/\|\\\).*'
-else
-    let g:MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
-endif
-
-nnoremap <silent> <Leader>m :MRU<CR>
-
-" End of mru }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neocomplcache {{{
 " https://github.com/Shougo/neocomplcache
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -937,11 +898,12 @@ let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_auto_completion_start_length = 2
 let g:neocomplcache_manual_completion_start_length = 2
 let g:neocomplcache_plugin_disable = {'snippets_complete' : 1}
-inoremap <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
-inoremap <expr> <C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr> <BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr> <C-y> neocomplcache#close_popup()
-inoremap <expr> <C-e> neocomplcache#cancel_popup()
+" TODO: 1. SHOULD keep popup window when enter backspace key.
+inoremap <silent> <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
+inoremap <silent> <expr> <C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <silent> <expr> <BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <silent> <expr> <C-y> neocomplcache#close_popup()
+inoremap <silent> <expr> <C-e> neocomplcache#cancel_popup()
 
 if !exists('g:neocomplcache_omni_patterns')
     let g:neocomplcache_omni_patterns = {}
@@ -991,20 +953,20 @@ let NERDTreeDirArrows = 1
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeIgnore=['^\.svn', '\~$']
 
-nmap <silent> <Leader>n :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 " command 'NERDTree' will refresh current directory.
-nmap <silent> <Leader>N :NERDTree<CR>
+nnoremap <silent> <Leader>N :NERDTree<CR>
 
 " End of nerdtree }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - Powerline for vim  {{{
+" Plugin - Powerline {{{
 " https://github.com/Lokaltog/vim-powerline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Lokaltog/vim-powerline'
 
-" End of Powerline for vim }}}
+" End of Powerline }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1075,7 +1037,7 @@ Bundle 'tpope/vim-surround'
 " https://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'SyntaxAttr.vim'
-nmap <silent> <Leader>S :call SyntaxAttr()<CR>
+nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 
 " End of SyntaxAttr }}}
 
@@ -1086,7 +1048,7 @@ nmap <silent> <Leader>S :call SyntaxAttr()<CR>
 " http://ctags.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'majutsushi/tagbar'
-nmap <silent> <Leader>t :TagbarToggle<CR>
+nnoremap <silent> <Leader>t :TagbarToggle<CR>
 let g:tagbar_left = 1
 let g:tagbar_width = 30
 let g:tagbar_compact = 1
@@ -1112,7 +1074,7 @@ let g:tagbar_compact = 1
 " http://juan.axisym3.net/vim-plugins/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'TaskList.vim'
-map <silent> <Leader>T <Plug>TaskList
+nmap <silent> <Leader>T <Plug>TaskList
 
 " End of TaskList }}}
 
@@ -1148,9 +1110,9 @@ endif
 
 " Fast editing of my plugin
 if has('unix')
-    nmap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/.vim/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
+    nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/.vim/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 elseif has('win32') || has('win64')
-    nmap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$VIM/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
+    nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$VIM/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 endif
 
 " End of vimprj }}}
