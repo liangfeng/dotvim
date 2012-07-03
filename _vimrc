@@ -840,16 +840,6 @@ let g:ctrlp_custom_ignore = {
             \ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.obj$',
             \ }
 
-" " XXX: Change it. It's just for my environment.
-" " TODO: Should use $TMP as exclude pattern
-" if has('mac')
-"     let g:MRU_Exclude_Files = '^/private/var/folders/.*'
-" elseif has('win32') || has('win64')
-"     let g:MRU_Exclude_Files = '^\(h\|H\):\(/\|\\\)temp\(/\|\\\).*'
-" else
-"     let g:MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
-" endif
-
 " Do not delete the cache files upon exiting vim.
 let g:ctrlp_clear_cache_on_exit = 0
 
