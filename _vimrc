@@ -747,11 +747,11 @@ colorscheme solarized
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Raimondi/delimitMate'
 au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
-au FileType python let b:delimitMate_nesting_quotes = ['"']
 au FileType html let b:delimitMate_quotes = "\" '"
-au FileType c,cpp let b:delimitMate_eol_marker = ";"
+au FileType python let b:delimitMate_nesting_quotes = ['"']
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
+let delimitMate_excluded_ft = "mail,txt"
 
 " End of delimitMate }}}
 
@@ -889,19 +889,21 @@ let g:neocomplcache_enable_ignore_case = 0
 let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_auto_completion_start_length = 2
 let g:neocomplcache_manual_completion_start_length = 2
-let g:neocomplcache_plugin_disable = {'snippets_complete' : 1}
-" TODO: 1. SHOULD keep popup window when enter backspace key.
-inoremap <silent> <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
-inoremap <silent> <expr> <C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <silent> <expr> <BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <silent> <expr> <C-y> neocomplcache#close_popup()
-inoremap <silent> <expr> <C-e> neocomplcache#cancel_popup()
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
 
 if !exists('g:neocomplcache_omni_patterns')
     let g:neocomplcache_omni_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.c = '.*\.\|->'
-let g:neocomplcache_omni_patterns.cpp = '.*\.\|->\|::'
+let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+
+
+if !exists('g:neocomplcache_context_filetype_lists')
+    let g:neocomplcache_context_filetype_lists = {}
+endif
+let g:neocomplcache_context_filetype_lists.vim =
+            \ [{'filetype' : 'python', 'start' : '^\s*python <<\s*\(\h\w*\)', 'end' : '^\1'}]
 
 " End of neocomplcache }}}
 
@@ -1146,6 +1148,7 @@ au FileType vundle setlocal noshellslash
 " XXX: Since the original repo dos not suit vundle, use vim-scripts instead.
 " TODO: Should check whether vundle support post-install hook. If support, use
 "       original repo, create html.vim as symbol link to xml.vim.
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 Bundle 'xml.vim'
 
 " End of xml }}}
