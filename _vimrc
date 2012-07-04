@@ -847,18 +847,20 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 10000
 
 " Optimize file searching
-" TODO: 1. Setup proper fallback for Windows.
-"       2. Check if g:ctrlp_user_command is used in mru list. If used, we can
-"          setup #1 item properly by using envionment variable in find/
-"          findstr command.
-if has("unix")
-    let g:ctrlp_user_command = {
-                \ 'types': {
-                \ 1: ['.git/', 'cd %s && git ls-files']
-                \ },
-                \ 'fallback': 'find %s -type f | head -' . g:ctrlp_max_files
-                \ }
+" TODO: 1. Need support ctrlp_max_files on Windows.
+if has('unix')
+    let ctrlp_find_cmd_ = 'find %s -type f | head -' . g:ctrlp_max_files
+elseif has('win32') || has('win64')
+    let ctrlp_find_cmd_ = 'dir %s /-n /b /s /a-d'
 endif
+
+let g:ctrlp_user_command = {
+            \ 'types': {
+            \ 1: ['.git/', 'cd %s && git ls-files'],
+            \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+            \ },
+            \ 'fallback': ctrlp_find_cmd_
+            \ }
 
 let g:ctrlp_open_new_file = 't'
 
