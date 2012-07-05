@@ -905,6 +905,12 @@ endif
 let g:neocomplcache_context_filetype_lists.vim =
             \ [{'filetype' : 'python', 'start' : '^\s*python <<\s*\(\h\w*\)', 'end' : '^\1'}]
 
+" <CR>: close popup and save indent.
+inoremap <unique> <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
+" Do NOT popup when enter <C-y> and <C-e>
+inoremap <unique> <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
+inoremap <unique> <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
+
 " End of neocomplcache }}}
 
 
