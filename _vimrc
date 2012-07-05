@@ -403,7 +403,7 @@ function! s:InsertCurrentDate()
 endfunction
 
 " Key mapping to insert the current date
-inoremap <silent> <Leader><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
+inoremap <silent> <C-d><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
 
 " Eliminate comment leader when joining comment lines
 function! s:JoinWithLeader(count, leaderText)
@@ -543,6 +543,8 @@ au FileType c,cpp call s:MapJoinWithLeaders('//\\|\\')
 " Help {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType help nnoremap <buffer> <silent> q :q<CR>
+au FileType help setlocal number
+
 
 " End of help }}}
 
@@ -700,9 +702,10 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - a {{{
+" Plugin - A {{{
 " https://github.com/vim-scripts/a.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Find a modern alternative that can support change default insert mode mapping.
 Bundle 'a.vim'
 let g:alternateExtensions_h = "c,cpp,cc"
 let g:alternateExtensions_H = "C,CPP,CC"
@@ -713,7 +716,7 @@ let g:alternateExtensions_C = "H"
 let g:alternateExtensions_cxx = "h"
 let g:alternateSearchPath = 'sfr:.,sfr:../src,sfr:../include'
 
-" End of a }}}
+" End of A }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -907,6 +910,7 @@ let g:neocomplcache_context_filetype_lists.vim =
 
 " <CR>: close popup and save indent.
 inoremap <unique> <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
+
 " Do NOT popup when enter <C-y> and <C-e>
 inoremap <unique> <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
 inoremap <unique> <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
