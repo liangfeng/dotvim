@@ -804,6 +804,7 @@ endif
 " Plugin - FencView {{{
 " https://github.com/vim-scripts/FencView.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FIXME: Fix empty file encoding issue.
 Bundle 'FencView.vim'
 
 " End of FencView }}}
@@ -909,11 +910,11 @@ let g:neocomplcache_context_filetype_lists.vim =
             \ [{'filetype' : 'python', 'start' : '^\s*python <<\s*\(\h\w*\)', 'end' : '^\1'}]
 
 " <CR>: close popup and save indent.
-inoremap <unique> <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
+inoremap <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
 
 " Do NOT popup when enter <C-y> and <C-e>
-inoremap <unique> <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
-inoremap <unique> <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
+inoremap <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
+inoremap <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
 
 " End of neocomplcache }}}
 
@@ -1013,6 +1014,7 @@ Bundle 'tpope/vim-repeat'
 " Plugin - supertab {{{
 " https://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: add function param complete by TAB (like Vim script #1764)
 Bundle 'ervandew/supertab'
 " Since use tags, disable included header files searching to improve
 " performance.
@@ -1097,6 +1099,7 @@ Bundle 'liangfeng/vimcdoc'
 " Plugin - vimprj (my plugin) {{{
 " https://github.com/liangfeng/vimprj
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: add workspace support for projectmgr plugin. Such as, lookupfile plugin support multiple ftags.
 Bundle 'liangfeng/vimprj'
 
 " Since this plugin use python script to do some text precessing jobs,
