@@ -702,24 +702,6 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - A {{{
-" https://github.com/vim-scripts/a.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Find a modern alternative that can support change default insert mode mapping.
-Bundle 'a.vim'
-let g:alternateExtensions_h = "c,cpp,cc"
-let g:alternateExtensions_H = "C,CPP,CC"
-let g:alternateExtensions_cpp = "h,hpp"
-let g:alternateExtensions_CPP = "H,HPP"
-let g:alternateExtensions_c = "h"
-let g:alternateExtensions_C = "H"
-let g:alternateExtensions_cxx = "h"
-let g:alternateSearchPath = 'sfr:.,sfr:../src,sfr:../include'
-
-" End of A }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - c-syntax {{{
 " https://github.com/liangfeng/c-syntax
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -733,6 +715,7 @@ Bundle 'liangfeng/c-syntax'
 " https://github.com/altercation/vim-colors-solarized
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'altercation/vim-colors-solarized'
+
 if !has('gui_running')
     let g:solarized_termcolors=256
 endif
@@ -749,6 +732,7 @@ colorscheme solarized
 " https://github.com/Raimondi/delimitMate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Raimondi/delimitMate'
+
 au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 au FileType html let b:delimitMate_quotes = "\" '"
 au FileType python let b:delimitMate_nesting_quotes = ['"']
@@ -764,6 +748,7 @@ let delimitMate_excluded_ft = "mail,txt"
 " https://github.com/vim-scripts/DoxygenToolkit.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'DoxygenToolkit.vim'
+
 " Load doxygen syntax file for c/cpp/idl files
 let g:load_doxygen_syntax = 1
 let g:DoxygenToolkit_commentType = "C++"
@@ -803,9 +788,9 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FencView {{{
 " https://github.com/vim-scripts/FencView.vim
+" https://github.com/liangfeng/FencView.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" FIXME: Fix empty file encoding issue.
-Bundle 'FencView.vim'
+Bundle 'liangfeng/FencView.vim'
 
 " End of FencView }}}
 
@@ -817,6 +802,20 @@ Bundle 'FencView.vim'
 Bundle 'c9s/filetype-completion.vim'
 
 " End of filetype-completion }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - FSwitch {{{
+" https://github.com/vim-scripts/FSwitch
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need refining
+Bundle 'FSwitch'
+
+command! FA :FSSplitAbove
+
+let g:fsnonewfiles = 1
+
+" End of FSwitch }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -887,6 +886,7 @@ let g:ctrlp_open_new_file = 't'
 " https://github.com/Shougo/neocomplcache
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'Shougo/neocomplcache'
+
 set showfulltag
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_ignore_case = 0
@@ -916,6 +916,10 @@ inoremap <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#E
 inoremap <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
 inoremap <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
 
+" <Tab>: completion.
+inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
+inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<Tab>'
+
 " End of neocomplcache }}}
 
 
@@ -924,6 +928,7 @@ inoremap <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
 " https://github.com/scrooloose/nerdcommenter
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'scrooloose/nerdcommenter'
+
 let g:NERDCreateDefaultMappings = 0
 let g:NERDMenuMode = 0
 let g:NERDSpaceDelims = 1
@@ -944,6 +949,7 @@ let g:NERDCustomDelimiters = {
 " https://github.com/scrooloose/nerdtree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'scrooloose/nerdtree'
+
 " Set the window position
 let g:NERDTreeWinPos = "right"
 " Exit vim, if only the NERDTree window is present. If there is more than one tab
@@ -1015,7 +1021,8 @@ Bundle 'tpope/vim-repeat'
 " https://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
-Bundle 'ervandew/supertab'
+" Bundle 'ervandew/supertab'
+
 " Since use tags, disable included header files searching to improve
 " performance.
 set complete-=i
@@ -1043,6 +1050,7 @@ Bundle 'tpope/vim-surround'
 " https://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'SyntaxAttr.vim'
+
 nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 
 " End of SyntaxAttr }}}
@@ -1054,6 +1062,7 @@ nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 " http://ctags.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'majutsushi/tagbar'
+
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
 let g:tagbar_left = 1
 let g:tagbar_width = 30
@@ -1080,6 +1089,7 @@ let g:tagbar_compact = 1
 " http://juan.axisym3.net/vim-plugins/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'TaskList.vim'
+
 nmap <silent> <Leader>T <Plug>TaskList
 
 " End of TaskList }}}
@@ -1148,6 +1158,7 @@ Bundle 'Shougo/vimshell'
 " https://github.com/gmarik/vundle
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'gmarik/vundle'
+
 let g:vundle_default_git_proto = 'http'
 au FileType vundle setlocal noshellslash
 
@@ -1161,8 +1172,9 @@ au FileType vundle setlocal noshellslash
 " XXX: Since the original repo dos not suit vundle, use vim-scripts instead.
 " TODO: Should check whether vundle support post-install hook. If support, use
 "       original repo, create html.vim as symbol link to xml.vim.
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 Bundle 'xml.vim'
+
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " End of xml }}}
 
