@@ -712,123 +712,6 @@ Bundle 'liangfeng/c-syntax'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-colors-solarized {{{
-" https://github.com/altercation/vim-colors-solarized
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'altercation/vim-colors-solarized'
-
-if !has('gui_running')
-    let g:solarized_termcolors=256
-endif
-let g:solarized_italic = 0
-let g:solarized_hitrail = 1
-set background=dark
-colorscheme solarized
-
-" End of vim-colors-solarized }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - delimitMate {{{
-" https://github.com/Raimondi/delimitMate
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'Raimondi/delimitMate'
-
-au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
-au FileType html let b:delimitMate_quotes = "\" '"
-au FileType python let b:delimitMate_nesting_quotes = ['"']
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_balance_matchpairs = 1
-let delimitMate_excluded_ft = "mail,txt"
-
-" End of delimitMate }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - DoxygenToolkit {{{
-" https://github.com/vim-scripts/DoxygenToolkit.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'DoxygenToolkit.vim'
-
-" Load doxygen syntax file for c/cpp/idl files
-let g:load_doxygen_syntax = 1
-let g:DoxygenToolkit_commentType = "C++"
-let g:DoxygenToolkit_dateTag = ""
-let g:DoxygenToolkit_authorName = "liangfeng"
-let g:DoxygenToolkit_versionString = ""
-let g:DoxygenToolkit_versionTag = ""
-let g:DoxygenToolkit_briefTag_pre = "@brief:  "
-let g:DoxygenToolkit_fileTag = "@file:   "
-let g:DoxygenToolkit_authorTag = "@author: "
-let g:DoxygenToolkit_blockTag = "@name: "
-let g:DoxygenToolkit_paramTag_pre = "@param:  "
-let g:DoxygenToolkit_returnTag = "@return:  "
-let g:DoxygenToolkit_classTag = "@class: "
-
-" End of DoxygenToolkit }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - eclim {{{
-" https://github.com/ervandew/eclim
-" http://eclim.org/
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:EclimDisabled = 1
-let g:EclimTaglistEnabled = 0
-if has('mac')
-    let g:EclimHome = '/Applications/eclipse/plugins/org.eclim_1.6.0'
-    let g:EclimEclipseHome = '/Applications/eclipse'
-elseif has('win32') || has('win64')
-    let g:EclimHome = 'D:/eclipse/plugins/org.eclim_1.6.0'
-    let g:EclimEclipseHome = 'D:/eclipse'
-endif
-
-" End of eclim }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - FencView {{{
-" https://github.com/vim-scripts/FencView.vim
-" https://github.com/liangfeng/FencView.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'liangfeng/FencView.vim'
-
-" End of FencView }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - filetype-completion {{{
-" https://github.com/c9s/filetype-completion.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'c9s/filetype-completion.vim'
-
-" End of filetype-completion }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - FSwitch {{{
-" https://github.com/vim-scripts/FSwitch
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need refining
-Bundle 'FSwitch'
-
-command! FA :FSSplitAbove
-
-let g:fsnonewfiles = 1
-
-" End of FSwitch }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - LargeFile {{{
-" https://github.com/vim-scripts/LargeFile
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'LargeFile'
-
-" End of LargeFile }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - ctrlp.vim {{{
 " https://github.com/kien/ctrlp.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -869,6 +752,106 @@ let g:ctrlp_user_command = {
 let g:ctrlp_open_new_file = 't'
 
 " End of ctrlp.vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - delimitMate {{{
+" https://github.com/Raimondi/delimitMate
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Raimondi/delimitMate'
+
+au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+au FileType html let b:delimitMate_quotes = "\" '"
+au FileType python let b:delimitMate_nesting_quotes = ['"']
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_balance_matchpairs = 1
+let delimitMate_excluded_ft = "mail,txt"
+
+" End of delimitMate }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - DoxygenToolkit.vim {{{
+" https://github.com/vim-scripts/DoxygenToolkit.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'DoxygenToolkit.vim'
+
+" Load doxygen syntax file for c/cpp/idl files
+let g:load_doxygen_syntax = 1
+let g:DoxygenToolkit_commentType = "C++"
+let g:DoxygenToolkit_dateTag = ""
+let g:DoxygenToolkit_authorName = "liangfeng"
+let g:DoxygenToolkit_versionString = ""
+let g:DoxygenToolkit_versionTag = ""
+let g:DoxygenToolkit_briefTag_pre = "@brief:  "
+let g:DoxygenToolkit_fileTag = "@file:   "
+let g:DoxygenToolkit_authorTag = "@author: "
+let g:DoxygenToolkit_blockTag = "@name: "
+let g:DoxygenToolkit_paramTag_pre = "@param:  "
+let g:DoxygenToolkit_returnTag = "@return:  "
+let g:DoxygenToolkit_classTag = "@class: "
+
+" End of DoxygenToolkit.vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - eclim {{{
+" https://github.com/ervandew/eclim
+" http://eclim.org/
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:EclimDisabled = 1
+let g:EclimTaglistEnabled = 0
+if has('mac')
+    let g:EclimHome = '/Applications/eclipse/plugins/org.eclim_1.6.0'
+    let g:EclimEclipseHome = '/Applications/eclipse'
+elseif has('win32') || has('win64')
+    let g:EclimHome = 'D:/eclipse/plugins/org.eclim_1.6.0'
+    let g:EclimEclipseHome = 'D:/eclipse'
+endif
+
+" End of eclim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - FencView.vim {{{
+" https://github.com/vim-scripts/FencView.vim
+" https://github.com/liangfeng/FencView.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'liangfeng/FencView.vim'
+
+" End of FencView.vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - filetype-completion.vim {{{
+" https://github.com/c9s/filetype-completion.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'c9s/filetype-completion.vim'
+
+" End of filetype-completion.vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - FSwitch {{{
+" https://github.com/vim-scripts/FSwitch
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need refining
+Bundle 'FSwitch'
+
+command! FA :FSSplitAbove
+
+let g:fsnonewfiles = 1
+
+" End of FSwitch }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - LargeFile {{{
+" https://github.com/vim-scripts/LargeFile
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'LargeFile'
+
+" End of LargeFile }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -913,6 +896,10 @@ let g:neocomplcache_context_filetype_lists.vim =
 " <CR>: close popup and save indent.
 inoremap <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
 
+" Set up proper mappings for  <BS> or <C-x>.
+inoremap <silent> <expr> <BS> pumvisible() ? '<BS><C-x>' : '<BS>'
+inoremap <silent> <expr> <C-h> pumvisible() ? '<C-h><C-x>' : '<C-h>'
+
 " Do NOT popup when enter <C-y> and <C-e>
 inoremap <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
 inoremap <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
@@ -953,17 +940,11 @@ Bundle 'scrooloose/nerdtree'
 
 " Set the window position
 let g:NERDTreeWinPos = "right"
-" Exit vim, if only the NERDTree window is present. If there is more than one tab
-" present, close current tab.
-let g:NERDTreeExitOnlyWindow = 1
-" Whether to open NERDtree or not in new tab, when user presses 't' or 'T' on
-" a file or bookmark.
-let g:NERDTreeFollowOpenInNewTab = 0
 let g:NERDTreeQuitOnOpen = 1
 let g:NERDTreeWinSize = 50
-let NERDTreeDirArrows = 1
+let g:NERDTreeDirArrows = 1
 let g:NERDTreeMinimalUI = 1
-let g:NERDTreeIgnore=['^\.svn', '\~$']
+let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
 
 nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 " command 'NERDTree' will refresh current directory.
@@ -973,48 +954,30 @@ nnoremap <silent> <Leader>N :NERDTree<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - Powerline {{{
-" https://github.com/Lokaltog/vim-powerline
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'Lokaltog/vim-powerline'
-
-" End of Powerline }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - python folding {{{
-" https://github.com/tmhedberg/SimpylFold
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle "tmhedberg/SimpylFold"
-
-" End of python folding }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - python_match {{{
-" https://github.com/vim-scripts/python_match.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'python_match.vim'
-
-" End of python_match }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - python_syntax {{{
+" Plugin - python.vim--Vasiliev {{{
 " https://github.com/vim-scripts/python.vim--Vasiliev
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'python.vim--Vasiliev'
 
-" End of python_syntax }}}
+" End of python.vim--Vasiliev }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-repeat {{{
-" https://github.com/tpope/vim-repeat
+" Plugin - python_match.vim {{{
+" https://github.com/vim-scripts/python_match.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'tpope/vim-repeat'
+Bundle 'python_match.vim'
 
-" End of vim-repeat }}}
+" End of python_match.vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - SimpylFold for python {{{
+" https://github.com/tmhedberg/SimpylFold
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle "tmhedberg/SimpylFold"
+
+" End of SimpylFold for python }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1022,7 +985,7 @@ Bundle 'tpope/vim-repeat'
 " https://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
-" Bundle 'ervandew/supertab'
+Bundle 'ervandew/supertab'
 
 " Since use tags, disable included header files searching to improve
 " performance.
@@ -1032,29 +995,19 @@ set complete=.
 
 let g:SuperTabDefaultCompletionType = 'context'
 let g:SuperTabCrMapping = 0
-let g:SuperTabLeadingSpaceCompletion = 0
 
 " End of supertab }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-surround {{{
-" https://github.com/tpope/vim-surround
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Bundle 'tpope/vim-surround'
-
-" End of vim-surround }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - SyntaxAttr {{{
+" Plugin - SyntaxAttr.vim {{{
 " https://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Bundle 'SyntaxAttr.vim'
 
 nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 
-" End of SyntaxAttr }}}
+" End of SyntaxAttr.vim }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1085,7 +1038,7 @@ let g:tagbar_compact = 1
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - TaskList {{{
+" Plugin - TaskList.vim {{{
 " https://github.com/vim-scripts/TaskList.vim
 " http://juan.axisym3.net/vim-plugins/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1093,7 +1046,51 @@ Bundle 'TaskList.vim'
 
 nmap <silent> <Leader>T <Plug>TaskList
 
-" End of TaskList }}}
+" End of TaskList.vim }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-colors-solarized {{{
+" https://github.com/altercation/vim-colors-solarized
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'altercation/vim-colors-solarized'
+
+if !has('gui_running')
+    let g:solarized_termcolors=256
+endif
+let g:solarized_italic = 0
+let g:solarized_hitrail = 1
+set background=dark
+colorscheme solarized
+
+" End of vim-colors-solarized }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-powerline {{{
+" https://github.com/Lokaltog/vim-powerline
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'Lokaltog/vim-powerline'
+
+" End of vim-powerline }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-repeat {{{
+" https://github.com/tpope/vim-repeat
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-repeat'
+
+" End of vim-repeat }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-surround {{{
+" https://github.com/tpope/vim-surround
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Bundle 'tpope/vim-surround'
+
+" End of vim-surround }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1167,7 +1164,7 @@ au FileType vundle setlocal noshellslash
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - xml {{{
+" Plugin - xml.vim {{{
 " https://github.com/othree/xml.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " XXX: Since the original repo dos not suit vundle, use vim-scripts instead.
@@ -1177,7 +1174,7 @@ Bundle 'xml.vim'
 
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-" End of xml }}}
+" End of xml.vim }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
