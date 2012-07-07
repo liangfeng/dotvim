@@ -340,6 +340,7 @@ set wildignore+=*.obj
 set wildignore+=*.bak
 set wildignore+=*.exe
 set wildignore+=*.swp
+set wildignore+=*.pyc
 
 nmap <silent> <Tab> %
 
