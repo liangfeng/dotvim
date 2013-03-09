@@ -734,7 +734,7 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 10000
 
 " Optimize file searching
-" TODO: 1. Need support ctrlp_max_files on Windows.
+" TODO: Need support ctrlp_max_files on Windows.
 if has('unix')
     let ctrlp_find_cmd_ = 'find %s -type f | head -' . g:ctrlp_max_files
 elseif has('win32') || has('win64')
@@ -1023,18 +1023,6 @@ let g:tagbar_width = 30
 let g:tagbar_compact = 1
 
 " End of tagbar }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - TagHighlight {{{
-" https://github.com/vim-scripts/TagHighlight
-" http://ctags.sourceforge.net/
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Doesn't work now, disable it.
-" TODO: Need troubleshooting.
-" Bundle 'TagHighlight'
-
-" End of TagHighlight }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
