@@ -19,12 +19,15 @@ if v:version < 700
     quit
 endif
 
+" Remove ALL autocommands for the current group
+au!
+
 " Use Vim settings, rather then Vi settings.
-" This option must be first, because it changes other options.
+" This option must be set first, since it changes other options.
 set nocompatible
 
-let g:maplocalleader = ","
-let g:mapleader = ","
+let g:maplocalleader = ','
+let g:mapleader = ','
 
 " If vim starts without opening file(s),
 " change working directory to $VIM (Windows) or $HOME(Mac, Linux).
@@ -77,7 +80,7 @@ if has('gui_win32') || has('gui_win64')
     " Run gvim with max mode by default.
     au GUIEnter * Max
 
-    function! s:ToogleWindowSize()
+    function! s:ToggleWindowSize()
         if exists('g:does_windows_need_max')
             let g:does_windows_need_max = !g:does_windows_need_max
         else
@@ -91,7 +94,7 @@ if has('gui_win32') || has('gui_win64')
         endif
     endfunction
 
-    nnoremap <silent> <Leader>W :call <SID>ToogleWindowSize()<CR>
+    nnoremap <silent> <Leader>W :call <SID>ToggleWindowSize()<CR>
 endif
 
 " XXX: Change it. It's just for my environment.
@@ -114,16 +117,16 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Encoding {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:legacy_encoding = &encoding
+let legacy_encoding = &encoding
 let &termencoding = &encoding
 
 set encoding=utf-8
 set ambiwidth=double
 scriptencoding utf-8
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
-if g:legacy_encoding != 'latin1'
+if legacy_encoding != 'latin1'
     let &fileencodings=substitute(
-                \&fileencodings, '\<default\>', g:legacy_encoding, '')
+                \&fileencodings, '\<default\>', legacy_encoding, '')
 else
     let &fileencodings=substitute(
                 \&fileencodings, ',default,', ',', '')
@@ -132,16 +135,16 @@ endif
 " This function is revised from Wu yongwei's _vimrc.
 " Function to display the current character code in its 'file encoding'
 function! s:EchoCharCode()
-    let _char_enc = matchstr(getline('.'), '.', col('.') - 1)
-    let _char_fenc = iconv(_char_enc, &encoding, &fileencoding)
+    let char_enc = matchstr(getline('.'), '.', col('.') - 1)
+    let char_fenc = iconv(char_enc, &encoding, &fileencoding)
     let i = 0
-    let _len = len(_char_fenc)
-    let _hex_code = ''
-    while i < _len
-        let _hex_code .= printf('%.2x',char2nr(_char_fenc[i]))
+    let char_len = len(char_fenc)
+    let hex_code = ''
+    while i < char_len
+        let hex_code .= printf('%.2x',char2nr(char_fenc[i]))
         let i += 1
     endwhile
-    echo '<' . _char_enc . '> Hex ' . _hex_code . ' (' .
+    echo '<' . char_enc . '> Hex ' . hex_code . ' (' .
           \(&fileencoding != '' ? &fileencoding : &encoding) . ')'
 endfunction
 
@@ -178,7 +181,7 @@ endif
 
 " Switch on syntax highlighting.
 " Delete colors_name for _vimrc re-sourcing.
-if exists("g:colors_name")
+if exists('g:colors_name')
     unlet g:colors_name
 endif
 
@@ -259,14 +262,14 @@ endif
 " Execute command without disturbing registers and cursor postion.
 function! s:Preserve(command)
     " Preparation: save last search, and cursor position.
-    let _s=@/
-    let _l = line(".")
-    let _c = col(".")
+    let s = @/
+    let l = line(".")
+    let c = col(".")
     " Do the business.
-    execute a:command
+    exec a:command
     " Clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(_l, _c)
+    let @/ = s
+    call cursor(l, c)
 endfunction
 
 function! s:RemoveTrailingSpaces()
@@ -289,9 +292,11 @@ set incsearch
 set hlsearch
 
 " Use external grep command for performance
-" On Windows, install 'grep' from:
-" http://gnuwin32.sourceforge.net/packages/grep.htm
+" On Windows, cmds from gnuwin32 doesn't work, must install from:
+" http://sourceforge.net/projects/unxutils/
 set grepprg=grep\ -Hn
+nnoremap <silent> <C-n> :cnext<CR>
+nnoremap <silent> <C-p> :cprevious<CR>
 
 set gdefault
 
@@ -402,8 +407,8 @@ set fileformats=unix,dos
 
 " Function to insert the current date
 function! s:InsertCurrentDate()
-    let _curr_date = strftime('%Y-%m-%d', localtime())
-    silent! exec 'normal! gi' .  _curr_date . "\<Esc>a"
+    let curr_date = strftime('%Y-%m-%d', localtime())
+    silent! exec 'normal! gi' .  curr_date . "\<Esc>a"
 endfunction
 
 " Key mapping to insert the current date
@@ -411,24 +416,24 @@ inoremap <silent> <C-d><C-d> <C-o>:call <SID>InsertCurrentDate()<CR>
 
 " Eliminate comment leader when joining comment lines
 function! s:JoinWithLeader(count, leaderText)
-    let l:linecount = a:count
+    let linecount = a:count
     " default number of lines to join is 2
-    if l:linecount < 2
-        let l:linecount = 2
+    if linecount < 2
+        let linecount = 2
     endif
-    echo l:linecount . " lines joined"
+    echo linecount . " lines joined"
     " clear errmsg so we can determine if the search fails
     let v:errmsg = ''
 
     " save off the search register to restore it later because we will clobber
     " it with a substitute command
-    let l:savsearch = @/
+    let savsearch = @/
 
-    while l:linecount > 1
+    while linecount > 1
         " do a J for each line (no mappings)
         normal! J
         " remove the comment leader from the current cursor position
-        silent! execute 'substitute/\%#\s*\%('.a:leaderText.'\)\s*/ /'
+        silent! exec 'substitute/\%#\s*\%('.a:leaderText.'\)\s*/ /'
         " check v:errmsg for status of the substitute command
         if v:errmsg=~'E486'
             " just means the line wasn't a comment - do nothing
@@ -439,24 +444,24 @@ function! s:JoinWithLeader(count, leaderText)
             " so move it back
             normal! ``
         endif
-        let l:linecount = l:linecount - 1
+        let linecount = linecount - 1
     endwhile
     " restore the @/ register
-    let @/ = l:savsearch
+    let @/ = savsearch
 endfunction
 
 function! s:MapJoinWithLeaders(leaderText)
-    let l:leaderText = escape(a:leaderText, '/')
+    let leaderText = escape(a:leaderText, '/')
     " visual mode is easy - just remove comment leaders from beginning of lines
     " before using J normally
     exec "vnoremap <silent> <buffer> J :<C-u>let savsearch=@/<Bar>'<+1,'>".
                 \'s/^\s*\%('.
-                \l:leaderText.
+                \leaderText.
                 \'\)\s*/<Space>/e<Bar>'.
                 \'let @/=savsearch<Bar>unlet savsearch<CR>'.
                 \'gvJ'
     " normal mode is harder because of the optional count - must use a function
-    exec "nnoremap <silent> <buffer> J :<C-u>call <SID>JoinWithLeader(v:count, '".l:leaderText."')<CR>"
+    exec "nnoremap <silent> <buffer> J :<C-u>call <SID>JoinWithLeader(v:count, '".leaderText."')<CR>"
 endfunction
 
 " End of Formats/Style }}}
@@ -724,6 +729,8 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'kien/ctrlp.vim'
 
+let g:ctrlp_map = ''
+
 nnoremap <silent> <Leader>f :CtrlP<CR>
 nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
 nnoremap <silent> <Leader>m :CtrlPMRU<CR>
@@ -741,12 +748,10 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 10000
 
 " Optimize file searching
-" TODO: Need support ctrlp_max_files on Windows.
-if has('unix')
-    let ctrlp_find_cmd_ = 'find %s -type f | head -' . g:ctrlp_max_files
-elseif has('win32') || has('win64')
-    let ctrlp_find_cmd_ = 'dir %s /-n /b /s /a-d'
-endif
+" On Windows, cmds from gnuwin32 doesn't work, must install from:
+" http://sourceforge.net/projects/unxutils/
+" XXX: Need prepend installed directory to PATH env var on Windows.
+let ctrlp_find_cmd_ = 'find %s -type f | head -' . g:ctrlp_max_files
 
 let g:ctrlp_user_command = {
     \ 'types': {
@@ -954,6 +959,8 @@ nnoremap <silent> <Leader>N :NERDTree<CR>
 " Plugin - python-mode {{{
 " https://github.com/klen/python-mode
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Refine settings of python-mode.
+
 NeoBundleLazy 'klen/python-mode', {
     \ 'autoload' : {
     \     'filetypes' : ['python'],
