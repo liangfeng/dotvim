@@ -100,16 +100,16 @@ endif
 " XXX: Change it. It's just for my environment.
 language messages zh_CN.utf-8
 
-" Locate the cursor at the last edited location when open a file
-au BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   exec "normal! g`\"" |
-    \ endif
-
 if has('unix')
     " XXX: Change it. It's just for my environment.
     set viminfo+=n$HOME/tmp/.viminfo
 endif
+
+" Locate the cursor at the last edited location when open a file
+au BufReadPost *
+    \ if line("'\"") <= line("$") |
+    \   exec "normal! g`\"" |
+    \ endif
 
 " End of Startup }}}
 
@@ -168,6 +168,7 @@ if has('gui_running')
     endif
 endif
 
+" TODO: Should test it in xshell console for performance.
 " Activate 256 colors independently of terminal, except Mac console mode
 if !(has('mac') && !has('gui_running'))
     set t_Co=256
@@ -343,6 +344,7 @@ set smartcase
 
 set wildmenu
 
+" Ignore files when completing.
 set wildignore+=*.o
 set wildignore+=*.obj
 set wildignore+=*.bak
@@ -497,10 +499,12 @@ function! s:GNUIndent()
 endfunction
 
 function! s:SetSysTags()
+    " XXX: change it. It's just for my environment.
     " include system tags, :help ft-c-omni
     if has('unix')
         set tags+=$HOME/.vim/systags
     elseif has('win32') || has('win64')
+        " XXX: change it. It's just for my environment.
         set tags+=$TMP/systags
     endif
 endfunction
@@ -645,12 +649,12 @@ au FileType python call s:MapJoinWithLeaders('#\\|\\')
 " Run the current buffer as VimL
 function! s:RunAsVimL(s, e)
     pclose!
-    let _lines = getline(a:s, a:e)
-    let _file = tempname()
-    call writefile(_lines, _file)
+    let lines = getline(a:s, a:e)
+    let file = tempname()
+    call writefile(lines, file)
     redir @e
-    silent exec ':source ' . _file
-    call delete(_file)
+    silent exec ':source ' . file_name
+    call delete(file)
     redraw
     redir END
 
@@ -727,41 +731,46 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 " Plugin - ctrlp.vim {{{
 " https://github.com/kien/ctrlp.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'kien/ctrlp.vim'
-
-let g:ctrlp_map = ''
+" On Windows, cmds from gnuwin32 doesn't work, must install from:
+" http://sourceforge.net/projects/unxutils/
+" XXX: Need prepend installed directory to PATH env var on Windows.
+NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
 
 nnoremap <silent> <Leader>f :CtrlP<CR>
 nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
 nnoremap <silent> <Leader>m :CtrlPMRU<CR>
 nnoremap <silent> <Leader>a :CtrlP<CR>
 
+" Clear up default key of g:ctrlpp_map.
+let g:ctrlp_map = ''
+
+let g:ctrlp_switch_buffer = 'ETVH'
+
+let g:ctrlp_show_hidden = 1
+
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\.git$\|\.hg$\|\.svn$',
     \ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.obj$',
     \ }
 
-" Do not delete the cache files upon exiting vim.
-let g:ctrlp_clear_cache_on_exit = 0
-
-" Set the max files
+" Set the max files.
 let g:ctrlp_max_files = 10000
 
 " Optimize file searching
-" On Windows, cmds from gnuwin32 doesn't work, must install from:
-" http://sourceforge.net/projects/unxutils/
-" XXX: Need prepend installed directory to PATH env var on Windows.
-let ctrlp_find_cmd_ = 'find %s -type f | head -' . g:ctrlp_max_files
+let ctrlp_find_cmd = 'find %s -type f | head -' . g:ctrlp_max_files
 
+" TODO: Should support show hidden files and dirs.
 let g:ctrlp_user_command = {
     \ 'types': {
     \ 1: ['.git/', 'cd %s && git ls-files'],
     \ 2: ['.hg', 'hg --cwd %s locate -I .'],
     \ },
-    \ 'fallback': ctrlp_find_cmd_
+    \ 'fallback': ctrlp_find_cmd,
+    \ 'ignore': 0
     \ }
 
 let g:ctrlp_open_new_file = 't'
+let g:ctrlp_open_multiple_files = 'tj'
 
 " End of ctrlp.vim }}}
 
@@ -810,7 +819,7 @@ let g:DoxygenToolkit_classTag = "@class: "
 " Plugin - FencView.vim {{{
 " https://github.com/mbbill/fencview
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'mbbill/fencview'
+NeoBundle 'mbbill/fencview', { 'external_commands' : ['tellenc'] }
 
 " End of FencView.vim }}}
 
@@ -836,6 +845,16 @@ command! FA :FSSplitAbove
 let g:fsnonewfiles = 1
 
 " End of FSwitch }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - Grep {{{
+" https://github.com/vim-scripts/grep.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Add 'q' and toggle support.
+NeoBundle 'grep.vim', { 'external_commands' : ['grep'] }
+
+" End of Grep }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -908,6 +927,7 @@ inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<Tab>'
 " Plugin - neobundle {{{
 " https://github.com/Shougo/neobundle.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: check whether to support building docs tags in individual plugin.
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " End of neobundle }}}
@@ -946,6 +966,7 @@ let g:NERDTreeQuitOnOpen = 1
 let g:NERDTreeWinSize = 50
 let g:NERDTreeDirArrows = 1
 let g:NERDTreeMinimalUI = 1
+let NERDTreeShowHidden=1
 let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
 
 nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
@@ -953,6 +974,17 @@ nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 nnoremap <silent> <Leader>N :NERDTree<CR>
 
 " End of nerdtree }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - nerdtree-tabs {{{
+" https://github.com/jistr/vim-nerdtree-tabs
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'jistr/vim-nerdtree-tabs'
+
+let g:nerdtree_tabs_open_on_gui_startup = 0
+
+" End of nerdtree-tabs }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1031,7 +1063,7 @@ nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 " https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'majutsushi/tagbar'
+NeoBundle 'majutsushi/tagbar', { 'external_commands' : ['ctags'] }
 
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
 let g:tagbar_left = 1
@@ -1044,11 +1076,13 @@ let g:tagbar_compact = 1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList.vim {{{
 " https://github.com/vim-scripts/TaskList.vim
-" http://juan.axisym3.net/vim-plugins/
+" http://juan.boxfi.com/vim-plugins/
+" https://github.com/liangfeng/TaskList.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'TaskList.vim'
+NeoBundle 'liangfeng/TaskList.vim'
 
-nmap <silent> <Leader>T <Plug>TaskList
+let g:tlRememberPosition = 1
+nmap <silent> <Leader>T <Plug>ToggleTaskList
 
 " End of TaskList.vim }}}
 
@@ -1111,8 +1145,9 @@ NeoBundle 'liangfeng/vimcdoc'
 " Plugin - vimprj (my plugin) {{{
 " https://github.com/liangfeng/vimprj
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: add workspace support for projectmgr plugin. Such as, lookupfile plugin support multiple ftags.
-NeoBundle 'liangfeng/vimprj'
+" TODO: Intergate with ctrlp.vim
+" TODO: add workspace support for projectmgr plugin. Such as, ctrlp.vim plugin support multiple ftags.
+NeoBundle 'liangfeng/vimprj', { 'external_commands' : ['python', 'cscope'] }
 
 " Since this plugin use python script to do some text precessing jobs,
 " add python script path into 'PYTHONPATH' environment variable.
@@ -1124,7 +1159,7 @@ endif
 
 " XXX: Change it. It's just for my environment.
 if has('win32') || has('win64')
-    let g:cscope_sort_path = 'd:/cscope'
+    let g:cscope_sort_path = 'C:/Program Files (x86)/cscope'
 endif
 
 " Fast editing of my plugin
@@ -1168,6 +1203,7 @@ NeoBundle 'Shougo/vimshell'
 " TODO: Should check whether neobundle support post-install hook. If support,
 "       create html.vim as a symbol link to xml.vim.
 " TODO: Give Zen Coding a try. https://github.com/mattn/zencoding-vim
+
 NeoBundleLazy 'sukima/xmledit', {
     \ 'autoload' : {
     \     'filetypes' : ['xml', 'html'],
