@@ -739,7 +739,6 @@ NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
 nnoremap <silent> <Leader>f :CtrlP<CR>
 nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
 nnoremap <silent> <Leader>m :CtrlPMRU<CR>
-nnoremap <silent> <Leader>a :CtrlP<CR>
 
 " Clear up default key of g:ctrlpp_map.
 let g:ctrlp_map = ''
@@ -1065,7 +1064,7 @@ nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'majutsushi/tagbar', { 'external_commands' : ['ctags'] }
 
-nnoremap <silent> <Leader>t :TagbarToggle<CR>
+nnoremap <silent> <Leader>a :TagbarToggle<CR>
 let g:tagbar_left = 1
 let g:tagbar_width = 30
 let g:tagbar_compact = 1
@@ -1082,7 +1081,7 @@ let g:tagbar_compact = 1
 NeoBundle 'liangfeng/TaskList.vim'
 
 let g:tlRememberPosition = 1
-nmap <silent> <Leader>T <Plug>ToggleTaskList
+nmap <silent> <Leader>t <Plug>ToggleTaskList
 
 " End of TaskList.vim }}}
 
