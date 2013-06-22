@@ -758,11 +758,10 @@ let g:ctrlp_max_files = 10000
 " Optimize file searching
 let ctrlp_find_cmd = 'find %s -type f | head -' . g:ctrlp_max_files
 
-" TODO: Should support show hidden files and dirs.
+" TODO: Should support show hidden dirs, i.e. files located in .neobundle.
 let g:ctrlp_user_command = {
     \ 'types': {
-    \ 1: ['.git/', 'cd %s && git ls-files'],
-    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+    \ 1: ['.git', 'cd %s && git ls-files']
     \ },
     \ 'fallback': ctrlp_find_cmd,
     \ 'ignore': 0
@@ -780,12 +779,15 @@ let g:ctrlp_open_multiple_files = 'tj'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Raimondi/delimitMate'
 
-au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
-au FileType html let b:delimitMate_quotes = "\" '"
-au FileType python let b:delimitMate_nesting_quotes = ['"']
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_balance_matchpairs = 1
 let delimitMate_excluded_ft = "mail,txt"
+
+imap <silent> <C-g> <Plug>delimitMateJumpMany
+
+au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+au FileType html let b:delimitMate_quotes = "\" '"
+au FileType python let b:delimitMate_nesting_quotes = ['"']
 
 " End of delimitMate }}}
 
@@ -834,10 +836,10 @@ NeoBundle 'c9s/filetype-completion.vim'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FSwitch {{{
-" https://github.com/vim-scripts/FSwitch
+" https://github.com/derekwyatt/vim-fswitch
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need refining
-NeoBundle 'FSwitch'
+NeoBundle 'derekwyatt/vim-fswitch'
 
 command! FA :FSSplitAbove
 
@@ -1015,6 +1017,15 @@ NeoBundleLazy 'python_match.vim', {
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - session {{{
+" https://github.com/xolox/vim-session
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NeoBundle 'xolox/vim-session'
+
+" End of session }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SimpylFold for python {{{
 " https://github.com/tmhedberg/SimpylFold
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1126,6 +1137,7 @@ NeoBundle 'tpope/vim-repeat'
 " https://github.com/tpope/vim-surround
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'tpope/vim-surround'
+let g:surround_no_insert_mappings = 1
 
 " End of vim-surround }}}
 
