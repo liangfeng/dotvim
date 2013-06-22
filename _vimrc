@@ -1230,6 +1230,8 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " Plugin - xptemplate {{{
 " https://github.com/drmingdrmer/xptemplate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TDOO: setup proper snippets for c, c++, python, java, js
+
 NeoBundle 'drmingdrmer/xptemplate'
 
 au BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
