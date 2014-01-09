@@ -989,21 +989,6 @@ let g:nerdtree_tabs_open_on_gui_startup = 0
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - python-mode {{{
-" https://github.com/klen/python-mode
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Refine settings of python-mode.
-
-NeoBundleLazy 'klen/python-mode', {
-    \ 'autoload' : {
-    \     'filetypes' : ['python'],
-    \    },
-    \ }
-
-" End of python-mode }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_match.vim {{{
 " https://github.com/vim-scripts/python_match.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
