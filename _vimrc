@@ -1088,9 +1088,6 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'altercation/vim-colors-solarized'
 
-if !has('gui_running')
-    let g:solarized_termcolors=256
-endif
 let g:solarized_italic = 0
 let g:solarized_hitrail = 1
 set background=dark
