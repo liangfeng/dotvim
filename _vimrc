@@ -48,9 +48,6 @@ else
     set runtimepath=$VIMRUNTIME,$VIM/bundle/neobundle.vim
     call neobundle#rc('$VIM/bundle')
 endif
-" TODO: Change neobundle.vim to put proto setting with neobundle.vim plugin.
-let g:neobundle#types#git#default_protocol = 'https'
-let g:neobundle#install_max_processes = 15
 
 " Do not load system menu, before ':syntax on' and ':filetype on'.
 if has('gui_running')
@@ -161,7 +158,6 @@ if has('gui_running')
     endif
 endif
 
-" TODO: Should test it in xshell console for performance.
 " Activate 256 colors independently of terminal, except Mac console mode
 if !(has('mac') && !has('gui_running'))
     set t_Co=256
@@ -831,7 +827,7 @@ NeoBundle 'c9s/filetype-completion.vim'
 " Plugin - FSwitch {{{
 " https://github.com/derekwyatt/vim-fswitch
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need refining
+" TODO: Need refining to catch exceptions.
 NeoBundle 'derekwyatt/vim-fswitch'
 
 command! FA :FSSplitAbove
@@ -923,6 +919,8 @@ inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<Tab>'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: check whether to support building docs tags in individual plugin.
 NeoBundleFetch 'Shougo/neobundle.vim'
+
+let g:neobundle#install_max_processes = 15
 
 " End of neobundle }}}
 
