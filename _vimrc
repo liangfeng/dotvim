@@ -57,13 +57,6 @@ if has('gui_running')
     set guioptions+=M
 endif
 
-" Patch to hide DOS prompt window, when call vim function system().
-" See Wu Yongwei's site for detail
-" http://wyw.dcweb.cn/
-if has('win32') || has('win64')
-    let $VIM_SYSTEM_HIDECONSOLE = 1
-endif
-
 filetype plugin indent on
 
 " End of Init }}}
