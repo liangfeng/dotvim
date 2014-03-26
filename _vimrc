@@ -720,7 +720,7 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 " Plugin - ctrlp.vim {{{
 " https://github.com/kien/ctrlp.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" On Windows, cmds from gnuwin32 doesn't work, must install from:
+" On Windows, cmds from gnuwin32 do NOT work, must be installed from:
 " http://sourceforge.net/projects/unxutils/
 " XXX: Need prepend installed directory to PATH env var on Windows.
 NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
@@ -747,7 +747,6 @@ let g:ctrlp_max_files = 10000
 " Optimize file searching
 let ctrlp_find_cmd = 'find %s -type f | head -' . g:ctrlp_max_files
 
-" TODO: Should support show hidden dirs, i.e. files located in .neobundle.
 let g:ctrlp_user_command = {
     \ 'types': {
     \ 1: ['.git', 'cd %s && git ls-files']
@@ -774,7 +773,9 @@ let delimitMate_excluded_ft = "mail,txt"
 
 imap <silent> <C-g> <Plug>delimitMateJumpMany
 
-au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+au FileType vim let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+" To collaborate with xmledit plugin, remove <:> pairs from default pairs for xml and html
+au FileType xml,html let b:delimitMate_matchpairs = "(:),[:],{:}"
 au FileType html let b:delimitMate_quotes = "\" '"
 au FileType python let b:delimitMate_nesting_quotes = ['"']
 
@@ -907,22 +908,21 @@ inoremap <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
 inoremap <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
 
 " <Tab>: completion.
-inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
-inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<Tab>'
+inoremap <silent> <expr> <Tab> pumvisible() ? '<C-p>' : '<Tab>'
+inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-n>' : '<Tab>'
 
 " End of neocomplcache }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - neobundle {{{
+" Plugin - neobundle.vim {{{
 " https://github.com/Shougo/neobundle.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: check whether to support building docs tags in individual plugin.
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 let g:neobundle#install_max_processes = 15
 
-" End of neobundle }}}
+" End of neobundle.vim }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -996,6 +996,7 @@ NeoBundleLazy 'python_match.vim', {
 " Plugin - session {{{
 " https://github.com/xolox/vim-session
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need check this.
 " NeoBundle 'xolox/vim-session'
 
 " End of session }}}
@@ -1019,10 +1020,9 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 " https://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
-NeoBundle 'ervandew/supertab'
+" NeoBundle 'ervandew/supertab'
 
-" Since use tags, disable included header files searching to improve
-" performance.
+" Since enable tags, disable header files searching to improve performance.
 set complete-=i
 " Only scan current buffer
 set complete=.
@@ -1129,8 +1129,8 @@ NeoBundle 'liangfeng/vimcdoc'
 " Plugin - vimprj (my plugin) {{{
 " https://github.com/liangfeng/vimprj
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Intergate with ctrlp.vim
-" TODO: add workspace support for projectmgr plugin. Such as, ctrlp.vim plugin support multiple ftags.
+" TODO: Intergate with ctrlp.vim and global(gtags).
+" TODO: Add workspace support for projectmgr plugin. Such as, ctrlp.vim plugin support multiple ftags.
 NeoBundle 'liangfeng/vimprj', { 'external_commands' : ['python', 'cscope'] }
 
 " Since this plugin use python script to do some text precessing jobs,
@@ -1184,26 +1184,36 @@ NeoBundle 'Shougo/vimshell'
 " Plugin - xmledit {{{
 " https://github.com/sukima/xmledit/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Should check whether neobundle support post-install hook. If support,
-"       create html.vim as a symbol link to xml.vim.
-" TODO: Give Zen Coding a try. https://github.com/mattn/zencoding-vim
-
+" TODO: Fix 'did_load' conflict.
 NeoBundleLazy 'sukima/xmledit', {
     \ 'autoload' : {
     \     'filetypes' : ['xml', 'html'],
     \    },
     \ }
 
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
 " End of xmledit }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - emmet-vim {{{
+" https://github.com/mattn/emmet-vim.git
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'mattn/emmet-vim.git', {
+    \ 'autoload' : {
+    \     'filetypes' : ['xml', 'html'],
+    \    },
+    \ }
+
+let g:use_emmet_complete_tag = 1
+
+" End of emmet-vim }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xptemplate {{{
 " https://github.com/drmingdrmer/xptemplate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TDOO: setup proper snippets for c, c++, python, java, js
+" TODO: setup proper snippets for c, c++, python, java, js
 
 NeoBundle 'drmingdrmer/xptemplate'
 
