@@ -470,7 +470,7 @@ endif
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Bash {{{
+" Language - Bash {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " :help ft-bash-syntax
 let g:is_bash = 1
@@ -479,7 +479,7 @@ let g:is_bash = 1
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" C/C++ {{{
+" Language - C/C++ {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! s:GNUIndent()
     setlocal cinoptions=>4,n-2,{2,^-2,:2,=2,g0,h2,p5,t0,+2,(0,u0,w1,m1
@@ -542,7 +542,15 @@ au FileType c,cpp call s:MapJoinWithLeaders('//\\|\\')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Help {{{
+" Language - CSS {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+
+" End of CSS }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Language - Help {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType help nnoremap <buffer> <silent> q :q<CR>
 au FileType help setlocal number
@@ -552,18 +560,27 @@ au FileType help setlocal number
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" HTML {{{
+" Language - HTML {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Let TOhtml output <PRE> and style sheet
 let g:html_use_css = 1
 let g:use_xhtml = 1
 au FileType html,xhtml setlocal indentexpr=
+au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 
 " End of HTML }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Lua {{{
+" Language - javascript {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+
+" End of Lua }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Language - Lua {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as lua code
 function! s:RunAsLuaCode(s, e)
@@ -592,7 +609,7 @@ au FileType lua call s:MapJoinWithLeaders('--\\|\\')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Make {{{
+" Language - Make {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType make setlocal noexpandtab
 au FileType make call s:MapJoinWithLeaders('#\\|\\')
@@ -601,7 +618,7 @@ au FileType make call s:MapJoinWithLeaders('#\\|\\')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Python {{{
+" Language - Python {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:python_highlight_all = 1
 
@@ -625,6 +642,7 @@ function! s:SetupAutoCmdForRunAsPythonCode()
     vnoremap <buffer> <silent> <Leader>e :Eval<CR>
 endfunction
 
+au FileType python setlocal omnifunc=pythoncomplete#Complete
 au FileType python setlocal commentstring=\ #%s
 au FileType python call s:SetupAutoCmdForRunAsPythonCode()
 au FileType python call s:MapJoinWithLeaders('#\\|\\')
@@ -633,7 +651,7 @@ au FileType python call s:MapJoinWithLeaders('#\\|\\')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"  VimL {{{
+"  Language - VimL {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as VimL
 function! s:RunAsVimL(s, e)
@@ -674,6 +692,14 @@ au FileType vim call s:MapJoinWithLeaders('"\\|\\')
 let g:vimsyn_noerror = 1
 
 " End of VimL }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  Language - xml {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" End of xml }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -869,47 +895,59 @@ NeoBundle 'LargeFile'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - neocomplcache {{{
-" https://github.com/Shougo/neocomplcache
+" Plugin - neocomplete.vim {{{
+" https://github.com/Shougo/neocomplete.vim.git
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Shougo/neocomplcache'
+" TODO: add function param complete by TAB (like Vim script #1764)
+NeoBundle 'Shougo/neocomplete.vim'
 
 set showfulltag
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_ignore_case = 0
-let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_auto_completion_start_length = 2
-let g:neocomplcache_manual_completion_start_length = 2
-let g:neocomplcache_enable_camel_case_completion = 1
-let g:neocomplcache_enable_underbar_completion = 1
+" TODO: The following two settings should be checked with vimprj overhaul.
+" Since enable tags(with vimprj), disable header files searching to improve performance.
+set complete-=i
+" Only scan current buffer
+set complete=.
 
-if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 2
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-
-if !exists('g:neocomplcache_context_filetype_lists')
-    let g:neocomplcache_context_filetype_lists = {}
-endif
-let g:neocomplcache_context_filetype_lists.vim =
-    \ [{'filetype' : 'python', 'start' : '^\s*python <<\s*\(\h\w*\)', 'end' : '^\1'}]
-
+" TODO: Need to check whether neocomplete support delimiter auto close.
 " <CR>: close popup and save indent.
-inoremap <silent> <expr> <CR> neocomplcache#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
+inoremap <silent> <expr> <CR> neocomplete#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
 
-" Set up proper mappings for  <BS> or <C-x>.
-inoremap <silent> <expr> <BS> pumvisible() ? '<BS><C-x>' : '<BS>'
-inoremap <silent> <expr> <C-h> pumvisible() ? '<C-h><C-x>' : '<C-h>'
-
-" Do NOT popup when enter <C-y> and <C-e>
-inoremap <silent> <expr> <C-y> neocomplcache#close_popup() . '<C-y>'
-inoremap <silent> <expr> <C-e> neocomplcache#close_popup() . '<C-e>'
+" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" function! s:my_cr_function()
+"     return neocomplete#close_popup() . '\<CR>'
+"     " For no inserting <CR> key.
+"     " return pumvisible() ? neocomplete#close_popup() : '\<CR>'
+" endfunction
 
 " <Tab>: completion.
-inoremap <silent> <expr> <Tab> pumvisible() ? '<C-p>' : '<Tab>'
-inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-n>' : '<Tab>'
+inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <silent> <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<C-h>"
+" Do NOT popup when enter <C-y> and <C-e>
+inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
+inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
 " End of neocomplcache }}}
 
@@ -1019,13 +1057,8 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 " Plugin - supertab {{{
 " https://github.com/ervandew/supertab
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: add function param complete by TAB (like Vim script #1764)
+" TODO: Is this plugin should be replaced by neocomplete?
 " NeoBundle 'ervandew/supertab'
-
-" Since enable tags, disable header files searching to improve performance.
-set complete-=i
-" Only scan current buffer
-set complete=.
 
 let g:SuperTabDefaultCompletionType = 'context'
 let g:SuperTabCrMapping = 0
@@ -1074,6 +1107,18 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-airline {{{
+" https://github.com/bling/vim-airline.git
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'bling/vim-airline'
+
+set noshowmode
+let g:airline_theme = 'powerlineish'
+
+" End of vim-airline }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1088,12 +1133,12 @@ colorscheme solarized
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-powerline {{{
-" https://github.com/Lokaltog/vim-powerline
+" Plugin - vim-fugitive {{{
+" https://github.com/tpope/vim-fugitive.git
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Lokaltog/vim-powerline'
+NeoBundle 'tpope/vim-fugitive.git'
 
-" End of vim-powerline }}}
+" End of vim-fugitive }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1110,6 +1155,7 @@ NeoBundle 'tpope/vim-repeat'
 " https://github.com/tpope/vim-surround
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'tpope/vim-surround'
+
 let g:surround_no_insert_mappings = 1
 
 " End of vim-surround }}}
@@ -1182,10 +1228,9 @@ NeoBundle 'Shougo/vimshell'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xmledit {{{
-" https://github.com/sukima/xmledit/
+" https://github.com/liangfeng/xmledit.git
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Fix 'did_load' conflict.
-NeoBundleLazy 'sukima/xmledit', {
+NeoBundleLazy 'liangfeng/xmledit', {
     \ 'autoload' : {
     \     'filetypes' : ['xml', 'html'],
     \    },
@@ -1238,5 +1283,14 @@ let g:xptemplate_brace_complete = 0
 let g:xptemplate_vars = 'SPop=&SParg='
 
 " End of xptemplate }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - YouCompleteMe {{{
+" https://github.com/Valloric/YouCompleteMe.git
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need a try.
+
+" End of YouCompleteMe }}}
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:

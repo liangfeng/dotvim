@@ -1,5 +1,0 @@
-setup clang(code completion) plugin
-add session support.
-add lua support.
-setup colorcolumn
-customize plugins after load, using VimEnter
