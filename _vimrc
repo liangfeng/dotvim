@@ -1054,19 +1054,6 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - supertab {{{
-" https://github.com/ervandew/supertab
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Is this plugin should be replaced by neocomplete?
-" NeoBundle 'ervandew/supertab'
-
-let g:SuperTabDefaultCompletionType = 'context'
-let g:SuperTabCrMapping = 0
-
-" End of supertab }}}
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SyntaxAttr.vim {{{
 " https://github.com/vim-scripts/SyntaxAttr.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
