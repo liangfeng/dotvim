@@ -988,6 +988,7 @@ let g:NERDCustomDelimiters = {
 " Plugin - nerdtree {{{
 " https://github.com/scrooloose/nerdtree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Replace nerdtree with vimfiler.
 NeoBundle 'scrooloose/nerdtree'
 
 " Set the window position
@@ -1092,6 +1093,14 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 
 " End of TaskList.vim }}}
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - unite.vim {{{
+" https://github.com/Shougo/unite.vim.git
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'Shougo/unite.vim'
+
+" End of unite.vim }}}
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-airline {{{
@@ -1156,6 +1165,15 @@ let g:surround_no_insert_mappings = 1
 NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vimfiler {{{
+" https://github.com/Shougo/vimfiler.vim.git
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'Shougo/vimfiler.vim'
+
+" End of vimfiler }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
