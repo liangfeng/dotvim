@@ -12,12 +12,29 @@
 "           has('gui_running') means in GUI mode.
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Init {{{
+" Check Prerequisite {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if v:version < 700
-    echoerr 'This _vimrc requires Vim 7 or later.'
+if v:version < 704
+    echoerr 'Requires (g)vim 7.4 or later.'
     quit
 endif
+
+if !has('python')
+    echoerr 'Requires (g)vim compiled with +python/dyn.'
+    quit
+endif
+
+if !has('lua')
+    echoerr 'Requires (g)vim compiled with +lua/dyn.'
+    quit
+endif
+
+" End of Check Prerequisite }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Init {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Remove ALL autocommands for the current group
 au!
@@ -159,7 +176,7 @@ if has('gui_running')
 endif
 
 " Activate 256 colors independently of terminal, except Mac console mode
-if !(has('mac') && !has('gui_running'))
+if !(!has('gui_running') && has('mac'))
     set t_Co=256
 endif
 
@@ -282,7 +299,7 @@ set incsearch
 set hlsearch
 
 " Use external grep command for performance
-" On Windows, cmds from gnuwin32 doesn't work, must install from:
+" XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
 " http://sourceforge.net/projects/unxutils/
 set grepprg=grep\ -Hn
 nnoremap <silent> <C-n> :cnext<CR>
@@ -308,7 +325,7 @@ nnoremap <silent> <Leader>w <C-w>w
 if !has('gui_running')
     set noesckeys
 endif
-" remap <Esc> to stop searching highlight
+" remap <Esc> to stop highlighing searching result.
 nnoremap <silent> <Esc> :nohls<CR><Esc>
 imap <silent> <Esc> <C-o><Esc>
 
@@ -343,6 +360,7 @@ set wildignore+=*.pyc
 
 nmap <silent> <Tab> %
 
+" Enable very magic mode for searching.
 nnoremap / /\v
 vnoremap / /\v
 
@@ -746,9 +764,9 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 " Plugin - ctrlp.vim {{{
 " https://github.com/kien/ctrlp.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" On Windows, cmds from gnuwin32 do NOT work, must be installed from:
+" XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
 " http://sourceforge.net/projects/unxutils/
-" XXX: Need prepend installed directory to PATH env var on Windows.
+" Need prepend installed directory to PATH env var on Windows.
 NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
 
 nnoremap <silent> <Leader>f :CtrlP<CR>
@@ -857,7 +875,7 @@ NeoBundle 'c9s/filetype-completion.vim'
 " TODO: Need refining to catch exceptions.
 NeoBundle 'derekwyatt/vim-fswitch'
 
-command! FA :FSSplitAbove
+command! FS :FSSplitAbove
 
 let g:fsnonewfiles = 1
 
@@ -1108,7 +1126,6 @@ NeoBundle 'Shougo/unite.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'bling/vim-airline'
 
-set noshowmode
 let g:airline_theme = 'powerlineish'
 
 " End of vim-airline }}}
@@ -1135,6 +1152,16 @@ colorscheme solarized
 NeoBundle 'tpope/vim-fugitive.git'
 
 " End of vim-fugitive }}}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-multiple-cursors {{{
+" https://github.com/terryma/vim-multiple-cursors.git
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Try this one.
+" NeoBundle 'terryma/vim-multiple-cursors'
+
+" End of vim-multiple-cursors }}}
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1172,6 +1199,9 @@ NeoBundle 'liangfeng/vimcdoc'
 " https://github.com/Shougo/vimfiler.vim.git
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/vimfiler.vim'
+
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_split_rule = 'botright'
 
 " End of vimfiler }}}
 
