@@ -2,7 +2,7 @@
 " Brief:    This vimrc supports Mac, Linux and Windows(both GUI & console version).
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
-" HomePage: https://github.com/liangfeng/vimrc
+" HomePage: https://github.com/liangfeng/dotvim
 " Comments: has('mac') means Mac version only.
 "           has('unix') means Mac or Linux version.
 "           has('win32') means Windows 32 verion only.
