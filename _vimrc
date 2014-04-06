@@ -11,30 +11,30 @@
 "           has('gui_win64') means Windows 64 bit GUI version.
 "           has('gui_running') means in GUI mode.
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Check Prerequisite {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if v:version < 704
-    echoerr 'Requires (g)vim 7.4 or later.'
+    echoerr 'Requires Vim 7.4 or later. The current version of Vim is "' . v:version . '".'
     quit
 endif
 
 if !has('python')
-    echoerr 'Requires (g)vim compiled with +python/dyn.'
+    echoerr 'Requires Vim compiled with +python/dyn.'
     quit
 endif
 
 if !has('lua')
-    echoerr 'Requires (g)vim compiled with +lua/dyn.'
+    echoerr 'Requires Vim compiled with +lua/dyn.'
     quit
 endif
 
 " End of Check Prerequisite }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Init {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Remove ALL autocommands for the current group
 au!
@@ -76,9 +76,9 @@ filetype plugin indent on
 " End of Init }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Startup/Exit {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set shortmess+=I
 
 if has('gui_win32') || has('gui_win64')
@@ -121,15 +121,15 @@ au BufReadPost *
 " End of Startup }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Encoding {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let legacy_encoding = &encoding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let &termencoding = &encoding
-
+let legacy_encoding = &encoding
 set encoding=utf-8
 set ambiwidth=double
 scriptencoding utf-8
+
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
 if legacy_encoding != 'latin1'
     let &fileencodings=substitute(
@@ -161,9 +161,9 @@ nnoremap <silent> gn :call <SID>EchoCharCode()<CR>
 " End of Encoding }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " UI {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('gui_running')
     if has('mac')
         set guifont=Monaco:h14
@@ -197,9 +197,9 @@ syntax on
 " End of UI }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editting {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('unix')
     if isdirectory("$HOME/tmp")
         set directory=$HOME/tmp
@@ -223,10 +223,11 @@ set history=400
 set completeopt-=preview
 
 " Disable middlemouse paste
-noremap <silent> <MiddleMouse> <LeftMouse>
+noremap <silent> <MiddleMouse> <Nop>
+inoremap <silent> <MiddleMouse> <Nop>
 noremap <silent> <2-MiddleMouse> <Nop>
 inoremap <silent> <2-MiddleMouse> <Nop>
-map <silent> <3-MiddleMouse> <Nop>
+noremap <silent> <3-MiddleMouse> <Nop>
 inoremap <silent> <3-MiddleMouse> <Nop>
 noremap <silent> <4-MiddleMouse> <Nop>
 inoremap <silent> <4-MiddleMouse> <Nop>
@@ -289,9 +290,9 @@ au BufWritePre * call s:RemoveTrailingSpaces()
 " End of Editting }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Searching/Matching {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " incremental searching
 set incsearch
 
@@ -305,6 +306,17 @@ set grepprg=grep\ -Hn
 nnoremap <silent> <C-n> :cnext<CR>
 nnoremap <silent> <C-p> :cprevious<CR>
 
+" Auto center
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
+nnoremap <silent> <C-o> <C-o>zz
+nnoremap <silent> <C-i> <C-i>zz
+
+" Replace all matched items in the line.
 set gdefault
 
 " Find buffer more friendly
@@ -325,14 +337,19 @@ nnoremap <silent> <Leader>w <C-w>w
 if !has('gui_running')
     set noesckeys
 endif
-" remap <Esc> to stop highlighing searching result.
+
+" Assume fast terminal connection.
+set ttyfast
+
+" Remap <Esc> to stop highlighing searching result.
 nnoremap <silent> <Esc> :nohls<CR><Esc>
 imap <silent> <Esc> <C-o><Esc>
 
-nnoremap <silent> <Up> <Nop>
-nnoremap <silent> <Down> <Nop>
-nnoremap <silent> <Left> <Nop>
-nnoremap <silent> <Right> <Nop>
+" Disalbe arrow keys.
+noremap <silent> <Up> <Nop>
+noremap <silent> <Down> <Nop>
+noremap <silent> <Left> <Nop>
+noremap <silent> <Right> <Nop>
 inoremap <silent> <Up> <Nop>
 inoremap <silent> <Down> <Nop>
 inoremap <silent> <Left> <Nop>
@@ -361,8 +378,12 @@ set wildignore+=*.pyc
 nmap <silent> <Tab> %
 
 " Enable very magic mode for searching.
-nnoremap / /\v
+" TODO: Need to fix the issue of cursor move to next char.
+noremap / /\v
 vnoremap / /\v
+
+nnoremap ? ?\v
+vnoremap ? ?\v
 
 " Support */# in visual mode
 function! s:VSetSearch()
@@ -378,9 +399,9 @@ vnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 " End of Searching/Matching }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Formats/Style {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -470,15 +491,15 @@ function! s:MapJoinWithLeaders(leaderText)
                 \'let @/=savsearch<Bar>unlet savsearch<CR>'.
                 \'gvJ'
     " normal mode is harder because of the optional count - must use a function
-    exec "nnoremap <silent> <buffer> J :<C-u>call <SID>JoinWithLeader(v:count, '".leaderText."')<CR>"
+    exec "nnoremap <silent> <buffer> J :call <SID>JoinWithLeader(v:count, '".leaderText."')<CR>"
 endfunction
 
 " End of Formats/Style }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tab/Buffer {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('gui_running')
     " Only show short name in gui tab
     set guitablabel=%N\ %t%m%r
@@ -487,18 +508,18 @@ endif
 " End of Tab/Buffer }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Bash {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " :help ft-bash-syntax
 let g:is_bash = 1
 
 " End of Bash }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - C/C++ {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! s:GNUIndent()
     setlocal cinoptions=>4,n-2,{2,^-2,:2,=2,g0,h2,p5,t0,+2,(0,u0,w1,m1
     setlocal shiftwidth=2
@@ -559,27 +580,27 @@ au FileType c,cpp call s:MapJoinWithLeaders('//\\|\\')
 " End of C/C++ }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - CSS {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 
 " End of CSS }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Help {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType help nnoremap <buffer> <silent> q :q<CR>
-au FileType help setlocal number
+au FileType help setlocal readonly nomodifiable number
 
 
 " End of help }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - HTML {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Let TOhtml output <PRE> and style sheet
 let g:html_use_css = 1
 let g:use_xhtml = 1
@@ -589,24 +610,24 @@ au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 " End of HTML }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - javascript {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 " End of Lua }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Lua {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as lua code
 function! s:RunAsLuaCode(s, e)
     pclose!
     silent exec a:s . ',' . a:e . 'y a'
     belowright new
     silent put a
-    silent %!lua -
+    silent %!lua52 -
     setlocal previewwindow
     setlocal noswapfile buftype=nofile bufhidden=wipe
     setlocal nobuflisted nowrap cursorline nonumber fdc=0
@@ -617,7 +638,7 @@ endfunction
 function! s:SetupAutoCmdForRunAsLuaCode()
     nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsLuaCode('1', '$')<CR>
     command! -range Eval :call s:RunAsLuaCode(<line1>, <line2>)
-    vnoremap <buffer> <silent> <Leader>e :Eval<CR>
+    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
 endfunction
 
 au FileType lua call s:SetupAutoCmdForRunAsLuaCode()
@@ -626,18 +647,18 @@ au FileType lua call s:MapJoinWithLeaders('--\\|\\')
 " End of Lua }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Make {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType make setlocal noexpandtab
 au FileType make call s:MapJoinWithLeaders('#\\|\\')
 
 " End of make }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Python {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:python_highlight_all = 1
 
 " Run the current buffer as python code
@@ -657,7 +678,7 @@ endfunction
 function! s:SetupAutoCmdForRunAsPythonCode()
     nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsPythonCode('1', '$')<CR>
     command! -range Eval :call s:RunAsPythonCode(<line1>, <line2>)
-    vnoremap <buffer> <silent> <Leader>e :Eval<CR>
+    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
 endfunction
 
 au FileType python setlocal omnifunc=pythoncomplete#Complete
@@ -668,9 +689,9 @@ au FileType python call s:MapJoinWithLeaders('#\\|\\')
 " End of Python }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "  Language - VimL {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as VimL
 function! s:RunAsVimL(s, e)
     pclose!
@@ -700,7 +721,7 @@ endfunction
 function! s:SetupAutoCmdForRunAsVimL()
     nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsVimL('1', '$')<CR>
     command! -range Eval :call s:RunAsVimL(<line1>, <line2>)
-    vnoremap <buffer> <silent> <Leader>e :Eval<CR>
+    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
 endfunction
 
 au FileType vim setlocal commentstring=\ \"%s
@@ -712,17 +733,17 @@ let g:vimsyn_noerror = 1
 " End of VimL }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "  Language - xml {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " End of xml }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "  vimrc {{{
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " If current buffer is noname and empty, use current buffer.
 " Otherwise use new tab
 function! s:OpenFileWithProperBuffer(file)
@@ -747,10 +768,10 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 " End of vimrc }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - c-syntax {{{
 " https://github.com/liangfeng/c-syntax
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/c-syntax', {
     \ 'autoload' : {
     \     'filetypes' : ['c', 'cpp'],
@@ -760,18 +781,18 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 " End of c-syntax }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - ctrlp.vim {{{
 " https://github.com/kien/ctrlp.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
 " http://sourceforge.net/projects/unxutils/
 " Need prepend installed directory to PATH env var on Windows.
-NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
+" NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
 
-nnoremap <silent> <Leader>f :CtrlP<CR>
-nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
-nnoremap <silent> <Leader>m :CtrlPMRU<CR>
+" nnoremap <silent> <Leader>f :CtrlP<CR>
+" nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
+" nnoremap <silent> <Leader>m :CtrlPMRU<CR>
 
 " Clear up default key of g:ctrlpp_map.
 let g:ctrlp_map = ''
@@ -805,10 +826,10 @@ let g:ctrlp_open_multiple_files = 'tj'
 " End of ctrlp.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
 " https://github.com/Raimondi/delimitMate
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Raimondi/delimitMate'
 
 let g:delimitMate_expand_cr = 1
@@ -826,10 +847,10 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 " End of delimitMate }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - DoxygenToolkit.vim {{{
 " https://github.com/vim-scripts/DoxygenToolkit.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'DoxygenToolkit.vim'
 
 " Load doxygen syntax file for c/cpp/idl files
@@ -850,28 +871,28 @@ let g:DoxygenToolkit_classTag = "@class: "
 " End of DoxygenToolkit.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FencView.vim {{{
 " https://github.com/mbbill/fencview
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'mbbill/fencview', { 'external_commands' : ['tellenc'] }
 
 " End of FencView.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - filetype-completion.vim {{{
 " https://github.com/c9s/filetype-completion.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'c9s/filetype-completion.vim'
 
 " End of filetype-completion.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FSwitch {{{
 " https://github.com/derekwyatt/vim-fswitch
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need refining to catch exceptions.
 NeoBundle 'derekwyatt/vim-fswitch'
 
@@ -882,29 +903,29 @@ let g:fsnonewfiles = 1
 " End of FSwitch }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - Grep {{{
 " https://github.com/vim-scripts/grep.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Add 'q' and toggle support.
 NeoBundle 'grep.vim', { 'external_commands' : ['grep'] }
 
 " End of Grep }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
 " https://github.com/vim-scripts/LargeFile
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'LargeFile'
 
 " End of LargeFile }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - matchit {{{
 " https://github.com/vim-scripts/matchit.zip
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Since 'matchit' script is included in standard distribution,
 " only need to 'source' it.
 :source $VIMRUNTIME/macros/matchit.vim
@@ -912,10 +933,10 @@ NeoBundle 'LargeFile'
 " End of matchit }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neocomplete.vim {{{
 " https://github.com/Shougo/neocomplete.vim.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
 NeoBundle 'Shougo/neocomplete.vim'
 
@@ -970,10 +991,10 @@ let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\
 " End of neocomplcache }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neobundle.vim {{{
 " https://github.com/Shougo/neobundle.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 let g:neobundle#install_max_processes = 15
@@ -981,10 +1002,19 @@ let g:neobundle#install_max_processes = 15
 " End of neobundle.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - neomru.vim {{{
+" https://github.com/Shougo/neomru.vim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
+
+" End of neomru.vim }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdcommenter {{{
 " https://github.com/scrooloose/nerdcommenter
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'scrooloose/nerdcommenter'
 
 let g:NERDCreateDefaultMappings = 0
@@ -1002,10 +1032,10 @@ let g:NERDCustomDelimiters = {
 " End of nerdcommenter }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdtree {{{
 " https://github.com/scrooloose/nerdtree
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Replace nerdtree with vimfiler.
 NeoBundle 'scrooloose/nerdtree'
 
@@ -1025,10 +1055,10 @@ nnoremap <silent> <Leader>N :NERDTree<CR>
 " End of nerdtree }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdtree-tabs {{{
 " https://github.com/jistr/vim-nerdtree-tabs
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'jistr/vim-nerdtree-tabs'
 
 let g:nerdtree_tabs_open_on_gui_startup = 0
@@ -1036,10 +1066,10 @@ let g:nerdtree_tabs_open_on_gui_startup = 0
 " End of nerdtree-tabs }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_match.vim {{{
 " https://github.com/vim-scripts/python_match.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'python_match.vim', {
     \ 'autoload' : {
     \     'filetypes' : ['python'],
@@ -1049,20 +1079,20 @@ NeoBundleLazy 'python_match.vim', {
 " End of python_match.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - session {{{
 " https://github.com/xolox/vim-session
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need check this.
 " NeoBundle 'xolox/vim-session'
 
 " End of session }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SimpylFold for python {{{
 " https://github.com/tmhedberg/SimpylFold
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'tmhedberg/SimpylFold', {
     \ 'autoload' : {
     \     'filetypes' : ['python'],
@@ -1072,10 +1102,10 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 " End of SimpylFold for python }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SyntaxAttr.vim {{{
 " https://github.com/vim-scripts/SyntaxAttr.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'SyntaxAttr.vim'
 
 nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
@@ -1083,11 +1113,11 @@ nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 " End of SyntaxAttr.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - tagbar {{{
 " https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'majutsushi/tagbar', { 'external_commands' : ['ctags'] }
 
 nnoremap <silent> <Leader>a :TagbarToggle<CR>
@@ -1098,12 +1128,12 @@ let g:tagbar_compact = 1
 " End of tagbar }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList.vim {{{
 " https://github.com/vim-scripts/TaskList.vim
 " http://juan.boxfi.com/vim-plugins/
 " https://github.com/liangfeng/TaskList.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'liangfeng/TaskList.vim'
 
 let g:tlRememberPosition = 1
@@ -1111,30 +1141,64 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 
 " End of TaskList.vim }}}
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Replace CtrlP with this one?
+" TODO: Replace Grep with this one?
 NeoBundle 'Shougo/unite.vim'
+
+let g:unite_enable_start_insert = 1
+let g:unite_source_history_yank_enable = 1
+let g:unite_source_rec_max_cache_files = 5000
+let g:unite_prompt = '» '
+
+" Use the fuzzy matcher for everything
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+" Use the rank sorter for everything
+call unite#filters#sorter_default#use(['sorter_rank'])
+
+" Enable 'smartcase' for 'files' profile.
+call unite#custom#profile('files', 'smartcase', 1)
+
+nnoremap <silent> <Leader>f :Unite -toggle -auto-resize -buffer-name=files file_rec:!<CR>
+nnoremap <silent> <Leader>m :Unite -toggle -auto-resize -buffer-name=recent -profile-name=files file_mru<CR>
+nnoremap <silent> <Leader>b :Unite -toggle -auto-resize -buffer-name=buffers buffer<CR>
+
+function! s:unite_settings()
+    imap <silent> <buffer> <C-j> <Plug>(unite_select_next_line)
+    imap <silent> <buffer> <C-k> <Plug>(unite_select_previous_line)
+    imap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
+    imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
+    imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
+endfunction
+
+autocmd FileType unite call s:unite_settings()
+
 
 " End of unite.vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-airline {{{
 " https://github.com/bling/vim-airline.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'bling/vim-airline'
 
 let g:airline_theme = 'powerlineish'
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 
 " End of vim-airline }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'altercation/vim-colors-solarized'
 
 let g:solarized_italic = 0
@@ -1145,38 +1209,38 @@ colorscheme solarized
 " End of vim-colors-solarized }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'tpope/vim-fugitive.git'
 
 " End of vim-fugitive }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-multiple-cursors {{{
 " https://github.com/terryma/vim-multiple-cursors.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Try this one.
 " NeoBundle 'terryma/vim-multiple-cursors'
 
 " End of vim-multiple-cursors }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-repeat {{{
 " https://github.com/tpope/vim-repeat
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'tpope/vim-repeat'
 
 " End of vim-repeat }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-surround {{{
 " https://github.com/tpope/vim-surround
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'tpope/vim-surround'
 
 let g:surround_no_insert_mappings = 1
@@ -1184,20 +1248,20 @@ let g:surround_no_insert_mappings = 1
 " End of vim-surround }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimcdoc {{{
 " https://github.com/vim-scripts/vimcdoc
 " http://vimcdoc.sourceforge.net/
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimfiler {{{
 " https://github.com/Shougo/vimfiler.vim.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/vimfiler.vim'
 
 let g:vimfiler_as_default_explorer = 1
@@ -1206,12 +1270,13 @@ let g:vimfiler_split_rule = 'botright'
 " End of vimfiler }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimprj (my plugin) {{{
 " https://github.com/liangfeng/vimprj
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Intergate with ctrlp.vim and global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, ctrlp.vim plugin support multiple ftags.
+" TODO: Rewrite vimprj with prototype-based OO method.
 NeoBundle 'liangfeng/vimprj', { 'external_commands' : ['python', 'cscope'] }
 
 " Since this plugin use python script to do some text precessing jobs,
@@ -1237,10 +1302,10 @@ endif
 " End of vimprj }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimproc {{{
 " https://github.com/Shougo/vimproc
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/vimproc', {
     \ 'build' : {
     \     'windows' : 'echo "You need compile vimproc manually on Windows."',
@@ -1252,19 +1317,19 @@ NeoBundle 'Shougo/vimproc', {
 " End of vimproc }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimshell {{{
 " https://github.com/Shougo/vimshell
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/vimshell'
 
 " End of vimshell }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xmledit {{{
 " https://github.com/liangfeng/xmledit.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/xmledit', {
     \ 'autoload' : {
     \     'filetypes' : ['xml', 'html'],
@@ -1274,10 +1339,10 @@ NeoBundleLazy 'liangfeng/xmledit', {
 " End of xmledit }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - emmet-vim {{{
 " https://github.com/mattn/emmet-vim.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'mattn/emmet-vim.git', {
     \ 'autoload' : {
     \     'filetypes' : ['xml', 'html'],
@@ -1289,10 +1354,10 @@ let g:use_emmet_complete_tag = 1
 " End of emmet-vim }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xptemplate {{{
 " https://github.com/drmingdrmer/xptemplate
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
 
 NeoBundle 'drmingdrmer/xptemplate'
@@ -1320,12 +1385,13 @@ let g:xptemplate_vars = 'SPop=&SParg='
 " End of xptemplate }}}
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - YouCompleteMe {{{
 " https://github.com/Valloric/YouCompleteMe.git
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
 
 " End of YouCompleteMe }}}
+
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
