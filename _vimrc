@@ -849,7 +849,7 @@ NeoBundle 'c9s/filetype-completion.vim'
 " Plugin - FSwitch {{{
 " https://github.com/derekwyatt/vim-fswitch
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need refining to catch exceptions.
+" TODO: Need refining to catch exceptions or just rewrite one?
 NeoBundle 'derekwyatt/vim-fswitch'
 
 command! FS :FSSplitAbove
@@ -887,7 +887,7 @@ NeoBundle 'LargeFile'
 NeoBundle 'Shougo/neocomplete.vim'
 
 set showfulltag
-" TODO: The following two settings should be checked with vimprj overhaul.
+" TODO: The following two settings should be checked during vimprj overhaul.
 " Since enable tags(with vimprj), disable header files searching to improve performance.
 set complete-=i
 " Only scan current buffer
