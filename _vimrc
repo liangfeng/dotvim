@@ -302,7 +302,8 @@ set hlsearch
 " Use external grep command for performance
 " XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
 " http://sourceforge.net/projects/unxutils/
-set grepprg=grep\ -Hn
+" Need prepend installed directory to PATH env var on Windows.
+set grepprg=grep\ -Hni
 nnoremap <silent> <C-n> :cnext<CR>
 nnoremap <silent> <C-p> :cprevious<CR>
 
@@ -782,51 +783,6 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - ctrlp.vim {{{
-" https://github.com/kien/ctrlp.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
-" http://sourceforge.net/projects/unxutils/
-" Need prepend installed directory to PATH env var on Windows.
-" NeoBundle 'kien/ctrlp.vim', { 'external_commands' : ['find', 'head'] }
-
-" nnoremap <silent> <Leader>f :CtrlP<CR>
-" nnoremap <silent> <Leader>b :CtrlPBuffer<CR>
-" nnoremap <silent> <Leader>m :CtrlPMRU<CR>
-
-" Clear up default key of g:ctrlpp_map.
-let g:ctrlp_map = ''
-
-let g:ctrlp_switch_buffer = 'ETVH'
-
-let g:ctrlp_show_hidden = 1
-
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-    \ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.obj$',
-    \ }
-
-" Set the max files.
-let g:ctrlp_max_files = 10000
-
-" Optimize file searching
-let ctrlp_find_cmd = 'find %s -type f | head -' . g:ctrlp_max_files
-
-let g:ctrlp_user_command = {
-    \ 'types': {
-    \ 1: ['.git', 'cd %s && git ls-files']
-    \ },
-    \ 'fallback': ctrlp_find_cmd,
-    \ 'ignore': 0
-    \ }
-
-let g:ctrlp_open_new_file = 't'
-let g:ctrlp_open_multiple_files = 'tj'
-
-" End of ctrlp.vim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
 " https://github.com/Raimondi/delimitMate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -901,16 +857,6 @@ command! FS :FSSplitAbove
 let g:fsnonewfiles = 1
 
 " End of FSwitch }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - Grep {{{
-" https://github.com/vim-scripts/grep.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Add 'q' and toggle support.
-NeoBundle 'grep.vim', { 'external_commands' : ['grep'] }
-
-" End of Grep }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1015,6 +961,8 @@ NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 " Plugin - nerdcommenter {{{
 " https://github.com/scrooloose/nerdcommenter
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Give it a try to replace nerdcommenter.
+" https://github.com/tomtom/tcomment_vim
 NeoBundle 'scrooloose/nerdcommenter'
 
 let g:NERDCreateDefaultMappings = 0
@@ -1146,17 +1094,22 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Replace CtrlP with this one?
-" TODO: Replace Grep with this one?
-NeoBundle 'Shougo/unite.vim'
+" XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
+" http://sourceforge.net/projects/unxutils/
+" Need prepend installed directory to PATH env var on Windows.
 
-let g:unite_enable_start_insert = 1
+" TODO:
+" 1. setup yank
+" 2. open buffer 'usetab'
+" 3. enter 'backspace' in inert mode,  do not exit unite buffer.
+NeoBundle 'Shougo/unite.vim', { 'external_commands' : ['find', 'grep'] }
+
 let g:unite_source_history_yank_enable = 1
-let g:unite_source_rec_max_cache_files = 5000
+let g:unite_source_rec_max_cache_files = 0
 let g:unite_prompt = '» '
-
-" Use the fuzzy matcher for everything
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
+if has('win32') || has('win64')
+    let g:unite_source_rec_async_command = 'find'
+endif
 
 " Use the rank sorter for everything
 call unite#filters#sorter_default#use(['sorter_rank'])
@@ -1164,14 +1117,70 @@ call unite#filters#sorter_default#use(['sorter_rank'])
 " Enable 'smartcase' for 'files' profile.
 call unite#custom#profile('files', 'smartcase', 1)
 
-nnoremap <silent> <Leader>f :Unite -toggle -auto-resize -buffer-name=files file_rec:!<CR>
-nnoremap <silent> <Leader>m :Unite -toggle -auto-resize -buffer-name=recent -profile-name=files file_mru<CR>
-nnoremap <silent> <Leader>b :Unite -toggle -auto-resize -buffer-name=buffers buffer<CR>
+nmap <Leader> [unite]
+nnoremap [unite] <Nop>
+
+" Frequent shortcuts.
+" When searching buffer enter normal mode by default.
+nnoremap <silent> [unite]b :Unite -toggle -auto-resize -buffer-name=buffers
+                            \ -profile-name=files buffer<CR>
+
+" Shortcut for searching mru file.
+nnoremap <silent> [unite]m :Unite -start-insert -toggle -auto-resize -buffer-name=recent
+                            \ -profile-name=files file_mru<CR>
+
+" Shortcut for searching files in current directory recursively.
+nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize -buffer-name=files
+                            \ -profile-name=files file_rec/async:!<CR>
+
+" Shortcut for searching (buffers, mru files, file in curr dir).
+nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize -buffer-name=mixed
+                                  \ -profile-name=files buffer file_mru file_rec/async:!<CR>
+
+" Interactive shortcut for saerching the string in files located current directory recursively.
+nnoremap <silent> [unite]g :Unite -toggle -auto-resize -buffer-name=grep grep<CR>
+let g:unite_source_grep_encoding = 'utf-8'
+let g:unite_source_grep_max_candidates = 200
+function! s:fire_grep(...)
+    let params = a:000
+
+    " options
+    let added_options = ''
+    " grep pattern
+    let grep_pattern = ''
+    " target directory
+    " TODO: should support list, if the number of target_dirs is large than 1.
+    let target_dir = ''
+
+    if len(params) >= 3
+        let added_options = params[0]
+        let grep_pattern = params[1]
+        let target_dir = params[2]
+    endif
+
+    if len(params) == 2
+        let grep_pattern = params[0]
+        let target_dir = params[1]
+    endif
+
+    let unite_cmd = 'Unite -toggle -auto-resize -buffer-name=grep grep:' . target_dir . ":" . added_options . ":" . grep_pattern
+    echom unite_cmd
+    exec unite_cmd
+endfunction
+command -nargs=* Grep call s:fire_grep(<f-args>)
+
+" Unfrequent shortcuts.
+" Shortcut for mappings searching.
+nnoremap <silent> <Space>m :Unite -toggle -auto-resize -buffer-name=mappings mapping<CR>
 
 function! s:unite_settings()
+    setlocal number
+    nmap <silent> <buffer> <C-j> <Plug>(unite_loop_cursor_down)
+    nmap <silent> <buffer> <C-k> <Plug>(unite_loop_cursor_up)
     imap <silent> <buffer> <C-j> <Plug>(unite_select_next_line)
     imap <silent> <buffer> <C-k> <Plug>(unite_select_previous_line)
-    imap <silent> <buffer> <expr> <C-t> unite#do_action('tabopen')
+    imap <silent> <buffer> <Tab> <Plug>(unite_select_next_line)
+    imap <silent> <buffer> <S-Tab> <Plug>(unite_select_previous_line)
     imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
     imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
 endfunction
@@ -1274,8 +1283,8 @@ let g:vimfiler_split_rule = 'botright'
 " Plugin - vimprj (my plugin) {{{
 " https://github.com/liangfeng/vimprj
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Intergate with ctrlp.vim and global(gtags).
-" TODO: Add workspace support for projectmgr plugin. Such as, ctrlp.vim plugin support multiple ftags.
+" TODO: Intergate with global(gtags).
+" TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
 " TODO: Rewrite vimprj with prototype-based OO method.
 NeoBundle 'liangfeng/vimprj', { 'external_commands' : ['python', 'cscope'] }
 
