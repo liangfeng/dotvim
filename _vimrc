@@ -1,5 +1,5 @@
 " Author:   Liang Feng <liang.feng98 AT gmail DOT com>
-" Brief:    This vimrc supports Mac, Linux and Windows(both GUI & console version).
+" Brief:    This vimrc supports Mac OS, Linux and Windows(both GUI & console version).
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
 " HomePage: https://github.com/liangfeng/dotvim
@@ -213,8 +213,6 @@ endif
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-set autochdir
-
 set nobackup
 
 " keep 400 lines of command line history
@@ -379,7 +377,6 @@ set wildignore+=*.pyc
 nmap <silent> <Tab> %
 
 " Enable very magic mode for searching.
-" TODO: Need to fix the issue of cursor move to next char.
 noremap / /\v
 vnoremap / /\v
 
@@ -831,7 +828,7 @@ let g:DoxygenToolkit_classTag = "@class: "
 " Plugin - FencView.vim {{{
 " https://github.com/mbbill/fencview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'mbbill/fencview', { 'external_commands' : ['tellenc'] }
+NeoBundle 'mbbill/fencview', {'external_commands' : 'tellenc'}
 
 " End of FencView.vim }}}
 
@@ -904,7 +901,6 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" TODO: Need to check whether neocomplete support delimiter auto close.
 " <CR>: close popup and save indent.
 inoremap <silent> <expr> <CR> neocomplete#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
 
@@ -916,12 +912,12 @@ inoremap <silent> <expr> <CR> neocomplete#close_popup() . '<C-r>=delimitMate#Exp
 " endfunction
 
 " <Tab>: completion.
-inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <silent> <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
+inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
 
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <silent> <expr> <BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup() . '<C-h>'
+inoremap <silent> <expr> <BS> neocomplete#smart_close_popup() . '<C-h>'
 " Do NOT popup when enter <C-y> and <C-e>
 inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
 inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
@@ -941,7 +937,10 @@ let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\
 " Plugin - neobundle.vim {{{
 " https://github.com/Shougo/neobundle.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundleFetch 'Shougo/neobundle.vim', {'external_commands' : 'rm'}
+
+" Must setup rm_command explicitly on Windows.
+let g:neobundle#rm_command = 'rm -rf'
 
 let g:neobundle#install_max_processes = 15
 
@@ -958,26 +957,14 @@ NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - nerdcommenter {{{
-" https://github.com/scrooloose/nerdcommenter
+" Plugin - tcomment_vim {{{
+" https://github.com/tomtom/tcomment_vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Give it a try to replace nerdcommenter.
-" https://github.com/tomtom/tcomment_vim
-NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'tomtom/tcomment_vim.git'
 
-let g:NERDCreateDefaultMappings = 0
-let g:NERDMenuMode = 0
-let g:NERDSpaceDelims = 1
-nmap <silent> <Leader>cc <plug>NERDCommenterAlignLeft
-vmap <silent> <Leader>cc <plug>NERDCommenterAlignLeft
-nmap <silent> <Leader>cu <plug>NERDCommenterUncomment
-vmap <silent> <Leader>cu <plug>NERDCommenterUncomment
+map <silent> <Leader>cc :TComment<CR>
 
-let g:NERDCustomDelimiters = {
-    \ 'vim': { 'left': '"' }
-    \ }
-
-" End of nerdcommenter }}}
+" End of tcomment_vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1066,7 +1053,7 @@ nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 " https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'majutsushi/tagbar', { 'external_commands' : ['ctags'] }
+NeoBundle 'majutsushi/tagbar', {'external_commands' : 'ctags'}
 
 nnoremap <silent> <Leader>a :TagbarToggle<CR>
 let g:tagbar_left = 1
@@ -1098,11 +1085,7 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 " http://sourceforge.net/projects/unxutils/
 " Need prepend installed directory to PATH env var on Windows.
 
-" TODO:
-" 1. setup yank
-" 2. open buffer 'usetab'
-" 3. enter 'backspace' in inert mode,  do not exit unite buffer.
-NeoBundle 'Shougo/unite.vim', { 'external_commands' : ['find', 'grep'] }
+NeoBundle 'Shougo/unite.vim', {'external_commands' : ['find', 'grep']}
 
 let g:unite_source_history_yank_enable = 1
 let g:unite_source_rec_max_cache_files = 0
@@ -1111,37 +1094,41 @@ if has('win32') || has('win64')
     let g:unite_source_rec_async_command = 'find'
 endif
 
-" Use the rank sorter for everything
+" Use the rank sorter for everything.
 call unite#filters#sorter_default#use(['sorter_rank'])
 
-" Enable 'smartcase' for 'files' profile.
-call unite#custom#profile('files', 'smartcase', 1)
+" Enable 'ignorecase' for the following profiles.
+call unite#custom#profile('source/mapping, source/history/yank', 'ignorecase', 1)
 
-nmap <Leader> [unite]
+" Enable 'smartcase' for the following profiles.
+call unite#custom#profile('files, source/mapping, source/history/yank', 'smartcase', 1)
+
+nmap <Space> [unite]
 nnoremap [unite] <Nop>
 
 " Frequent shortcuts.
 " When searching buffer enter normal mode by default.
-nnoremap <silent> [unite]b :Unite -toggle -auto-resize -buffer-name=buffers
-                            \ -profile-name=files buffer<CR>
+nnoremap <silent> [unite]b :Unite -toggle -auto-resize
+                            \ -buffer-name=buffers -profile-name=files buffer<CR>
 
 " Shortcut for searching mru file.
-nnoremap <silent> [unite]m :Unite -start-insert -toggle -auto-resize -buffer-name=recent
-                            \ -profile-name=files file_mru<CR>
+nnoremap <silent> [unite]r :Unite -start-insert -toggle -auto-resize
+                            \ -buffer-name=recent -profile-name=files file_mru<CR>
 
 " Shortcut for searching files in current directory recursively.
-nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize -buffer-name=files
-                            \ -profile-name=files file_rec/async:!<CR>
+nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
+                            \ -buffer-name=files -profile-name=files file_rec/async:!<CR>
 
 " Shortcut for searching (buffers, mru files, file in curr dir).
-nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize -buffer-name=mixed
-                                  \ -profile-name=files buffer file_mru file_rec/async:!<CR>
+nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
+                                  \ -buffer-name=mixed -profile-name=files
+                                  \ buffer file_mru file_rec/async:!<CR>
 
-" Interactive shortcut for saerching the string in files located current directory recursively.
-nnoremap <silent> [unite]g :Unite -toggle -auto-resize -buffer-name=grep grep<CR>
+" Setup variables for 'grep' source.
 let g:unite_source_grep_encoding = 'utf-8'
 let g:unite_source_grep_max_candidates = 200
-function! s:fire_grep(...)
+" Interactive shortcut for saerching the string in files located current directory recursively.
+function! s:fire_grep_cmd(...)
     let params = a:000
 
     " options
@@ -1163,16 +1150,22 @@ function! s:fire_grep(...)
         let target_dir = params[1]
     endif
 
-    let unite_cmd = 'Unite -toggle -auto-resize -buffer-name=grep grep:' . target_dir . ":" . added_options . ":" . grep_pattern
-    echom unite_cmd
+    let unite_cmd = 'Unite -toggle -auto-resize -buffer-name=contents grep:' . target_dir . ":" . added_options . ":" . grep_pattern
     exec unite_cmd
 endfunction
-command -nargs=* Grep call s:fire_grep(<f-args>)
+command! -nargs=* Grep call s:fire_grep_cmd(<f-args>)
+nnoremap <silent> [unite]g :Grep<CR>
 
 " Unfrequent shortcuts.
 " Shortcut for mappings searching.
-nnoremap <silent> <Space>m :Unite -toggle -auto-resize -buffer-name=mappings mapping<CR>
+nnoremap <silent> [unite]y :Unite -toggle -auto-resize -buffer-name=yanks history/yank<CR>
+nnoremap <silent> [unite]m :Unite -toggle -auto-resize -buffer-name=mappings mapping<CR>
 
+" function! s:handle_proper_prompt()
+" unite#helper#get_input() == ''
+" endfunction
+
+" Setup UI actions.
 function! s:unite_settings()
     setlocal number
     nmap <silent> <buffer> <C-j> <Plug>(unite_loop_cursor_down)
@@ -1183,10 +1176,16 @@ function! s:unite_settings()
     imap <silent> <buffer> <S-Tab> <Plug>(unite_select_previous_line)
     imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
     imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
+    noremap <silent> <buffer> <expr> t unite#do_action('tabdrop')
+    imap <silent> <buffer> <expr> <C-t> unite#do_action('tabdrop')
+
+    " Do not exit unite buffer when call '<Plug>(unite_delete_backward_char)'.
+    inoremap <silent> <expr> <buffer> <Plug>(unite_delete_backward_char)
+                                      \ unite#helper#get_input() == '' ?
+                                      \ '' : '<C-h>'
 endfunction
 
 autocmd FileType unite call s:unite_settings()
-
 
 " End of unite.vim }}}
 
@@ -1232,7 +1231,7 @@ NeoBundle 'tpope/vim-fugitive.git'
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Try this one.
-" NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'terryma/vim-multiple-cursors'
 
 " End of vim-multiple-cursors }}}
 
@@ -1286,7 +1285,7 @@ let g:vimfiler_split_rule = 'botright'
 " TODO: Intergate with global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
 " TODO: Rewrite vimprj with prototype-based OO method.
-NeoBundle 'liangfeng/vimprj', { 'external_commands' : ['python', 'cscope'] }
+NeoBundle 'liangfeng/vimprj', {'external_commands' : ['python', 'cscope']}
 
 " Since this plugin use python script to do some text precessing jobs,
 " add python script path into 'PYTHONPATH' environment variable.
