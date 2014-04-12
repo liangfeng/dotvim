@@ -745,11 +745,7 @@ au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " If current buffer is noname and empty, use current buffer.
 " Otherwise use new tab
 function! s:OpenFileWithProperBuffer(file)
-    if bufname('%') == '' && &modified == 0 && &modifiable == 1
-        exec 'edit ' . a:file
-    else
-        exec 'tabedit' . a:file
-    endif
+    exec 'tab drop ' . a:file
 endfunction
 
 " Fast editing of vimrc
