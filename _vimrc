@@ -1312,7 +1312,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/vimproc', {
     \ 'build' : {
-    \     'windows' : 'echo "You need compile vimproc manually on Windows."',
+    \     'windows' : 'echoerr "You need compile vimproc manually on Windows."',
     \     'mac' : 'make -f make_mac.mak',
     \     'unix' : 'make -f make_unix.mak',
     \    },
