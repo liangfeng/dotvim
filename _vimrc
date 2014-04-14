@@ -285,6 +285,23 @@ endfunction
 " Remove trailing spaces for all files
 au BufWritePre * call s:RemoveTrailingSpaces()
 
+function! s:Tabdrop(...)
+    for file in a:000
+        let file_expanded_env_var = expand(file)
+        if bufexists(file_expanded_env_var)
+            exec 'sb ' . file_expanded_env_var
+            continue
+        endif
+        if bufname('%') == '' && &modified == 0 && &modifiable == 1
+            exec 'edit ' . file_expanded_env_var
+        else
+            exec 'tabedit ' . file_expanded_env_var
+        endif
+    endfor
+endfunction
+
+command! -complete=file -nargs=+ Tabdrop call s:Tabdrop(<q-args>)
+
 " End of Editting }}}
 
 
@@ -745,7 +762,7 @@ au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " If current buffer is noname and empty, use current buffer.
 " Otherwise use new tab
 function! s:OpenFileWithProperBuffer(file)
-    exec 'tab drop ' . a:file
+    call s:Tabdrop(a:file)
 endfunction
 
 " Fast editing of vimrc
@@ -1157,9 +1174,28 @@ nnoremap <silent> [unite]g :Grep<CR>
 nnoremap <silent> [unite]y :Unite -toggle -auto-resize -buffer-name=yanks history/yank<CR>
 nnoremap <silent> [unite]m :Unite -toggle -auto-resize -buffer-name=mappings mapping<CR>
 
-" function! s:handle_proper_prompt()
-" unite#helper#get_input() == ''
-" endfunction
+" To fix the issue of 'tabdrop' can not work on console.
+if !has('gui_running')
+    let s:my_tabdrop = {
+                \ 'description' : 'my tab drop',
+                \ 'is_selectable' : 1,
+                \ }
+    function! s:my_tabdrop.func(candidates)
+        let bufpath = unite#util#substitute_path_separator(expand('%:p'))
+
+        for candidate in a:candidates
+            if bufpath !=# candidate.action__path
+                call unite#util#smart_execute_command('Tabdrop',
+                            \ candidate.action__path)
+
+                call unite#remove_previewed_buffer_list(
+                            \ bufnr(unite#util#escape_file_searching(
+                            \       candidate.action__path)))
+            endif
+        endfor
+    endfunction
+    call unite#custom#action('file, buffer', 'my_tabdrop', s:my_tabdrop)
+endif
 
 " Setup UI actions.
 function! s:unite_settings()
@@ -1172,9 +1208,13 @@ function! s:unite_settings()
     imap <silent> <buffer> <S-Tab> <Plug>(unite_select_previous_line)
     imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
     imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
-    noremap <silent> <buffer> <expr> t unite#do_action('tabdrop')
-    imap <silent> <buffer> <expr> <C-t> unite#do_action('tabdrop')
-
+    if has('gui_running')
+        noremap <silent> <buffer> <expr> t unite#do_action('tabdrop')
+        imap <silent> <buffer> <expr> <C-t> unite#do_action('tabdrop')
+    else
+        noremap <silent> <buffer> <expr> t unite#do_action('my_tabdrop')
+        imap <silent> <buffer> <expr> <C-t> unite#do_action('my_tabdrop')
+    endif
     " Do not exit unite buffer when call '<Plug>(unite_delete_backward_char)'.
     inoremap <silent> <expr> <buffer> <Plug>(unite_delete_backward_char)
                                       \ unite#helper#get_input() == '' ?
