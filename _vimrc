@@ -1232,6 +1232,12 @@ autocmd FileType unite call s:unite_settings()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'bling/vim-airline'
 
+if !has('gui_running')
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#tab_nr_type = 1
+    let g:airline#extensions#tabline#fnamemod = ':p:t'
+endif
+
 let g:airline_theme = 'powerlineish'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
