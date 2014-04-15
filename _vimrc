@@ -3,12 +3,11 @@
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
 " HomePage: https://github.com/liangfeng/dotvim
-" Comments: has('mac') means Mac version only.
-"           has('unix') means Mac or Linux version.
-"           has('win32') means Windows 32 verion only.
-"           has('win64') means Windows 64 verion only.
-"           has('gui_win32') means Windows 32 bit GUI version.
-"           has('gui_win64') means Windows 64 bit GUI version.
+" Comments: has('mac') means Mac only.
+"           has('unix') means Mac, Linux or Unix only.
+"           has('win16') means Windows 16 only.
+"           has('win32') means Windows 32 only.
+"           has('win64') means Windows 64 only.
 "           has('gui_running') means in GUI mode.
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -43,22 +42,28 @@ au!
 " This option must be set first, since it changes other options.
 set nocompatible
 
+" Check OS and env.
+let s:is_mac = has('mac')
+let s:is_unix = has('unix')
+let s:is_windows = has('win16') || has('win32') || has('win64')
+let s:is_gui_running = has('gui_running')
+
 let g:maplocalleader = ','
 let g:mapleader = ','
 
 " If vim starts without opening file(s),
-" change working directory to $VIM (Windows) or $HOME(Mac, Linux).
+" change working directory to $HOME(Mac, Linux, Unix) or $VIM (Windows).
 if expand('%') == ''
-    if has('unix')
+    if s:is_unix
         cd $HOME
-    elseif has('win32') || has('win64')
+    elseif s:is_windows
         cd $VIM
     endif
 endif
 
 " Setup neobundle plugin.
 " Must be called before filetype on.
-if has('unix')
+if s:is_unix
     set runtimepath=$VIMRUNTIME,$HOME/.vim/bundle/neobundle.vim
     call neobundle#rc()
 else
@@ -67,7 +72,7 @@ else
 endif
 
 " Do not load system menu, before ':syntax on' and ':filetype on'.
-if has('gui_running')
+if s:is_gui_running
     set guioptions+=M
 endif
 
@@ -81,7 +86,7 @@ filetype plugin indent on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set shortmess+=I
 
-if has('gui_win32') || has('gui_win64')
+if s:is_windows && s:is_gui_running
     command! Res simalt ~r
     command! Max simalt ~x
     " Run gvim with max mode by default.
@@ -107,7 +112,7 @@ endif
 " XXX: Change it. It's just for my environment.
 language messages zh_CN.utf-8
 
-if has('unix')
+if s:is_unix
     " XXX: Change it. It's just for my environment.
     set viminfo+=n$HOME/tmp/.viminfo
 endif
@@ -164,10 +169,10 @@ nnoremap <silent> gn :call <SID>EchoCharCode()<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " UI {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('gui_running')
-    if has('mac')
+if s:is_gui_running
+    if s:is_mac
         set guifont=Monaco:h14
-    elseif has('win32') || has('win64')
+    elseif s:is_windows
         set guifont=Consolas:h14:cANSI
         set guifontwide=YaHei\ Consolas\ Hybrid:h14
     else
@@ -176,11 +181,11 @@ if has('gui_running')
 endif
 
 " Activate 256 colors independently of terminal, except Mac console mode
-if !(!has('gui_running') && has('mac'))
+if !(!s:is_gui_running && s:is_mac)
     set t_Co=256
 endif
 
-if has('mac') && has('gui_running')
+if s:is_mac && s:is_gui_running
     set fuoptions+=maxhorz
     nnoremap <silent> <D-f> :set invfullscreen<CR>
     inoremap <silent> <D-f> <C-o>:set invfullscreen<CR>
@@ -200,13 +205,13 @@ syntax on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editting {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('unix')
+if s:is_unix
     if isdirectory("$HOME/tmp")
         set directory=$HOME/tmp
     else
         set directory=/tmp
     endif
-elseif has('win32') || has('win64')
+elseif s:is_windows
     set directory=$TMP
 endif
 
@@ -245,10 +250,12 @@ nnoremap <silent> ZZ :confirm qa<CR>
 nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
 if has('filterpipe')
-    set noshelltemp
+    if !s:is_windows
+        set noshelltemp
+    endif
 endif
 
-if has('win32') || has('win64')
+if s:is_windows
     set shellslash
 endif
 
@@ -340,7 +347,7 @@ nnoremap <silent> <C-Tab> gt
 nnoremap <silent> <Leader>w <C-w>w
 
 " To make remapping Esc work porperly in console mode by disabling esckeys.
-if !has('gui_running')
+if !s:is_gui_running
     set noesckeys
 endif
 
@@ -421,7 +428,7 @@ vnoremap <silent> <S-Tab> <gv
 
 set scrolloff=7
 
-if has('gui_running')
+if s:is_gui_running
     set guioptions-=m
     set guioptions-=T
     set guioptions+=c
@@ -505,7 +512,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tab/Buffer {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('gui_running')
+if s:is_gui_running
     " Only show short name in gui tab
     set guitablabel=%N\ %t%m%r
 endif
@@ -534,9 +541,9 @@ endfunction
 function! s:SetSysTags()
     " XXX: change it. It's just for my environment.
     " include system tags, :help ft-c-omni
-    if has('unix')
+    if s:is_unix
         set tags+=$HOME/.vim/systags
-    elseif has('win32') || has('win64')
+    elseif s:is_windows
         " XXX: change it. It's just for my environment.
         set tags+=$TMP/systags
     endif
@@ -570,9 +577,9 @@ function! s:SetupCppEnv()
 endfunction
 
 " Setting for files following the GNU coding standard
-if has('unix')
+if s:is_unix
     au BufEnter /usr/include/* call s:GNUIndent()
-elseif has('win32') || has('win64')
+elseif s:is_windows
     " XXX: change it. It's just for my environment.
     au BufEnter e:/project/g++/* call s:GNUIndent()
     set makeprg=nmake
@@ -757,9 +764,9 @@ endfunction
 
 " Fast editing of vimrc
 function! s:OpenVimrc()
-    if has('unix')
+    if s:is_unix
         call s:OpenFileWithProperBuffer('$HOME/.vimrc')
-    elseif has('win32') || has('win64')
+    elseif s:is_windows
         call s:OpenFileWithProperBuffer('$VIM/_vimrc')
     endif
 endfunction
@@ -1093,7 +1100,7 @@ NeoBundle 'Shougo/unite.vim', {'external_commands' : ['find', 'grep']}
 let g:unite_source_history_yank_enable = 1
 let g:unite_source_rec_max_cache_files = 0
 let g:unite_prompt = '» '
-if has('win32') || has('win64')
+if s:is_windows
     let g:unite_source_rec_async_command = 'find'
 endif
 
@@ -1165,7 +1172,7 @@ nnoremap <silent> [unite]y :Unite -toggle -auto-resize -buffer-name=yanks histor
 nnoremap <silent> [unite]m :Unite -toggle -auto-resize -buffer-name=mappings mapping<CR>
 
 " To fix the issue of 'tabdrop' can not work on console.
-if !has('gui_running')
+if !s:is_gui_running
     let s:my_tabdrop = {
                 \ 'description' : 'my tab drop',
                 \ 'is_selectable' : 1,
@@ -1198,7 +1205,7 @@ function! s:unite_settings()
     imap <silent> <buffer> <S-Tab> <Plug>(unite_select_previous_line)
     imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
     imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
-    if has('gui_running')
+    if s:is_gui_running
         noremap <silent> <buffer> <expr> t unite#do_action('tabdrop')
         imap <silent> <buffer> <expr> <C-t> unite#do_action('tabdrop')
     else
@@ -1223,7 +1230,7 @@ autocmd FileType unite call s:unite_settings()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'bling/vim-airline'
 
-if !has('gui_running')
+if !s:is_gui_running
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tabline#tab_nr_type = 1
     let g:airline#extensions#tabline#fnamemod = ':p:t'
@@ -1323,21 +1330,21 @@ NeoBundle 'liangfeng/vimprj', {'external_commands' : ['python', 'cscope']}
 
 " Since this plugin use python script to do some text precessing jobs,
 " add python script path into 'PYTHONPATH' environment variable.
-if has('unix')
+if s:is_unix
     let $PYTHONPATH .= $HOME . '/.vim/bundle/vimprj/ftplugin/vimprj/:'
-elseif has('win32') || has('win64')
+elseif s:is_windows
     let $PYTHONPATH .= $VIM . '/bundle/vimprj/ftplugin/vimprj/;'
 endif
 
 " XXX: Change it. It's just for my environment.
-if has('win32') || has('win64')
+if s:is_windows
     let g:cscope_sort_path = 'C:/Program Files (x86)/cscope'
 endif
 
 " Fast editing of my plugin
-if has('unix')
+if s:is_unix
     nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/.vim/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
-elseif has('win32') || has('win64')
+elseif s:is_windows
     nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$VIM/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 endif
 
