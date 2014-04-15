@@ -314,6 +314,9 @@ set incsearch
 " highlight the last used search pattern.
 set hlsearch
 
+" Automatically cd into the directory that the file is in
+autocmd BufEnter * execute 'chdir ' . escape(expand("%:p:h"), ' ')
+
 " Use external grep command for performance
 " XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
 " http://sourceforge.net/projects/unxutils/
