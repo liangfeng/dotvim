@@ -244,19 +244,6 @@ nnoremap <silent> ZZ :confirm qa<CR>
 " Create a new tabpage
 nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
-" Quote shell if it contains space and is not quoted
-if &shell =~? '^[^"].* .*[^"]'
-    let &shell = '"' . &shell . '"'
-endif
-
-" Clear up xquote
-set shellxquote=
-
-" Redirect command output to standard output and temp file
-if has('unix')
-    set shellpipe=2>&1\|\ tee
-endif
-
 if has('filterpipe')
     set noshelltemp
 endif
@@ -314,7 +301,7 @@ set incsearch
 " highlight the last used search pattern.
 set hlsearch
 
-" Automatically cd into the directory that the file is in
+" Simulate 'autochdir' option to avoid side-effect of this option.
 autocmd BufEnter * execute 'chdir ' . escape(expand("%:p:h"), ' ')
 
 " Use external grep command for performance
