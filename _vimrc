@@ -360,7 +360,7 @@ endif
 " Assume fast terminal connection.
 set ttyfast
 
-" Remap <Esc> to stop highlighing searching result.
+" Remap <Esc> to stop highlighting searching result.
 nnoremap <silent> <Esc> :nohls<CR><Esc>
 imap <silent> <Esc> <C-o><Esc>
 
@@ -1217,6 +1217,7 @@ function! s:unite_settings()
     else
         noremap <silent> <buffer> <expr> t unite#do_action('my_tabdrop')
         imap <silent> <buffer> <expr> <C-t> unite#do_action('my_tabdrop')
+        inoremap <silent> <buffer> <expr> <C-o> '<C-o>'
     endif
     " Do not exit unite buffer when call '<Plug>(unite_delete_backward_char)'.
     inoremap <silent> <expr> <buffer> <Plug>(unite_delete_backward_char)
