@@ -967,7 +967,7 @@ let g:neobundle#install_max_processes = 15
 " Plugin - neomru.vim {{{
 " https://github.com/Shougo/neomru.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
+NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 
 " End of neomru.vim }}}
 
@@ -1320,6 +1320,7 @@ NeoBundle 'Shougo/vimfiler.vim'
 
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_split_rule = 'botright'
+let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
 
 " End of vimfiler }}}
 
