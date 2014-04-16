@@ -63,6 +63,7 @@ endif
 
 " Setup neobundle plugin.
 " Must be called before filetype on.
+" TODO: manage plugins by VimL 'Dictionary' to avoid first load error.
 if s:is_unix
     set runtimepath=$VIMRUNTIME,$HOME/.vim/bundle/neobundle.vim
     call neobundle#rc()
@@ -949,8 +950,11 @@ let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleFetch 'Shougo/neobundle.vim', {'external_commands' : 'rm'}
 
-" Must setup rm_command explicitly on Windows.
-let g:neobundle#rm_command = 'rm -rf'
+" Since unix style 'rmdir' is installed and can not handle directory properly,
+" must setup rm_command explicitly on Windows to use internal 'rmdir' cmd.
+if s:is_windows
+    let g:neobundle#rm_command = 'cmd.exe /C rmdir /S /Q'
+endif
 
 let g:neobundle#install_max_processes = 15
 
