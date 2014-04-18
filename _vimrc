@@ -35,8 +35,8 @@ endif
 " Init {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Remove ALL autocommands for the current group
-au!
+" Remove ALL autocmds for the current group
+autocmd!
 
 " Use Vim settings, rather then Vi settings.
 " This option must be set first, since it changes other options.
@@ -91,7 +91,7 @@ if s:is_windows && s:is_gui_running
     command! Res simalt ~r
     command! Max simalt ~x
     " Run gvim with max mode by default.
-    au GUIEnter * Max
+    autocmd GUIEnter * Max
 
     function! s:ToggleWindowSize()
         if exists('g:does_windows_need_max')
@@ -119,7 +119,7 @@ if s:is_unix
 endif
 
 " Locate the cursor at the last edited location when open a file
-au BufReadPost *
+autocmd BufReadPost *
     \ if line("'\"") <= line("$") |
     \   exec "normal! g`\"" |
     \ endif
@@ -239,7 +239,7 @@ inoremap <silent> <4-MiddleMouse> <Nop>
 " Disable bell on errors
 set noerrorbells
 set novisualbell
-au VimEnter * set vb t_vb=
+autocmd VimEnter * set vb t_vb=
 
 " remap Y to work properly
 nnoremap <silent> Y y$
@@ -250,10 +250,26 @@ nnoremap <silent> ZZ :confirm qa<CR>
 " Create a new tabpage
 nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
-if has('filterpipe')
-    if !s:is_windows
-        set noshelltemp
-    endif
+set noshelltemp
+
+if s:is_windows
+    " Set shelltemp before run shell command and set noshelltemp after that.
+    function! MyHandleShellFunc()
+        let cmdline = getcmdline()
+        let cmdtype = getcmdtype()
+        if cmdtype == ':'
+            " Perform Ex command map action
+            if cmdline == 'sh'
+               \ || cmdline == 'she'
+               \ || cmdline == 'shel'
+               \ || cmdline == 'shell'
+                exec 'set shelltemp | shell | set noshelltemp'
+                return ''
+            endif
+        endif
+        return cmdline
+    endfunction
+    cnoremap <silent> <CR> <C-\>eMyHandleShellFunc()<CR><CR>
 endif
 
 if s:is_windows
@@ -278,7 +294,7 @@ function! s:RemoveTrailingSpaces()
 endfunction
 
 " Remove trailing spaces for all files
-au BufWritePre * call s:RemoveTrailingSpaces()
+autocmd BufWritePre * call s:RemoveTrailingSpaces()
 
 function! s:Tabdrop(...)
     for file in a:000
@@ -320,7 +336,7 @@ set grepprg=grep\ -Hni
 nnoremap <silent> <C-n> :cnext<CR>
 nnoremap <silent> <C-p> :cprevious<CR>
 
-" Auto center
+" auto center
 nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
@@ -579,16 +595,16 @@ endfunction
 
 " Setting for files following the GNU coding standard
 if s:is_unix
-    au BufEnter /usr/include/* call s:GNUIndent()
+    autocmd BufEnter /usr/include/* call s:GNUIndent()
 elseif s:is_windows
     " XXX: change it. It's just for my environment.
-    au BufEnter e:/project/g++/* call s:GNUIndent()
+    autocmd BufEnter e:/project/g++/* call s:GNUIndent()
     set makeprg=nmake
 endif
 
-au FileType c,cpp setlocal commentstring=\ //%s
-au FileType c,cpp call s:SetupCppEnv()
-au FileType c,cpp call s:MapJoinWithLeaders('//\\|\\')
+autocmd FileType c,cpp setlocal commentstring=\ //%s
+autocmd FileType c,cpp call s:SetupCppEnv()
+autocmd FileType c,cpp call s:MapJoinWithLeaders('//\\|\\')
 
 " End of C/C++ }}}
 
@@ -604,8 +620,8 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Help {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-au FileType help nnoremap <buffer> <silent> q :q<CR>
-au FileType help setlocal readonly nomodifiable number
+autocmd FileType help nnoremap <buffer> <silent> q :q<CR>
+autocmd FileType help setlocal readonly nomodifiable number
 
 
 " End of help }}}
@@ -617,8 +633,8 @@ au FileType help setlocal readonly nomodifiable number
 " Let TOhtml output <PRE> and style sheet
 let g:html_use_css = 1
 let g:use_xhtml = 1
-au FileType html,xhtml setlocal indentexpr=
-au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType html,xhtml setlocal indentexpr=
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 
 " End of HTML }}}
 
@@ -626,7 +642,7 @@ au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - javascript {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 " End of Lua }}}
 
@@ -654,8 +670,8 @@ function! s:SetupAutoCmdForRunAsLuaCode()
     vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
 endfunction
 
-au FileType lua call s:SetupAutoCmdForRunAsLuaCode()
-au FileType lua call s:MapJoinWithLeaders('--\\|\\')
+autocmd FileType lua call s:SetupAutoCmdForRunAsLuaCode()
+autocmd FileType lua call s:MapJoinWithLeaders('--\\|\\')
 
 " End of Lua }}}
 
@@ -663,8 +679,8 @@ au FileType lua call s:MapJoinWithLeaders('--\\|\\')
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Make {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-au FileType make setlocal noexpandtab
-au FileType make call s:MapJoinWithLeaders('#\\|\\')
+autocmd FileType make setlocal noexpandtab
+autocmd FileType make call s:MapJoinWithLeaders('#\\|\\')
 
 " End of make }}}
 
@@ -694,10 +710,10 @@ function! s:SetupAutoCmdForRunAsPythonCode()
     vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
 endfunction
 
-au FileType python setlocal omnifunc=pythoncomplete#Complete
-au FileType python setlocal commentstring=\ #%s
-au FileType python call s:SetupAutoCmdForRunAsPythonCode()
-au FileType python call s:MapJoinWithLeaders('#\\|\\')
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType python setlocal commentstring=\ #%s
+autocmd FileType python call s:SetupAutoCmdForRunAsPythonCode()
+autocmd FileType python call s:MapJoinWithLeaders('#\\|\\')
 
 " End of Python }}}
 
@@ -737,9 +753,9 @@ function! s:SetupAutoCmdForRunAsVimL()
     vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
 endfunction
 
-au FileType vim setlocal commentstring=\ \"%s
-au FileType vim call s:SetupAutoCmdForRunAsVimL()
-au FileType vim call s:MapJoinWithLeaders('"\\|\\')
+autocmd FileType vim setlocal commentstring=\ \"%s
+autocmd FileType vim call s:SetupAutoCmdForRunAsVimL()
+autocmd FileType vim call s:MapJoinWithLeaders('"\\|\\')
 
 let g:vimsyn_noerror = 1
 
@@ -749,7 +765,7 @@ let g:vimsyn_noerror = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "  Language - xml {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " End of xml }}}
 
@@ -802,11 +818,11 @@ let delimitMate_excluded_ft = "mail,txt"
 
 imap <silent> <C-g> <Plug>delimitMateJumpMany
 
-au FileType vim let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+autocmd FileType vim let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 " To collaborate with xmledit plugin, remove <:> pairs from default pairs for xml and html
-au FileType xml,html let b:delimitMate_matchpairs = "(:),[:],{:}"
-au FileType html let b:delimitMate_quotes = "\" '"
-au FileType python let b:delimitMate_nesting_quotes = ['"']
+autocmd FileType xml,html let b:delimitMate_matchpairs = "(:),[:],{:}"
+autocmd FileType html let b:delimitMate_quotes = "\" '"
+autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
 
 " End of delimitMate }}}
 
@@ -1415,7 +1431,7 @@ let g:use_emmet_complete_tag = 1
 
 NeoBundle 'drmingdrmer/xptemplate'
 
-au BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
+autocmd BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
 
 " trigger key
 let g:xptemplate_key = '<C-l>'
