@@ -66,16 +66,19 @@ endif
 " TODO: manage plugins by VimL 'Dictionary' to avoid first load error.
 if s:is_unix
     set runtimepath=$VIMRUNTIME,$HOME/.vim/bundle/neobundle.vim
-    call neobundle#rc()
+    call neobundle#begin()
 else
     set runtimepath=$VIMRUNTIME,$VIM/bundle/neobundle.vim
-    call neobundle#rc('$VIM/bundle')
+    call neobundle#begin('$VIM/bundle')
 endif
 
 " Do not load system menu, before ':syntax on' and ':filetype on'.
 if s:is_gui_running
     set guioptions+=M
 endif
+
+" Must call this, since use neobundle#begin()
+call neobundle#end()
 
 filetype plugin indent on
 
@@ -250,9 +253,11 @@ nnoremap <silent> ZZ :confirm qa<CR>
 " Create a new tabpage
 nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
+" Use pipe instead of temp file for shell.
 set noshelltemp
 
 if s:is_windows
+    " TODO: Need fix issue in :exec 'shell'
     " Set shelltemp before run shell command and set noshelltemp after that.
     function! MyHandleShellFunc()
         let cmdline = getcmdline()
@@ -298,15 +303,15 @@ autocmd BufWritePre * call s:RemoveTrailingSpaces()
 
 function! s:Tabdrop(...)
     for file in a:000
-        let file_expanded_env_var = expand(file)
-        if bufexists(file_expanded_env_var)
-            exec 'sb ' . file_expanded_env_var
+        let file_expanded = expand(file)
+        if bufexists(file_expanded)
+            exec 'sb ' . file_expanded
             continue
         endif
         if bufname('%') == '' && &modified == 0 && &modifiable == 1
-            exec 'edit ' . file_expanded_env_var
+            exec 'edit ' . file_expanded
         else
-            exec 'tabedit ' . file_expanded_env_var
+            exec 'tabedit ' . file_expanded
         endif
     endfor
 endfunction
@@ -326,7 +331,7 @@ set incsearch
 set hlsearch
 
 " Simulate 'autochdir' option to avoid side-effect of this option.
-autocmd BufEnter * execute 'chdir ' . escape(expand("%:p:h"), ' ')
+autocmd BufEnter * exec 'chdir ' . escape(expand("%:p:h"), ' ')
 
 " Use external grep command for performance
 " XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
@@ -795,34 +800,55 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - c-syntax {{{
-" https://github.com/liangfeng/c-syntax
+" https://github.com/liangfeng/c-syntax.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/c-syntax', {
-    \ 'autoload' : {
-    \     'filetypes' : ['c', 'cpp'],
-    \    },
-    \ }
+                \ 'autoload' : {
+                    \ 'filetypes' : ['c', 'cpp'],
+                    \ },
+                \ }
 
 " End of c-syntax }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - context_filetype {{{
+" https://github.com/Shougo/context_filetype.vim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
+NeoBundle 'Shougo/context_filetype.vim.git'
+
+" End of context_filetype }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
 " https://github.com/Raimondi/delimitMate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Raimondi/delimitMate'
+NeoBundleLazy 'Raimondi/delimitMate', {
+                \ 'autoload': {
+                    \ 'mappings' : ['i', '<Plug>delimitMate'],
+                    \ },
+                \ }
 
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_balance_matchpairs = 1
-let delimitMate_excluded_ft = "mail,txt"
-
-imap <silent> <C-g> <Plug>delimitMateJumpMany
-
-autocmd FileType vim let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
-" To collaborate with xmledit plugin, remove <:> pairs from default pairs for xml and html
-autocmd FileType xml,html let b:delimitMate_matchpairs = "(:),[:],{:}"
-autocmd FileType html let b:delimitMate_quotes = "\" '"
-autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+let s:bundle = neobundle#get('delimitMate')
+function! s:bundle.hooks.on_source(bundle)
+    let g:delimitMate_excluded_ft = 'mail,txt,text'
+    let execluded_ft_list = split(g:delimitMate_excluded_ft, ',')
+    for ft in execluded_ft_list
+        if ft ==# &filetype
+            return
+        endif
+    endfor
+    imap <silent> <C-g> <Plug>delimitMateJumpMany
+    let g:delimitMate_expand_cr = 1
+    let g:delimitMate_balance_matchpairs = 1
+    autocmd FileType vim let b:delimitMate_matchpairs = '(:),[:],{:},<:>'
+    " To collaborate with xmledit plugin, remove <:> pairs from default pairs for xml and html
+    autocmd FileType xml,html let b:delimitMate_matchpairs = '(:),[:],{:}'
+    autocmd FileType html let b:delimitMate_quotes = '\" ''
+    autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+endfunction
 
 " End of delimitMate }}}
 
@@ -831,22 +857,29 @@ autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
 " Plugin - DoxygenToolkit.vim {{{
 " https://github.com/vim-scripts/DoxygenToolkit.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'DoxygenToolkit.vim'
+NeoBundleLazy 'DoxygenToolkit.vim', {
+                \ 'autoload' : {
+                    \ 'filetypes' : ['c', 'cpp', 'python'],
+                    \ },
+                \ }
 
-" Load doxygen syntax file for c/cpp/idl files
-let g:load_doxygen_syntax = 1
-let g:DoxygenToolkit_commentType = "C++"
-let g:DoxygenToolkit_dateTag = ""
-let g:DoxygenToolkit_authorName = "liangfeng"
-let g:DoxygenToolkit_versionString = ""
-let g:DoxygenToolkit_versionTag = ""
-let g:DoxygenToolkit_briefTag_pre = "@brief:  "
-let g:DoxygenToolkit_fileTag = "@file:   "
-let g:DoxygenToolkit_authorTag = "@author: "
-let g:DoxygenToolkit_blockTag = "@name: "
-let g:DoxygenToolkit_paramTag_pre = "@param:  "
-let g:DoxygenToolkit_returnTag = "@return:  "
-let g:DoxygenToolkit_classTag = "@class: "
+let s:bundle = neobundle#get('DoxygenToolkit.vim')
+function! s:bundle.hooks.on_source(bundle)
+    " Load doxygen syntax file for c/cpp/idl files
+    let g:load_doxygen_syntax = 1
+    let g:DoxygenToolkit_commentType = "C++"
+    let g:DoxygenToolkit_dateTag = ""
+    let g:DoxygenToolkit_authorName = "liangfeng"
+    let g:DoxygenToolkit_versionString = ""
+    let g:DoxygenToolkit_versionTag = ""
+    let g:DoxygenToolkit_briefTag_pre = "@brief:  "
+    let g:DoxygenToolkit_fileTag = "@file:   "
+    let g:DoxygenToolkit_authorTag = "@author: "
+    let g:DoxygenToolkit_blockTag = "@name: "
+    let g:DoxygenToolkit_paramTag_pre = "@param:  "
+    let g:DoxygenToolkit_returnTag = "@return:  "
+    let g:DoxygenToolkit_classTag = "@class: "
+endfunction
 
 " End of DoxygenToolkit.vim }}}
 
@@ -855,18 +888,13 @@ let g:DoxygenToolkit_classTag = "@class: "
 " Plugin - FencView.vim {{{
 " https://github.com/mbbill/fencview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'mbbill/fencview', {'external_commands' : 'tellenc'}
+NeoBundleLazy 'mbbill/fencview', {
+                \ 'external_commands' : 'tellenc',
+                \ 'autoload' : {
+                    \ 'commands' : ['FencAutoDetect', 'FencView', 'FencManualEncoding'] },
+                \ }
 
 " End of FencView.vim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - filetype-completion.vim {{{
-" https://github.com/c9s/filetype-completion.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'c9s/filetype-completion.vim'
-
-" End of filetype-completion.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -874,20 +902,28 @@ NeoBundle 'c9s/filetype-completion.vim'
 " https://github.com/derekwyatt/vim-fswitch
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need refining to catch exceptions or just rewrite one?
-NeoBundle 'derekwyatt/vim-fswitch'
+NeoBundleLazy 'derekwyatt/vim-fswitch', {
+                \ 'autoload' : {
+                    \ 'filetypes' : ['c', 'cpp'],
+                    \ 'commands' : ['FS'],
+                    \ },
+                \ }
 
-command! FS :FSSplitAbove
-
-let g:fsnonewfiles = 1
+let s:bundle = neobundle#get('vim-fswitch')
+function! s:bundle.hooks.on_source(bundle)
+    command! FS :FSSplitAbove
+    let g:fsnonewfiles = 1
+endfunction
 
 " End of FSwitch }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
-" https://github.com/vim-scripts/LargeFile
+" http://www.drchip.org/astronaut/vim/#LARGEFILE
+" https://github.com/liangfeng/LargeFile.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'LargeFile'
+NeoBundle 'liangfeng/LargeFile'
 
 " End of LargeFile }}}
 
@@ -896,9 +932,17 @@ NeoBundle 'LargeFile'
 " Plugin - matchit {{{
 " https://github.com/vim-scripts/matchit.zip
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Since 'matchit' script is included in standard distribution,
-" only need to 'source' it.
-:source $VIMRUNTIME/macros/matchit.vim
+" TODO: Need to figure out the method of source macro by lazy loading.
+NeoBundleLazy 'matchit.zip', {
+                \ 'autoload' : {
+                    \ 'mappings' : ['%', 'g%'],
+                    \ },
+                \}
+
+let bundle = neobundle#get('matchit.zip')
+function! bundle.hooks.on_post_source(bundle)
+    silent! execute 'doautocmd Filetype' &filetype
+endfunction
 
 " End of matchit }}}
 
@@ -908,56 +952,62 @@ NeoBundle 'LargeFile'
 " https://github.com/Shougo/neocomplete.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
-NeoBundle 'Shougo/neocomplete.vim'
+NeoBundleLazy 'Shougo/neocomplete.vim', {
+                \ 'depends' : 'Shougo/context_filetype.vim',
+                \ 'autoload' : {
+                    \ 'insert' : 1
+                    \ },
+                \ }
 
-set showfulltag
-" TODO: The following two settings should be checked during vimprj overhaul.
-" Since enable tags(with vimprj), disable header files searching to improve performance.
-set complete-=i
-" Only scan current buffer
-set complete=.
+let s:bundle = neobundle#get('neocomplete.vim')
+function! s:bundle.hooks.on_source(bundle)
+    set showfulltag
+    " TODO: The following two settings should be checked during vimprj overhaul.
+    " Disable header files searching to improve performance.
+    set complete-=i
+    " Only scan current buffer
+    set complete=.
 
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 2
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_smart_case = 1
+    " Set minimum syntax keyword length.
+    let g:neocomplete#sources#syntax#min_keyword_length = 2
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+    " Define keyword.
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" <CR>: close popup and save indent.
-inoremap <silent> <expr> <CR> neocomplete#close_popup() . '<C-r>=delimitMate#ExpandReturn()<CR>'
+    " <CR>: close popup and save indent.
+    inoremap <silent> <expr> <CR> neocomplete#close_popup()
+                \ . '<C-r>=delimitMate#ExpandReturn()<CR>'
 
-" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" function! s:my_cr_function()
-"     return neocomplete#close_popup() . '\<CR>'
-"     " For no inserting <CR> key.
-"     " return pumvisible() ? neocomplete#close_popup() : '\<CR>'
-" endfunction
+    " <Tab>: completion.
+    inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
+    inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
 
-" <Tab>: completion.
-inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
-inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup() . '<C-h>'
+    inoremap <silent> <expr> <BS> neocomplete#smart_close_popup() . '<C-h>'
+    " Do NOT popup when enter <C-y> and <C-e>
+    inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
+    inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
 
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup() . '<C-h>'
-inoremap <silent> <expr> <BS> neocomplete#smart_close_popup() . '<C-h>'
-" Do NOT popup when enter <C-y> and <C-e>
-inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
-inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
+    " Enable heavy omni completion.
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    let g:neocomplete#sources#omni#input_patterns.php =
+                \ '[^. \t]->\h\w*\|\h\w*::'
+    let g:neocomplete#sources#omni#input_patterns.c =
+                \ '[^.[:digit:] *\t]\%(\.\|->\)'
+    let g:neocomplete#sources#omni#input_patterns.cpp =
+                \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+endfunction
 
-" End of neocomplcache }}}
+" End of neocomplete.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -981,7 +1031,9 @@ let g:neobundle#install_max_processes = 15
 " Plugin - neomru.vim {{{
 " https://github.com/Shougo/neomru.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
+" TODO: Need to check whether be lazy loaded or not ?
+" NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
+NeoBundle 'Shougo/neomru.vim'
 
 " End of neomru.vim }}}
 
@@ -990,6 +1042,7 @@ NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 " Plugin - tcomment_vim {{{
 " https://github.com/tomtom/tcomment_vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tomtom/tcomment_vim.git'
 
 map <silent> <Leader>cc :TComment<CR>
@@ -1002,20 +1055,29 @@ map <silent> <Leader>cc :TComment<CR>
 " https://github.com/scrooloose/nerdtree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Replace nerdtree with vimfiler.
-NeoBundle 'scrooloose/nerdtree'
+NeoBundleLazy 'scrooloose/nerdtree', {
+                \ 'autoload' : {
+                    \ 'commands' : ['NERDTreeToggle','NERDTree','NERDTreeFind'],
+                    \ 'mappings' : ['<Leader>n','<Leader>N'],
+                    \ }
+                \}
 
-" Set the window position
-let g:NERDTreeWinPos = "right"
-let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeWinSize = 50
-let g:NERDTreeDirArrows = 1
-let g:NERDTreeMinimalUI = 1
-let NERDTreeShowHidden=1
-let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
+let s:bundle = neobundle#get('nerdtree')
+function! s:bundle.hooks.on_source(bundle)
+    " Set the window position
+    let g:NERDTreeWinPos = "right"
+    let g:NERDTreeQuitOnOpen = 1
+    let g:NERDTreeWinSize = 50
+    let g:NERDTreeDirArrows = 1
+    let g:NERDTreeMinimalUI = 1
+    let NERDTreeShowHidden=1
+    let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
 
-nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
-" command 'NERDTree' will refresh current directory.
-nnoremap <silent> <Leader>N :NERDTree<CR>
+    nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
+    " command 'NERDTree' will refresh current directory.
+    nnoremap <silent> <Leader>N :NERDTree<CR>
+
+endfunction
 
 " End of nerdtree }}}
 
@@ -1024,6 +1086,7 @@ nnoremap <silent> <Leader>N :NERDTree<CR>
 " Plugin - nerdtree-tabs {{{
 " https://github.com/jistr/vim-nerdtree-tabs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'jistr/vim-nerdtree-tabs'
 
 let g:nerdtree_tabs_open_on_gui_startup = 0
@@ -1035,6 +1098,7 @@ let g:nerdtree_tabs_open_on_gui_startup = 0
 " Plugin - python_match.vim {{{
 " https://github.com/vim-scripts/python_match.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to setup more accurated autoload conditions.
 NeoBundleLazy 'python_match.vim', {
     \ 'autoload' : {
     \     'filetypes' : ['python'],
@@ -1071,6 +1135,7 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 " Plugin - SyntaxAttr.vim {{{
 " https://github.com/vim-scripts/SyntaxAttr.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'SyntaxAttr.vim'
 
 nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
@@ -1083,6 +1148,7 @@ nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 " https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'majutsushi/tagbar', {'external_commands' : 'ctags'}
 
 nnoremap <silent> <Leader>a :TagbarToggle<CR>
@@ -1099,6 +1165,7 @@ let g:tagbar_compact = 1
 " http://juan.boxfi.com/vim-plugins/
 " https://github.com/liangfeng/TaskList.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'liangfeng/TaskList.vim'
 
 let g:tlRememberPosition = 1
@@ -1115,6 +1182,7 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 " http://sourceforge.net/projects/unxutils/
 " Need prepend installed directory to PATH env var on Windows.
 
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'Shougo/unite.vim', {'external_commands' : ['find', 'grep']}
 
 let g:unite_source_history_yank_enable = 1
@@ -1245,9 +1313,21 @@ autocmd FileType unite call s:unite_settings()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-altercmd {{{
+" https://github.com/tyru/vim-altercmd.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Does it can replace MyHandleShellFunc?
+" TODO: Need to check whether be lazy loaded or not ?
+NeoBundle 'tyru/vim-altercmd'
+
+" End of vim-altercmd }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-airline {{{
 " https://github.com/bling/vim-airline.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'bling/vim-airline'
 
 if !s:is_gui_running
@@ -1267,6 +1347,7 @@ let g:airline_right_sep=''
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'altercation/vim-colors-solarized'
 
 let g:solarized_italic = 0
@@ -1281,6 +1362,7 @@ colorscheme solarized
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tpope/vim-fugitive.git'
 
 " End of vim-fugitive }}}
@@ -1291,6 +1373,7 @@ NeoBundle 'tpope/vim-fugitive.git'
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Try this one.
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'terryma/vim-multiple-cursors'
 
 " End of vim-multiple-cursors }}}
@@ -1300,6 +1383,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
 " Plugin - vim-repeat {{{
 " https://github.com/tpope/vim-repeat
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tpope/vim-repeat'
 
 " End of vim-repeat }}}
@@ -1309,6 +1393,7 @@ NeoBundle 'tpope/vim-repeat'
 " Plugin - vim-surround {{{
 " https://github.com/tpope/vim-surround
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tpope/vim-surround'
 
 let g:surround_no_insert_mappings = 1
@@ -1321,6 +1406,7 @@ let g:surround_no_insert_mappings = 1
 " https://github.com/vim-scripts/vimcdoc
 " http://vimcdoc.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
@@ -1330,7 +1416,10 @@ NeoBundle 'liangfeng/vimcdoc'
 " Plugin - vimfiler {{{
 " https://github.com/Shougo/vimfiler.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Shougo/vimfiler.vim'
+" TODO: Need to check whether be lazy loaded or not ?
+NeoBundle 'Shougo/vimfiler', {
+            \ 'depends' : 'Shougo/unite.vim',
+            \ }
 
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_split_rule = 'botright'
@@ -1346,6 +1435,7 @@ let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
 " TODO: Intergate with global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
 " TODO: Rewrite vimprj with prototype-based OO method.
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'liangfeng/vimprj', {'external_commands' : ['python', 'cscope']}
 
 " Since this plugin use python script to do some text precessing jobs,
@@ -1375,6 +1465,7 @@ endif
 " Plugin - vimproc {{{
 " https://github.com/Shougo/vimproc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'Shougo/vimproc', {
     \ 'build' : {
     \     'windows' : 'echoerr "You need compile vimproc manually on Windows."',
@@ -1390,6 +1481,7 @@ NeoBundle 'Shougo/vimproc', {
 " Plugin - vimshell {{{
 " https://github.com/Shougo/vimshell
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'Shougo/vimshell'
 
 " End of vimshell }}}
@@ -1425,10 +1517,10 @@ let g:use_emmet_complete_tag = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xptemplate {{{
-" https://github.com/drmingdrmer/xptemplate
+" https://github.com/drmingdrmer/xptemplate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
-
+" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'drmingdrmer/xptemplate'
 
 autocmd BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
@@ -1459,6 +1551,7 @@ let g:xptemplate_vars = 'SPop=&SParg='
 " https://github.com/Valloric/YouCompleteMe.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
+" TODO: Need to check whether be lazy loaded or not ?
 
 " End of YouCompleteMe }}}
 
