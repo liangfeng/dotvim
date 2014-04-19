@@ -1417,7 +1417,7 @@ NeoBundle 'liangfeng/vimcdoc'
 " https://github.com/Shougo/vimfiler.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/vimfiler', {
+NeoBundle 'Shougo/vimfiler.vim', {
             \ 'depends' : 'Shougo/unite.vim',
             \ }
 
