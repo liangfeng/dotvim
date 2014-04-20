@@ -2,7 +2,7 @@
 " Brief:    This vimrc supports Mac OS, Linux and Windows(both GUI & console version).
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
-" HomePage: https://github.com/liangfeng/dotvim
+" HomePage: https://github.com/liangfeng/dotvim.git
 " Comments: has('mac') means Mac only.
 "           has('unix') means Mac, Linux or Unix only.
 "           has('win16') means Windows 16 only.
@@ -63,7 +63,6 @@ endif
 
 " Setup neobundle plugin.
 " Must be called before filetype on.
-" TODO: manage plugins by VimL 'Dictionary' to avoid first load error.
 if s:is_unix
     set runtimepath=$VIMRUNTIME,$HOME/.vim/bundle/neobundle.vim
     call neobundle#begin()
@@ -823,7 +822,7 @@ NeoBundle 'Shougo/context_filetype.vim.git'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
-" https://github.com/Raimondi/delimitMate
+" https://github.com/Raimondi/delimitMate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Raimondi/delimitMate', {
                 \ 'autoload': {
@@ -855,7 +854,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - DoxygenToolkit.vim {{{
-" https://github.com/vim-scripts/DoxygenToolkit.vim
+" https://github.com/vim-scripts/DoxygenToolkit.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'DoxygenToolkit.vim', {
                 \ 'autoload' : {
@@ -886,7 +885,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FencView.vim {{{
-" https://github.com/mbbill/fencview
+" https://github.com/mbbill/fencview.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'mbbill/fencview', {
                 \ 'external_commands' : 'tellenc',
@@ -899,7 +898,7 @@ NeoBundleLazy 'mbbill/fencview', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FSwitch {{{
-" https://github.com/derekwyatt/vim-fswitch
+" https://github.com/derekwyatt/vim-fswitch.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need refining to catch exceptions or just rewrite one?
 NeoBundleLazy 'derekwyatt/vim-fswitch', {
@@ -930,7 +929,7 @@ NeoBundle 'liangfeng/LargeFile'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - matchit {{{
-" https://github.com/vim-scripts/matchit.zip
+" https://github.com/vim-scripts/matchit.zip.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to figure out the method of source macro by lazy loading.
 NeoBundleLazy 'matchit.zip', {
@@ -984,6 +983,7 @@ function! s:bundle.hooks.on_source(bundle)
                 \ . '<C-r>=delimitMate#ExpandReturn()<CR>'
 
     " <Tab>: completion.
+    " TODO: <S-Tab> does NOT work?
     inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
     inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
 
@@ -1012,7 +1012,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neobundle.vim {{{
-" https://github.com/Shougo/neobundle.vim
+" https://github.com/Shougo/neobundle.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleFetch 'Shougo/neobundle.vim', {'external_commands' : 'rm'}
 
@@ -1031,8 +1031,6 @@ let g:neobundle#install_max_processes = 15
 " Plugin - neomru.vim {{{
 " https://github.com/Shougo/neomru.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-" NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
 NeoBundle 'Shougo/neomru.vim'
 
 " End of neomru.vim }}}
@@ -1042,17 +1040,24 @@ NeoBundle 'Shougo/neomru.vim'
 " Plugin - tcomment_vim {{{
 " https://github.com/tomtom/tcomment_vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'tomtom/tcomment_vim.git'
+NeoBundleLazy 'tomtom/tcomment_vim', {
+                \ 'autoload' : {
+                    \ 'commands' : ['TComment'],
+                    \ 'mappings' : ['<Leader>cc'],
+                    \ },
+                \ }
 
-map <silent> <Leader>cc :TComment<CR>
+let s:bundle = neobundle#get('tcomment_vim')
+function! s:bundle.hooks.on_source(bundle)
+    map <silent> <Leader>cc :TComment<CR>
+endfunction
 
 " End of tcomment_vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdtree {{{
-" https://github.com/scrooloose/nerdtree
+" https://github.com/scrooloose/nerdtree.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Replace nerdtree with vimfiler.
 NeoBundleLazy 'scrooloose/nerdtree', {
@@ -1083,34 +1088,21 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - nerdtree-tabs {{{
-" https://github.com/jistr/vim-nerdtree-tabs
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'jistr/vim-nerdtree-tabs'
-
-let g:nerdtree_tabs_open_on_gui_startup = 0
-
-" End of nerdtree-tabs }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_match.vim {{{
-" https://github.com/vim-scripts/python_match.vim
+" https://github.com/vim-scripts/python_match.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to setup more accurated autoload conditions.
 NeoBundleLazy 'python_match.vim', {
-    \ 'autoload' : {
-    \     'filetypes' : ['python'],
-    \    },
-    \ }
+                \ 'autoload' : {
+                    \ 'filetypes' : ['python'],
+                    \ },
+                \ }
 
 " End of python_match.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - session {{{
-" https://github.com/xolox/vim-session
+" https://github.com/xolox/vim-session.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need check this.
 " NeoBundle 'xolox/vim-session'
@@ -1120,56 +1112,75 @@ NeoBundleLazy 'python_match.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SimpylFold for python {{{
-" https://github.com/tmhedberg/SimpylFold
+" https://github.com/tmhedberg/SimpylFold.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'tmhedberg/SimpylFold', {
-    \ 'autoload' : {
-    \     'filetypes' : ['python'],
-    \    },
-    \ }
+                \ 'autoload' : {
+                    \ 'filetypes' : ['python'],
+                    \ },
+                \ }
 
 " End of SimpylFold for python }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SyntaxAttr.vim {{{
-" https://github.com/vim-scripts/SyntaxAttr.vim
+" https://github.com/vim-scripts/SyntaxAttr.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'SyntaxAttr.vim'
+NeoBundleLazy 'SyntaxAttr.vim', {
+                \ 'autoload' : {
+                    \ 'mappings' : '<Leader>S',
+                    \ },
+                \ }
 
-nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
+let s:bundle = neobundle#get('SyntaxAttr.vim')
+function! s:bundle.hooks.on_source(bundle)
+    nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
+endfunction
 
 " End of SyntaxAttr.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - tagbar {{{
-" https://github.com/majutsushi/tagbar
+" https://github.com/majutsushi/tagbar.git
 " http://ctags.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'majutsushi/tagbar', {'external_commands' : 'ctags'}
+NeoBundleLazy 'majutsushi/tagbar', {
+                \ 'external_commands' : 'ctags',
+                \ 'autoload' : {
+                    \ 'mappings' : '<Leader>a',
+                    \ },
+                \ }
 
-nnoremap <silent> <Leader>a :TagbarToggle<CR>
-let g:tagbar_left = 1
-let g:tagbar_width = 30
-let g:tagbar_compact = 1
+let s:bundle = neobundle#get('tagbar')
+function! s:bundle.hooks.on_source(bundle)
+    nnoremap <silent> <Leader>a :TagbarToggle<CR>
+    let g:tagbar_left = 1
+    let g:tagbar_width = 30
+    let g:tagbar_compact = 1
+endfunction
 
 " End of tagbar }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList.vim {{{
-" https://github.com/vim-scripts/TaskList.vim
+" https://github.com/vim-scripts/TaskList.vim.git
 " http://juan.boxfi.com/vim-plugins/
-" https://github.com/liangfeng/TaskList.vim
+" https://github.com/liangfeng/TaskList.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'liangfeng/TaskList.vim'
+NeoBundleLazy 'liangfeng/TaskList.vim', {
+                \ 'autoload' : {
+                    \ 'mappings' : '<Leader>t',
+                    \ },
+                \ }
 
-let g:tlRememberPosition = 1
-nmap <silent> <Leader>t <Plug>ToggleTaskList
+let s:bundle = neobundle#get('TaskList.vim')
+function! s:bundle.hooks.on_source(bundle)
+    let g:tlRememberPosition = 1
+    nmap <silent> <Leader>t <Plug>ToggleTaskList
+endfunction
 
 " End of TaskList.vim }}}
 
@@ -1183,49 +1194,85 @@ nmap <silent> <Leader>t <Plug>ToggleTaskList
 " Need prepend installed directory to PATH env var on Windows.
 
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/unite.vim', {'external_commands' : ['find', 'grep']}
+NeoBundleLazy 'Shougo/unite.vim', {
+                \ 'external_commands' : ['find', 'grep'],
+                \ 'autoload' : {
+                    \ 'mappings' : '[unite]',
+                    \ 'commands' : ['Unite', 'Grep'],
+                    \ },
+                \ }
 
-let g:unite_source_history_yank_enable = 1
-let g:unite_source_rec_max_cache_files = 0
-let g:unite_prompt = '» '
-if s:is_windows
-    let g:unite_source_rec_async_command = 'find'
-endif
+let s:bundle = neobundle#get('unite.vim')
+function! s:bundle.hooks.on_source(bundle)
+    call s:unite_variables()
 
-" Use the rank sorter for everything.
-call unite#filters#sorter_default#use(['sorter_rank'])
+    " Use the rank sorter for everything.
+    call unite#filters#sorter_default#use(['sorter_rank'])
 
-" Enable 'ignorecase' for the following profiles.
-call unite#custom#profile('source/mapping, source/history/yank', 'ignorecase', 1)
+    " Enable 'ignorecase' for the following profiles.
+    call unite#custom#profile('source/mapping, source/history/yank', 'ignorecase', 1)
 
-" Enable 'smartcase' for the following profiles.
-call unite#custom#profile('files, source/mapping, source/history/yank', 'smartcase', 1)
+    " Enable 'smartcase' for the following profiles.
+    call unite#custom#profile('files, source/mapping, source/history/yank', 'smartcase', 1)
 
-nmap <Space> [unite]
-nnoremap [unite] <Nop>
+    " Use 'my_tabdrop', since 'tabdrop' not supported in terminal mode.
+    if !s:is_gui_running
+        call unite#custom#action('file, buffer', 'my_tabdrop', s:my_tabdrop)
+    endif
 
-" Frequent shortcuts.
-" When searching buffer enter normal mode by default.
-nnoremap <silent> [unite]b :Unite -toggle -auto-resize
-                            \ -buffer-name=buffers -profile-name=files buffer<CR>
+    call s:unite_mappings()
+endfunction
 
-" Shortcut for searching mru file.
-nnoremap <silent> [unite]r :Unite -start-insert -toggle -auto-resize
-                            \ -buffer-name=recent -profile-name=files file_mru<CR>
+function! s:unite_variables()
+    let g:unite_source_history_yank_enable = 1
+    let g:unite_source_rec_max_cache_files = 0
+    let g:unite_prompt = '» '
+    if s:is_windows
+        let g:unite_source_rec_async_command = 'find'
+    endif
+    " Setup variables for 'grep' source.
+    let g:unite_source_grep_encoding = 'utf-8'
+    let g:unite_source_grep_max_candidates = 200
+endfunction
 
-" Shortcut for searching files in current directory recursively.
-nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
-                            \ -buffer-name=files -profile-name=files file_rec/async:!<CR>
+function! s:unite_mappings()
+    nmap <Space> [unite]
+    nnoremap [unite] <Nop>
 
-" Shortcut for searching (buffers, mru files, file in curr dir).
-nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
-                                  \ -buffer-name=mixed -profile-name=files
-                                  \ buffer file_mru file_rec/async:!<CR>
+    " Frequent shortcuts.
+    " When searching buffer enter normal mode by default.
+    nnoremap <silent> [unite]b :Unite -toggle -auto-resize
+                                \ -buffer-name=buffers -profile-name=files
+                                \ buffer<CR>
 
-" Setup variables for 'grep' source.
-let g:unite_source_grep_encoding = 'utf-8'
-let g:unite_source_grep_max_candidates = 200
-" Interactive shortcut for saerching the string in files located current directory recursively.
+    " Shortcut for searching mru file.
+    nnoremap <silent> [unite]r :Unite -start-insert -toggle -auto-resize
+                                \ -buffer-name=recent -profile-name=files
+                                \ file_mru<CR>
+
+    " Shortcut for searching files in current directory recursively.
+    nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
+                                \ -buffer-name=files -profile-name=files
+                                \ file_rec/async:!<CR>
+
+    " Shortcut for searching (buffers, mru files, file in curr dir).
+    nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
+                                      \ -buffer-name=mixed -profile-name=files
+                                      \ buffer file_mru file_rec/async:!<CR>
+
+    " Unfrequent shortcuts.
+    " Shortcut for mappings searching.
+    nnoremap <silent> [unite]y :Unite -toggle -auto-resize
+                                \ -buffer-name=yanks
+                                \ history/yank<CR>
+    nnoremap <silent> [unite]m :Unite -toggle -auto-resize
+                                \ -buffer-name=mappings
+                                \ mapping<CR>
+
+    nnoremap <silent> [unite]g :Grep<CR>
+endfunction
+
+" Interactive shortcut for searching context in files located in current directory recursively.
 function! s:fire_grep_cmd(...)
     let params = a:000
 
@@ -1248,16 +1295,11 @@ function! s:fire_grep_cmd(...)
         let target_dir = params[1]
     endif
 
-    let unite_cmd = 'Unite -toggle -auto-resize -buffer-name=contents grep:' . target_dir . ":" . added_options . ":" . grep_pattern
+    let unite_cmd = 'Unite -toggle -auto-resize -buffer-name=contents grep:' .
+                \ target_dir . ":" . added_options . ":" . grep_pattern
     exec unite_cmd
 endfunction
 command! -nargs=* Grep call s:fire_grep_cmd(<f-args>)
-nnoremap <silent> [unite]g :Grep<CR>
-
-" Unfrequent shortcuts.
-" Shortcut for mappings searching.
-nnoremap <silent> [unite]y :Unite -toggle -auto-resize -buffer-name=yanks history/yank<CR>
-nnoremap <silent> [unite]m :Unite -toggle -auto-resize -buffer-name=mappings mapping<CR>
 
 " To fix the issue of 'tabdrop' can not work on console.
 if !s:is_gui_running
@@ -1279,11 +1321,10 @@ if !s:is_gui_running
             endif
         endfor
     endfunction
-    call unite#custom#action('file, buffer', 'my_tabdrop', s:my_tabdrop)
 endif
 
 " Setup UI actions.
-function! s:unite_settings()
+function! s:unite_ui_settings()
     setlocal number
     nmap <silent> <buffer> <C-j> <Plug>(unite_loop_cursor_down)
     nmap <silent> <buffer> <C-k> <Plug>(unite_loop_cursor_up)
@@ -1307,7 +1348,8 @@ function! s:unite_settings()
                                       \ '' : '<C-h>'
 endfunction
 
-autocmd FileType unite call s:unite_settings()
+autocmd FileType unite call s:unite_ui_settings()
+
 
 " End of unite.vim }}}
 
@@ -1345,7 +1387,7 @@ let g:airline_right_sep=''
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-colors-solarized {{{
-" https://github.com/altercation/vim-colors-solarized
+" https://github.com/altercation/vim-colors-solarized.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'altercation/vim-colors-solarized'
@@ -1381,7 +1423,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-repeat {{{
-" https://github.com/tpope/vim-repeat
+" https://github.com/tpope/vim-repeat.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tpope/vim-repeat'
@@ -1391,7 +1433,7 @@ NeoBundle 'tpope/vim-repeat'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-surround {{{
-" https://github.com/tpope/vim-surround
+" https://github.com/tpope/vim-surround.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tpope/vim-surround'
@@ -1403,7 +1445,7 @@ let g:surround_no_insert_mappings = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimcdoc {{{
-" https://github.com/vim-scripts/vimcdoc
+" https://github.com/vim-scripts/vimcdoc.git
 " http://vimcdoc.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
@@ -1430,7 +1472,7 @@ let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimprj (my plugin) {{{
-" https://github.com/liangfeng/vimprj
+" https://github.com/liangfeng/vimprj.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Intergate with global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
@@ -1463,7 +1505,7 @@ endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimproc {{{
-" https://github.com/Shougo/vimproc
+" https://github.com/Shougo/vimproc.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'Shougo/vimproc', {
@@ -1479,7 +1521,7 @@ NeoBundle 'Shougo/vimproc', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimshell {{{
-" https://github.com/Shougo/vimshell
+" https://github.com/Shougo/vimshell.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'Shougo/vimshell'
