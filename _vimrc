@@ -176,8 +176,8 @@ if s:is_gui_running
     if s:is_mac
         set guifont=Monaco:h14
     elseif s:is_windows
-        set guifont=Consolas:h14:cANSI
-        set guifontwide=YaHei\ Consolas\ Hybrid:h14
+        set guifont=Powerline_Consolas:h14:cANSI
+        set guifontwide=YaHei_Consolas_Hybrid:h14
     else
         set guifont=Monospace:h14
     endif
@@ -256,27 +256,6 @@ nnoremap <silent> <Leader><Tab> :tabnew<CR>
 set noshelltemp
 
 if s:is_windows
-    " TODO: Need fix issue in :exec 'shell'
-    " Set shelltemp before run shell command and set noshelltemp after that.
-    function! MyHandleShellFunc()
-        let cmdline = getcmdline()
-        let cmdtype = getcmdtype()
-        if cmdtype == ':'
-            " Perform Ex command map action
-            if cmdline == 'sh'
-               \ || cmdline == 'she'
-               \ || cmdline == 'shel'
-               \ || cmdline == 'shell'
-                exec 'set shelltemp | shell | set noshelltemp'
-                return ''
-            endif
-        endif
-        return cmdline
-    endfunction
-    cnoremap <silent> <CR> <C-\>eMyHandleShellFunc()<CR><CR>
-endif
-
-if s:is_windows
     set shellslash
 endif
 
@@ -337,6 +316,8 @@ autocmd BufEnter * exec 'chdir ' . escape(expand("%:p:h"), ' ')
 " http://sourceforge.net/projects/unxutils/
 " Need prepend installed directory to PATH env var on Windows.
 set grepprg=grep\ -Hni
+
+" TODO: Sinece vim-multiple-cursors use <C-n> mapping, change the followings.
 nnoremap <silent> <C-n> :cnext<CR>
 nnoremap <silent> <C-p> :cprevious<CR>
 
@@ -815,7 +796,7 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 " https://github.com/Shougo/context_filetype.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/context_filetype.vim.git'
+NeoBundle 'Shougo/context_filetype.vim'
 
 " End of context_filetype }}}
 
@@ -881,6 +862,24 @@ function! s:bundle.hooks.on_source(bundle)
 endfunction
 
 " End of DoxygenToolkit.vim }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - emmet-vim {{{
+" https://github.com/mattn/emmet-vim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'mattn/emmet-vim', {
+                \ 'autoload' : {
+                    \ 'filetypes' : ['xml', 'html'],
+                    \ },
+                \ }
+
+let s:bundle = neobundle#get('emmet-vim')
+function! s:bundle.hooks.on_source(bundle)
+    let g:use_emmet_complete_tag = 1
+endfunction
+
+" End of emmet-vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1192,13 +1191,12 @@ endfunction
 " XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
 " http://sourceforge.net/projects/unxutils/
 " Need prepend installed directory to PATH env var on Windows.
-
-" TODO: Need to check whether be lazy loaded or not ?
 NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'external_commands' : ['find', 'grep'],
                 \ 'autoload' : {
                     \ 'mappings' : '[unite]',
                     \ 'commands' : ['Unite', 'Grep'],
+                    \ 'on_source' : 'vimfiler.vim',
                     \ },
                 \ }
 
@@ -1350,7 +1348,6 @@ endfunction
 
 autocmd FileType unite call s:unite_ui_settings()
 
-
 " End of unite.vim }}}
 
 
@@ -1358,9 +1355,24 @@ autocmd FileType unite call s:unite_ui_settings()
 " Plugin - vim-altercmd {{{
 " https://github.com/tyru/vim-altercmd.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Does it can replace MyHandleShellFunc?
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'tyru/vim-altercmd'
+NeoBundle 'tyru/vim-altercmd', {
+                \ 'autoload' : {
+                    \ },
+                \ }
+
+let s:bundle = neobundle#get('vim-altercmd')
+function! s:bundle.hooks.on_source(bundle)
+    command! Shell call s:Shell()
+    AlterCommand sh[ell] Shell
+endfunction
+
+" TODO: Need fix issue in :exec 'shell'
+if s:is_windows
+    function! s:Shell()
+        exec 'set shelltemp | shell | set noshelltemp'
+    endfunction
+endif
 
 " End of vim-altercmd }}}
 
@@ -1369,7 +1381,6 @@ NeoBundle 'tyru/vim-altercmd'
 " Plugin - vim-airline {{{
 " https://github.com/bling/vim-airline.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'bling/vim-airline'
 
 if !s:is_gui_running
@@ -1378,10 +1389,8 @@ if !s:is_gui_running
     let g:airline#extensions#tabline#fnamemod = ':p:t'
 endif
 
+let g:airline_powerline_fonts = 1
 let g:airline_theme = 'powerlineish'
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-
 " End of vim-airline }}}
 
 
@@ -1389,7 +1398,6 @@ let g:airline_right_sep=''
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'altercation/vim-colors-solarized'
 
 let g:solarized_italic = 0
@@ -1404,8 +1412,17 @@ colorscheme solarized
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'tpope/vim-fugitive.git'
+NeoBundleLazy 'tpope/vim-fugitive', {
+                \ 'autoload' : {
+                    \ 'commands' : ['Git', 'Gcd', 'Gstatus', 'Gedit',
+                                  \ 'Gdiff', 'Gcommit', 'Gblame', 'Glog', 'Gwrite', 'Gremove'],
+                    \ },
+                \ }
+
+let s:bundle = neobundle#get('vim-fugitive')
+function! s:bundle.hooks.on_source(bundle)
+    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
+endfunction
 
 " End of vim-fugitive }}}
 
@@ -1414,7 +1431,6 @@ NeoBundle 'tpope/vim-fugitive.git'
 " Plugin - vim-multiple-cursors {{{
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Try this one.
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'terryma/vim-multiple-cursors'
 
@@ -1425,8 +1441,11 @@ NeoBundle 'terryma/vim-multiple-cursors'
 " Plugin - vim-repeat {{{
 " https://github.com/tpope/vim-repeat.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'tpope/vim-repeat'
+NeoBundleLazy 'tpope/vim-repeat', {
+                \ 'autoload': {
+                    \ 'mappings' : [['n', '.'], ['n','u'], ['n', 'U'], ['n', '<C-r>']],
+                    \ },
+                \ }
 
 " End of vim-repeat }}}
 
@@ -1435,7 +1454,6 @@ NeoBundle 'tpope/vim-repeat'
 " Plugin - vim-surround {{{
 " https://github.com/tpope/vim-surround.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'tpope/vim-surround'
 
 let g:surround_no_insert_mappings = 1
@@ -1448,7 +1466,7 @@ let g:surround_no_insert_mappings = 1
 " https://github.com/vim-scripts/vimcdoc.git
 " http://vimcdoc.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
+" TODO: setup 'keywordprg' for linux?
 NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
@@ -1458,14 +1476,22 @@ NeoBundle 'liangfeng/vimcdoc'
 " Plugin - vimfiler {{{
 " https://github.com/Shougo/vimfiler.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/vimfiler.vim', {
-            \ 'depends' : 'Shougo/unite.vim',
-            \ }
+NeoBundleLazy 'Shougo/vimfiler.vim', {
+                \ 'depends' : 'Shougo/unite.vim',
+                \ 'autoload' : {
+                    \ 'commands' : [{ 'name' : 'VimFiler', 'complete' : 'customlist,vimfiler#complete' },
+                                    \ 'VimFilerExplorer', 'Edit', 'Read', 'Source', 'Write'],
+                      \    'mappings' : ['<Plug>(vimfiler_'],
+                      \    'explorer' : 1,
+                  \ }
+                \ }
 
-let g:vimfiler_as_default_explorer = 1
-let g:vimfiler_split_rule = 'botright'
-let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
+let s:bundle = neobundle#get('vimfiler.vim')
+function! s:bundle.hooks.on_source(bundle)
+    let g:vimfiler_as_default_explorer = 1
+    let g:vimfiler_split_rule = 'botright'
+    let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
+endfunction
 
 " End of vimfiler }}}
 
@@ -1478,20 +1504,30 @@ let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
 " TODO: Rewrite vimprj with prototype-based OO method.
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'liangfeng/vimprj', {'external_commands' : ['python', 'cscope']}
+NeoBundleLazy 'liangfeng/vimprj', {
+                \ 'external_commands' : ['python', 'cscope'],
+                \ 'autoload' : {
+                    \ 'filetypes' : ['vimprj'],
+                    \ 'commands' : ['Preload', 'Pupdate', 'Pstatus', 'Punload'],
+                    \ }
+                \ }
 
-" Since this plugin use python script to do some text precessing jobs,
-" add python script path into 'PYTHONPATH' environment variable.
-if s:is_unix
-    let $PYTHONPATH .= $HOME . '/.vim/bundle/vimprj/ftplugin/vimprj/:'
-elseif s:is_windows
-    let $PYTHONPATH .= $VIM . '/bundle/vimprj/ftplugin/vimprj/;'
-endif
+let s:bundle = neobundle#get('vimprj')
+function! s:bundle.hooks.on_source(bundle)
+    " Since this plugin use python script to do some text precessing jobs,
+    " add python script path into 'PYTHONPATH' environment variable.
+    if s:is_unix
+        let $PYTHONPATH .= $HOME . '/.vim/bundle/vimprj/ftplugin/vimprj/:'
+    elseif s:is_windows
+        let $PYTHONPATH .= $VIM . '/bundle/vimprj/ftplugin/vimprj/;'
+    endif
 
-" XXX: Change it. It's just for my environment.
-if s:is_windows
-    let g:cscope_sort_path = 'C:/Program Files (x86)/cscope'
-endif
+    " XXX: Change it. It's just for my environment.
+    if s:is_windows
+        let g:cscope_sort_path = 'C:/Program Files (x86)/cscope'
+    endif
+
+endfunction
 
 " Fast editing of my plugin
 if s:is_unix
@@ -1499,6 +1535,7 @@ if s:is_unix
 elseif s:is_windows
     nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$VIM/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 endif
+
 
 " End of vimprj }}}
 
@@ -1509,12 +1546,12 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'Shougo/vimproc', {
-    \ 'build' : {
-    \     'windows' : 'echoerr "You need compile vimproc manually on Windows."',
-    \     'mac' : 'make -f make_mac.mak',
-    \     'unix' : 'make -f make_unix.mak',
-    \    },
-    \ }
+            \ 'build' : {
+                \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
+                \ 'mac' : 'make -f make_mac.mak',
+                \ 'unix' : 'make -f make_unix.mak',
+                \ },
+            \ }
 
 " End of vimproc }}}
 
@@ -1523,8 +1560,14 @@ NeoBundle 'Shougo/vimproc', {
 " Plugin - vimshell {{{
 " https://github.com/Shougo/vimshell.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/vimshell'
+NeoBundleLazy 'Shougo/vimshell', {
+                \ 'depends' : 'Shougo/vimproc.vim',
+                \ 'autoload' : {
+                    \ 'commands' : [{ 'name' : 'VimShell', 'complete' : 'customlist,vimshell#complete'},
+                                    \ 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop'],
+                    \ 'mappings' : ['<Plug>(vimshell_'],
+                    \ },
+                \ }
 
 " End of vimshell }}}
 
@@ -1534,27 +1577,12 @@ NeoBundle 'Shougo/vimshell'
 " https://github.com/liangfeng/xmledit.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/xmledit', {
-    \ 'autoload' : {
-    \     'filetypes' : ['xml', 'html'],
-    \    },
-    \ }
+                \ 'autoload' : {
+                    \ 'filetypes' : ['xml', 'html'],
+                    \ },
+                \ }
 
 " End of xmledit }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - emmet-vim {{{
-" https://github.com/mattn/emmet-vim.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'mattn/emmet-vim.git', {
-    \ 'autoload' : {
-    \     'filetypes' : ['xml', 'html'],
-    \    },
-    \ }
-
-let g:use_emmet_complete_tag = 1
-
-" End of emmet-vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1563,10 +1591,18 @@ let g:use_emmet_complete_tag = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'drmingdrmer/xptemplate'
+NeoBundle 'drmingdrmer/xptemplate', {
+                \ 'autoload' : {
+                    \ 'mappings' : ['i', '<C-l>'],
+                    \ }
+                \ }
+
+let s:bundle = neobundle#get('xptemplate')
+function! s:bundle.hooks.on_source(bundle)
+
+endfunction
 
 autocmd BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
-
 " trigger key
 let g:xptemplate_key = '<C-l>'
 " navigate key
