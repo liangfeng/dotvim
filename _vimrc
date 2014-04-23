@@ -317,7 +317,7 @@ autocmd BufEnter * exec 'chdir ' . escape(expand("%:p:h"), ' ')
 " Need prepend installed directory to PATH env var on Windows.
 set grepprg=grep\ -Hni
 
-" TODO: Sinece vim-multiple-cursors use <C-n> mapping, change the followings.
+" TODO: Since vim-multiple-cursors use <C-n> mapping, change the followings.
 nnoremap <silent> <C-n> :cnext<CR>
 nnoremap <silent> <C-p> :cprevious<CR>
 
@@ -808,9 +808,11 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
 " Plugin - delimitMate {{{
 " https://github.com/Raimondi/delimitMate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: fix issue: 'on_source' parm of 'autoload' option does not work with 'xptemplate'
 NeoBundleLazy 'Raimondi/delimitMate', {
                 \ 'autoload': {
                     \ 'insert' : 1,
+                    \ 'on_source' : ['neocomplete.vim'],
                     \ },
                 \ }
 
@@ -942,7 +944,7 @@ NeoBundleLazy 'matchit.zip', {
 
 let bundle = neobundle#get('matchit.zip')
 function! bundle.hooks.on_post_source(bundle)
-    silent! execute 'doautocmd Filetype' &filetype
+    silent! exec 'doautocmd Filetype' &filetype
 endfunction
 
 " End of matchit }}}
@@ -956,7 +958,7 @@ endfunction
 NeoBundleLazy 'Shougo/neocomplete.vim', {
                 \ 'depends' : 'Shougo/context_filetype.vim',
                 \ 'autoload' : {
-                    \ 'insert' : 1
+                    \ 'insert' : 1,
                     \ },
                 \ }
 
@@ -980,9 +982,13 @@ function! s:bundle.hooks.on_source(bundle)
     endif
     let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-    " <CR>: close popup and save indent.
-    inoremap <silent> <expr> <CR> neocomplete#close_popup()
-                \ . '<C-r>=delimitMate#ExpandReturn()<CR>'
+    " if use delimitMate Plugin, remap <CR> with it.
+    if neobundle#is_sourced('delimitMate')
+        " <CR>: close popup and save indent.
+        inoremap <silent> <expr> <CR> neocomplete#close_popup()
+                    \ . '<C-r>=delimitMate#ExpandReturn()<CR>'
+
+    endif
 
     " <Tab>: completion.
     " TODO: <S-Tab> does NOT work?
@@ -1435,7 +1441,14 @@ endfunction
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'terryma/vim-multiple-cursors', {
+                \ 'autoload' : {
+                    \ 'mappings' : ['<C-n>'],
+                    \ },
+                \ }
+let bundle = neobundle#get('vim-multiple-cursors')
+function! bundle.hooks.on_post_source(bundle)
+endfunction
 
 " End of vim-multiple-cursors }}}
 
@@ -1506,7 +1519,6 @@ endfunction
 " TODO: Intergate with global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
 " TODO: Rewrite vimprj with prototype-based OO method.
-" TODO: Need to check whether be lazy loaded or not ?
 NeoBundleLazy 'liangfeng/vimprj', {
                 \ 'external_commands' : ['python', 'cscope'],
                 \ 'autoload' : {
@@ -1593,39 +1605,36 @@ NeoBundleLazy 'liangfeng/xmledit', {
 " https://github.com/drmingdrmer/xptemplate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'drmingdrmer/xptemplate', {
+NeoBundleLazy 'drmingdrmer/xptemplate', {
                 \ 'autoload' : {
-                    \ 'mappings' : ['i', '<C-l>'],
-                    \ }
+                    \ 'insert' : 1,
+                    \ },
                 \ }
 
 let s:bundle = neobundle#get('xptemplate')
 function! s:bundle.hooks.on_source(bundle)
+    autocmd BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
+    " trigger key
+    let g:xptemplate_key = '<C-l>'
+    " navigate key
+    let g:xptemplate_nav_next = '<C-j>'
+    let g:xptemplate_nav_prev = '<C-k>'
+    let g:xptemplate_fallback = ''
+    let g:xptemplate_strict = 1
+    let g:xptemplate_minimal_prefix = 1
 
+    let g:xptemplate_pum_tab_nav = 1
+    let g:xptemplate_move_even_with_pum = 1
+
+    " if use delimitMate Plugin, disable it in xptemplate
+    if neobundle#is_sourced('delimitMate')
+        let g:xptemplate_brace_complete = 0
+    endif
+
+    " snippet settting
+    " Do not add space between brace
+    let g:xptemplate_vars = 'SPop=&SParg='
 endfunction
-
-autocmd BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
-" trigger key
-let g:xptemplate_key = '<C-l>'
-" navigate key
-let g:xptemplate_nav_next = '<C-j>'
-let g:xptemplate_nav_prev = '<C-k>'
-let g:xptemplate_fallback = ''
-let g:xptemplate_strict = 1
-let g:xptemplate_minimal_prefix = 1
-
-let g:xptemplate_pum_tab_nav = 1
-let g:xptemplate_move_even_with_pum = 1
-
-" if use delimitMate Plugin, disable it in xptemplate
-if neobundle#is_installed('Raimondi/delimitMate')
-    let g:xptemplate_brace_complete = 0
-endif
-
-" snippet settting
-" Do not add space between brace
-let g:xptemplate_vars = 'SPop=&SParg='
 
 " End of xptemplate }}}
 
@@ -1635,7 +1644,6 @@ let g:xptemplate_vars = 'SPop=&SParg='
 " https://github.com/Valloric/YouCompleteMe.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
-" TODO: Need to check whether be lazy loaded or not ?
 
 " End of YouCompleteMe }}}
 
