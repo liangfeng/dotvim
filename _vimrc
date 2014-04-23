@@ -1197,7 +1197,7 @@ endfunction
 NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'external_commands' : ['find', 'grep'],
                 \ 'autoload' : {
-                    \ 'mappings' : '[unite]',
+                    \ 'mappings' : ['<Space>'],
                     \ 'commands' : ['Unite', 'Grep'],
                     \ 'on_source' : 'vimfiler.vim',
                     \ },
