@@ -795,8 +795,11 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 " Plugin - context_filetype {{{
 " https://github.com/Shougo/context_filetype.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/context_filetype.vim'
+NeoBundleLazy 'Shougo/context_filetype.vim', {
+                \ 'autoload' : {
+                    \ 'on_source': 'neocomplete.vim',
+                    \ },
+                \}
 
 " End of context_filetype }}}
 
@@ -807,7 +810,7 @@ NeoBundle 'Shougo/context_filetype.vim'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Raimondi/delimitMate', {
                 \ 'autoload': {
-                    \ 'mappings' : ['i', '<Plug>delimitMate'],
+                    \ 'insert' : 1,
                     \ },
                 \ }
 
@@ -1561,7 +1564,7 @@ NeoBundle 'Shougo/vimproc', {
 " https://github.com/Shougo/vimshell.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimshell', {
-                \ 'depends' : 'Shougo/vimproc.vim',
+                \ 'depends' : 'Shougo/vimproc',
                 \ 'autoload' : {
                     \ 'commands' : [{ 'name' : 'VimShell', 'complete' : 'customlist,vimshell#complete'},
                                     \ 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop'],
@@ -1614,8 +1617,11 @@ let g:xptemplate_minimal_prefix = 1
 
 let g:xptemplate_pum_tab_nav = 1
 let g:xptemplate_move_even_with_pum = 1
-" since use delimitMate Plugin, disable it in xptemplate
-let g:xptemplate_brace_complete = 0
+
+" if use delimitMate Plugin, disable it in xptemplate
+if neobundle#is_installed('Raimondi/delimitMate')
+    let g:xptemplate_brace_complete = 0
+endif
 
 " snippet settting
 " Do not add space between brace
