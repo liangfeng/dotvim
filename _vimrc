@@ -48,8 +48,8 @@ let s:is_unix = has('unix')
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_gui_running = has('gui_running')
 
-let g:maplocalleader = ','
-let g:mapleader = ','
+let g:maplocalleader = ' '
+let g:mapleader = ' '
 
 " If vim starts without opening file(s),
 " change working directory to $HOME(Mac, Linux, Unix) or $VIM (Windows).
@@ -797,7 +797,7 @@ NeoBundleLazy 'liangfeng/c-syntax', {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/context_filetype.vim', {
                 \ 'autoload' : {
-                    \ 'on_source': 'neocomplete.vim',
+                    \ 'on_source': ['neocomplete.vim'],
                     \ },
                 \}
 
@@ -991,7 +991,6 @@ function! s:bundle.hooks.on_source(bundle)
     endif
 
     " <Tab>: completion.
-    " TODO: <S-Tab> does NOT work?
     inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
     inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
 
@@ -1205,7 +1204,7 @@ NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'autoload' : {
                     \ 'mappings' : ['<Space>'],
                     \ 'commands' : ['Unite', 'Grep'],
-                    \ 'on_source' : 'vimfiler.vim',
+                    \ 'on_source' : ['vimfiler.vim'],
                     \ },
                 \ }
 
@@ -1364,11 +1363,7 @@ autocmd FileType unite call s:unite_ui_settings()
 " Plugin - vim-altercmd {{{
 " https://github.com/tyru/vim-altercmd.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'tyru/vim-altercmd', {
-                \ 'autoload' : {
-                    \ },
-                \ }
+NeoBundle 'tyru/vim-altercmd'
 
 let s:bundle = neobundle#get('vim-altercmd')
 function! s:bundle.hooks.on_source(bundle)
@@ -1441,11 +1436,8 @@ endfunction
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'terryma/vim-multiple-cursors', {
-                \ 'autoload' : {
-                    \ 'mappings' : ['<C-n>'],
-                    \ },
-                \ }
+NeoBundle 'terryma/vim-multiple-cursors'
+
 let bundle = neobundle#get('vim-multiple-cursors')
 function! bundle.hooks.on_post_source(bundle)
 endfunction
@@ -1497,8 +1489,8 @@ NeoBundleLazy 'Shougo/vimfiler.vim', {
                 \ 'autoload' : {
                     \ 'commands' : [{ 'name' : 'VimFiler', 'complete' : 'customlist,vimfiler#complete' },
                                     \ 'VimFilerExplorer', 'Edit', 'Read', 'Source', 'Write'],
-                      \    'mappings' : ['<Plug>(vimfiler_'],
-                      \    'explorer' : 1,
+                    \ 'mappings' : ['<Plug>(vimfiler_'],
+                    \ 'explorer' : 1,
                   \ }
                 \ }
 
@@ -1559,13 +1551,15 @@ endif
 " Plugin - vimproc {{{
 " https://github.com/Shougo/vimproc.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'Shougo/vimproc', {
+NeoBundleLazy 'Shougo/vimproc', {
             \ 'build' : {
                 \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
                 \ 'mac' : 'make -f make_mac.mak',
                 \ 'unix' : 'make -f make_unix.mak',
                 \ },
+            \ 'autoload' : {
+                \ 'on_source' : ['unite.vim', 'vimfiler.vim', 'vimshell'],
+                \ }
             \ }
 
 " End of vimproc }}}
