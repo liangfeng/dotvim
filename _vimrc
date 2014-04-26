@@ -1402,12 +1402,19 @@ let g:airline_theme = 'powerlineish'
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'altercation/vim-colors-solarized', {
+                \ 'autoload' : {
+                    \ 'on_source' : ['vim-airline'],
+                    \ },
+                \ }
 
 let g:solarized_italic = 0
 let g:solarized_hitrail = 1
 set background=dark
-colorscheme solarized
+
+if neobundle#is_sourced('vim-colors-solarized')
+    colorscheme solarized
+endif
 
 " End of vim-colors-solarized }}}
 
@@ -1439,7 +1446,7 @@ endfunction
 NeoBundle 'terryma/vim-multiple-cursors'
 
 let bundle = neobundle#get('vim-multiple-cursors')
-function! bundle.hooks.on_post_source(bundle)
+function! bundle.hooks.on_source(bundle)
 endfunction
 
 " End of vim-multiple-cursors }}}
