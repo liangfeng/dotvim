@@ -410,6 +410,9 @@ endfunction
 vnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>//<CR>
 vnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
+" Search highlighted text, when press slash in visual mode.
+vmap / y/<C-R>"<CR>
+
 " End of Searching/Matching }}}
 
 
@@ -520,6 +523,34 @@ if s:is_gui_running
 endif
 
 " End of Tab/Buffer }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Scripts eval {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Run the current buffer with interp.
+function! s:EvalCodes(s, e, interp)
+    pclose!
+    silent exec a:s . ',' . a:e . 'y a'
+    belowright new
+    silent put a
+    silent exec '%!' . a:interp . ' -'
+    setlocal previewwindow
+    setlocal noswapfile buftype=nofile bufhidden=wipe
+    setlocal nobuflisted nowrap cursorline nonumber fdc=0
+    setlocal ro nomodifiable
+    wincmd p
+endfunction
+
+function! s:SetupAutoCmdForEvalCodes(interp)
+    exec "nnoremap <buffer> <silent> <Leader>e :call <SID>EvalCodes('1', '$', '"
+                \ . a:interp . "')<CR>"
+    exec "command! -range Eval :if visualmode() ==# 'V' | call s:EvalCodes(<line1>,"
+                \ . "<line2>, '" . a:interp . "') | endif"
+    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
+endfunction
+
+" End of Scripts eval }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -635,27 +666,7 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Lua {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Run the current buffer as lua code
-function! s:RunAsLuaCode(s, e)
-    pclose!
-    silent exec a:s . ',' . a:e . 'y a'
-    belowright new
-    silent put a
-    silent %!lua52 -
-    setlocal previewwindow
-    setlocal noswapfile buftype=nofile bufhidden=wipe
-    setlocal nobuflisted nowrap cursorline nonumber fdc=0
-    setlocal ro nomodifiable
-    wincmd p
-endfunction
-
-function! s:SetupAutoCmdForRunAsLuaCode()
-    nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsLuaCode('1', '$')<CR>
-    command! -range Eval :call s:RunAsLuaCode(<line1>, <line2>)
-    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
-endfunction
-
-autocmd FileType lua call s:SetupAutoCmdForRunAsLuaCode()
+autocmd FileType lua call s:SetupAutoCmdForEvalCodes('lua52')
 autocmd FileType lua call s:MapJoinWithLeaders('--\\|\\')
 
 " End of Lua }}}
@@ -675,29 +686,9 @@ autocmd FileType make call s:MapJoinWithLeaders('#\\|\\')
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:python_highlight_all = 1
 
-" Run the current buffer as python code
-function! s:RunAsPythonCode(s, e)
-    pclose!
-    silent exec a:s . ',' . a:e . 'y a'
-    belowright new
-    silent put a
-    silent %!python -
-    setlocal previewwindow
-    setlocal noswapfile buftype=nofile bufhidden=wipe
-    setlocal nobuflisted nowrap cursorline nonumber fdc=0
-    setlocal ro nomodifiable
-    wincmd p
-endfunction
-
-function! s:SetupAutoCmdForRunAsPythonCode()
-    nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsPythonCode('1', '$')<CR>
-    command! -range Eval :call s:RunAsPythonCode(<line1>, <line2>)
-    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
-endfunction
-
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType python setlocal commentstring=\ #%s
-autocmd FileType python call s:SetupAutoCmdForRunAsPythonCode()
+autocmd FileType python call s:SetupAutoCmdForEvalCodes('python')
 autocmd FileType python call s:MapJoinWithLeaders('#\\|\\')
 
 " End of Python }}}
@@ -707,13 +698,13 @@ autocmd FileType python call s:MapJoinWithLeaders('#\\|\\')
 "  Language - VimL {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as VimL
-function! s:RunAsVimL(s, e)
+function! s:EvalVimL(s, e)
     pclose!
     let lines = getline(a:s, a:e)
     let file = tempname()
     call writefile(lines, file)
     redir @e
-    silent exec ':source ' . file_name
+    silent exec ':source ' . file
     call delete(file)
     redraw
     redir END
@@ -733,9 +724,9 @@ function! s:RunAsVimL(s, e)
 endfunction
 
 function! s:SetupAutoCmdForRunAsVimL()
-    nnoremap <buffer> <silent> <Leader>e :call <SID>RunAsVimL('1', '$')<CR>
-    command! -range Eval :call s:RunAsVimL(<line1>, <line2>)
-    vnoremap <buffer> <silent> <Leader>e :<C-u>Eval<CR>
+    nnoremap <buffer> <silent> <Leader>e :call <SID>EvalVimL('1', '$')<CR>
+    command! -range EvalVimL :call s:EvalVimL(<line1>, <line2>)
+    vnoremap <buffer> <silent> <Leader>e :<C-u>EvalVimL<CR>
 endfunction
 
 autocmd FileType vim setlocal commentstring=\ \"%s
