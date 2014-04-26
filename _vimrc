@@ -965,7 +965,7 @@ NeoBundleLazy 'Shougo/neocomplete.vim', {
 let s:bundle = neobundle#get('neocomplete.vim')
 function! s:bundle.hooks.on_source(bundle)
     set showfulltag
-    " TODO: The following two settings should be checked during vimprj overhaul.
+    " TODO: The following two settings must be checked during vimprj overhaul.
     " Disable header files searching to improve performance.
     set complete-=i
     " Only scan current buffer
@@ -1066,7 +1066,7 @@ endfunction
 " Plugin - nerdtree {{{
 " https://github.com/scrooloose/nerdtree.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Replace nerdtree with vimfiler.
+" TODO: Replace nerdtree with vimfiler?
 NeoBundleLazy 'scrooloose/nerdtree', {
                 \ 'autoload' : {
                     \ 'commands' : ['NERDTreeToggle','NERDTree','NERDTreeFind'],
@@ -1426,7 +1426,8 @@ endif
 NeoBundleLazy 'tpope/vim-fugitive', {
                 \ 'autoload' : {
                     \ 'commands' : ['Git', 'Gcd', 'Gstatus', 'Gedit',
-                                  \ 'Gdiff', 'Gcommit', 'Gblame', 'Glog', 'Gwrite', 'Gremove'],
+                                  \ 'Gdiff', 'Gcommit', 'Gblame', 'Glog',
+                                  \ 'Gwrite', 'Gremove'],
                     \ },
                 \ }
 
