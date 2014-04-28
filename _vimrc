@@ -1553,7 +1553,7 @@ endif
 " Plugin - vimproc {{{
 " https://github.com/Shougo/vimproc.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Shougo/vimproc', {
+NeoBundle 'Shougo/vimproc', {
             \ 'build' : {
                 \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
                 \ 'mac' : 'make -f make_mac.mak',
