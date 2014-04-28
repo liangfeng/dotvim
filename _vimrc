@@ -974,7 +974,8 @@ function! s:bundle.hooks.on_source(bundle)
     let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
     " if use delimitMate Plugin, remap <CR> with it.
-    if neobundle#is_sourced('delimitMate')
+    if neobundle#is_installed('delimitMate') &&
+        \ neobundle#is_sourced('delimitMate')
         " <CR>: close popup and save indent.
         inoremap <silent> <expr> <CR> neocomplete#close_popup()
                     \ . '<C-r>=delimitMate#ExpandReturn()<CR>'
@@ -1386,6 +1387,7 @@ endif
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'powerlineish'
+
 " End of vim-airline }}}
 
 
@@ -1403,7 +1405,8 @@ let g:solarized_italic = 0
 let g:solarized_hitrail = 1
 set background=dark
 
-if neobundle#is_sourced('vim-colors-solarized')
+if neobundle#is_installed('vim-colors-solarized') &&
+    \ neobundle#is_sourced('vim-colors-solarized')
     colorscheme solarized
 endif
 
@@ -1620,7 +1623,8 @@ function! s:bundle.hooks.on_source(bundle)
     let g:xptemplate_move_even_with_pum = 1
 
     " if use delimitMate Plugin, disable it in xptemplate
-    if neobundle#is_sourced('delimitMate')
+    if neobundle#is_installed('delimitMate') &&
+        \ neobundle#is_sourced('delimitMate')
         let g:xptemplate_brace_complete = 0
     endif
 
