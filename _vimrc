@@ -1535,7 +1535,6 @@ function! s:bundle.hooks.on_source(bundle)
     if s:is_windows
         let g:cscope_sort_path = 'C:/Program Files (x86)/cscope'
     endif
-
 endfunction
 
 " Fast editing of my plugin
@@ -1545,15 +1544,14 @@ elseif s:is_windows
     nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$VIM/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 endif
 
-
 " End of vimprj }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vimproc {{{
-" https://github.com/Shougo/vimproc.git
+" Plugin - vimproc.vim {{{
+" https://github.com/Shougo/vimproc.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Shougo/vimproc', {
+NeoBundleLazy 'Shougo/vimproc.vim', {
             \ 'build' : {
                 \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
                 \ 'mac' : 'make -f make_mac.mak',
@@ -1561,10 +1559,10 @@ NeoBundle 'Shougo/vimproc', {
                 \ },
             \ 'autoload' : {
                 \ 'on_source' : ['unite.vim', 'vimfiler.vim', 'vimshell'],
-                \ }
+                \ },
             \ }
 
-" End of vimproc }}}
+" End of vimproc.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1572,7 +1570,7 @@ NeoBundle 'Shougo/vimproc', {
 " https://github.com/Shougo/vimshell.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimshell', {
-                \ 'depends' : 'Shougo/vimproc',
+                \ 'depends' : 'Shougo/vimproc.vim',
                 \ 'autoload' : {
                     \ 'commands' : [{ 'name' : 'VimShell', 'complete' : 'customlist,vimshell#complete'},
                                     \ 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop'],
