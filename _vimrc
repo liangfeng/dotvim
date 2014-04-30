@@ -1540,7 +1540,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimproc.vim', {
                 \ 'build' : {
-                    \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
+                    \ 'windows' : 'echo "You need compile vimproc manually on Windows."',
                     \ 'mac' : 'make -f make_mac.mak',
                     \ 'unix' : 'make -f make_unix.mak',
                     \ },
