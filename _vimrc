@@ -1539,15 +1539,15 @@ endif
 " https://github.com/Shougo/vimproc.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimproc.vim', {
-            \ 'build' : {
-                \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
-                \ 'mac' : 'make -f make_mac.mak',
-                \ 'unix' : 'make -f make_unix.mak',
-                \ },
-            \ 'autoload' : {
-                \ 'on_source' : ['unite.vim', 'vimfiler.vim', 'vimshell'],
-                \ },
-            \ }
+                \ 'build' : {
+                    \ 'windows' : 'echoerr "You need compile vimproc manually on Windows."',
+                    \ 'mac' : 'make -f make_mac.mak',
+                    \ 'unix' : 'make -f make_unix.mak',
+                    \ },
+                \ 'autoload' : {
+                    \ 'on_source' : ['unite.vim', 'vimfiler.vim', 'vimshell'],
+                    \ },
+                \ }
 
 " End of vimproc.vim }}}
 
