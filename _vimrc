@@ -1395,11 +1395,7 @@ let g:airline_theme = 'powerlineish'
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'altercation/vim-colors-solarized', {
-                \ 'autoload' : {
-                    \ 'on_source' : ['vim-airline'],
-                    \ },
-                \ }
+NeoBundle 'altercation/vim-colors-solarized'
 
 let g:solarized_italic = 0
 let g:solarized_hitrail = 1
@@ -1417,18 +1413,9 @@ endif
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'tpope/vim-fugitive', {
-                \ 'autoload' : {
-                    \ 'commands' : ['Git', 'Gcd', 'Gstatus', 'Gedit',
-                                  \ 'Gdiff', 'Gcommit', 'Gblame', 'Glog',
-                                  \ 'Gwrite', 'Gremove'],
-                    \ },
-                \ }
+NeoBundle 'tpope/vim-fugitive'
 
-let s:bundle = neobundle#get('vim-fugitive')
-function! s:bundle.hooks.on_source(bundle)
-    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
-endfunction
+autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
 
 " End of vim-fugitive }}}
 
