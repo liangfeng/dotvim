@@ -115,10 +115,12 @@ endif
 " XXX: Change it. It's just for my environment.
 language messages zh_CN.utf-8
 
-if s:is_unix
-    " XXX: Change it. It's just for my environment.
-    set viminfo+=n$HOME/tmp/.viminfo
+" XXX: Change it. It's just for my environment.
+if !isdirectory($HOME . '/tmp')
+    call mkdir($HOME . '/tmp')
 endif
+
+set viminfo+=n$HOME/tmp/.viminfo
 
 " Locate the cursor at the last edited location when open a file
 autocmd BufReadPost *
@@ -208,15 +210,7 @@ syntax on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editting {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if s:is_unix
-    if isdirectory("$HOME/tmp")
-        set directory=$HOME/tmp
-    else
-        set directory=/tmp
-    endif
-elseif s:is_windows
-    set directory=$TMP
-endif
+set directory=$HOME/tmp
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
