@@ -793,11 +793,10 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
 " Plugin - delimitMate {{{
 " https://github.com/Raimondi/delimitMate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: fix issue: 'on_source' parm of 'autoload' option does not work with 'xptemplate'
 NeoBundleLazy 'Raimondi/delimitMate', {
                 \ 'autoload': {
                     \ 'insert' : 1,
-                    \ 'on_source' : ['neocomplete.vim'],
+                    \ 'on_source' : ['neocomplete.vim', 'xptemplate'],
                     \ },
                 \ }
 
