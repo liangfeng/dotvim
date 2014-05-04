@@ -113,7 +113,11 @@ if s:is_windows && s:is_gui_running
 endif
 
 " XXX: Change it. It's just for my environment.
-language messages zh_CN.utf-8
+if &term ==# 'win32'
+    language messages en_US.utf-8
+else
+    language messages zh_CN.utf-8
+endif
 
 " XXX: Change it. It's just for my environment.
 if !isdirectory($HOME . '/tmp')
@@ -136,9 +140,12 @@ autocmd BufReadPost *
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let &termencoding = &encoding
 let legacy_encoding = &encoding
-set encoding=utf-8
-set ambiwidth=double
-scriptencoding utf-8
+
+if &term !=# 'win32'
+    set encoding=utf-8
+    set ambiwidth=double
+    scriptencoding utf-8
+endif
 
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
 if legacy_encoding != 'latin1'
@@ -342,11 +349,6 @@ nnoremap <silent> <C-Tab> gt
 " Quick moving between windows
 nnoremap <silent> <Leader>w <C-w>w
 
-" To make remapping Esc work porperly in console mode by disabling esckeys.
-if !s:is_gui_running
-    set noesckeys
-endif
-
 " Assume fast terminal connection.
 set ttyfast
 
@@ -364,14 +366,20 @@ inoremap <silent> <Down> <Nop>
 inoremap <silent> <Left> <Nop>
 inoremap <silent> <Right> <Nop>
 
-nnoremap <silent> <ESC>OA <Nop>
-nnoremap <silent> <ESC>OB <Nop>
-nnoremap <silent> <ESC>OC <Nop>
-nnoremap <silent> <ESC>OD <Nop>
-inoremap <silent> <ESC>OA <Nop>
-inoremap <silent> <ESC>OB <Nop>
-inoremap <silent> <ESC>OC <Nop>
-inoremap <silent> <ESC>OD <Nop>
+if !s:is_gui_running
+    " To make remapping Esc work porperly in terminal mode by disabling esckeys.
+    set noesckeys
+
+    " Disable arrow keys for terminals.
+    nnoremap <silent> <ESC>OA <Nop>
+    nnoremap <silent> <ESC>OB <Nop>
+    nnoremap <silent> <ESC>OC <Nop>
+    nnoremap <silent> <ESC>OD <Nop>
+    inoremap <silent> <ESC>OA <Nop>
+    inoremap <silent> <ESC>OB <Nop>
+    inoremap <silent> <ESC>OC <Nop>
+    inoremap <silent> <ESC>OD <Nop>
+endif
 
 " move around the visual lines
 nnoremap <silent> j gj
