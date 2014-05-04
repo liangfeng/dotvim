@@ -364,6 +364,15 @@ inoremap <silent> <Down> <Nop>
 inoremap <silent> <Left> <Nop>
 inoremap <silent> <Right> <Nop>
 
+nnoremap <silent> <ESC>OA <Nop>
+nnoremap <silent> <ESC>OB <Nop>
+nnoremap <silent> <ESC>OC <Nop>
+nnoremap <silent> <ESC>OD <Nop>
+inoremap <silent> <ESC>OA <Nop>
+inoremap <silent> <ESC>OB <Nop>
+inoremap <silent> <ESC>OC <Nop>
+inoremap <silent> <ESC>OD <Nop>
+
 " move around the visual lines
 nnoremap <silent> j gj
 nnoremap <silent> k gk
