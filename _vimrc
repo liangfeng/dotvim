@@ -769,7 +769,7 @@ endfunction
 " Fast editing of vimrc
 function! s:OpenVimrc()
     if s:is_unix
-        call s:OpenFileWithProperBuffer('$HOME/.vimrc')
+        call s:OpenFileWithProperBuffer('$HOME/.vim/_vimrc')
     elseif s:is_windows
         call s:OpenFileWithProperBuffer('$VIM/_vimrc')
     endif
