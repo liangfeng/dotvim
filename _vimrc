@@ -926,8 +926,8 @@ NeoBundleLazy 'matchit.zip', {
                     \ },
                 \}
 
-let bundle = neobundle#get('matchit.zip')
-function! bundle.hooks.on_post_source(bundle)
+let s:bundle = neobundle#get('matchit.zip')
+function! s:bundle.hooks.on_post_source(bundle)
     silent! exec 'doautocmd Filetype' &filetype
 endfunction
 
@@ -1067,7 +1067,7 @@ function! s:bundle.hooks.on_source(bundle)
     let g:NERDTreeWinSize = 50
     let g:NERDTreeDirArrows = 1
     let g:NERDTreeMinimalUI = 1
-    let NERDTreeShowHidden=1
+    let g:NERDTreeShowHidden = 1
     let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
 
     nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
@@ -1408,7 +1408,10 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'tpope/vim-fugitive'
 
-autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
+let s:bundle = neobundle#get('vim-fugitive')
+function! s:bundle.hooks.on_source(bundle)
+    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
+endfunction
 
 " End of vim-fugitive }}}
 
@@ -1420,8 +1423,8 @@ autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
 " TODO: Need to check whether be lazy loaded or not ?
 NeoBundle 'terryma/vim-multiple-cursors'
 
-let bundle = neobundle#get('vim-multiple-cursors')
-function! bundle.hooks.on_source(bundle)
+let s:bundle = neobundle#get('vim-multiple-cursors')
+function! s:bundle.hooks.on_source(bundle)
 endfunction
 
 " End of vim-multiple-cursors }}}
