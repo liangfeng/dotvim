@@ -370,15 +370,17 @@ if !s:is_gui_running
     " To make remapping Esc work porperly in terminal mode by disabling esckeys.
     set noesckeys
 
+    " FIXME: <Esc> slow issue on terminal.
+
     " Disable arrow keys for terminals.
-    nnoremap <silent> <ESC>OA <Nop>
-    nnoremap <silent> <ESC>OB <Nop>
-    nnoremap <silent> <ESC>OC <Nop>
-    nnoremap <silent> <ESC>OD <Nop>
-    inoremap <silent> <ESC>OA <Nop>
-    inoremap <silent> <ESC>OB <Nop>
-    inoremap <silent> <ESC>OC <Nop>
-    inoremap <silent> <ESC>OD <Nop>
+    nnoremap <silent> <Esc>OA <Nop>
+    nnoremap <silent> <Esc>OB <Nop>
+    nnoremap <silent> <Esc>OC <Nop>
+    nnoremap <silent> <Esc>OD <Nop>
+    inoremap <silent> <Esc>OA <Nop>
+    inoremap <silent> <Esc>OB <Nop>
+    inoremap <silent> <Esc>OC <Nop>
+    inoremap <silent> <Esc>OD <Nop>
 endif
 
 " move around the visual lines
