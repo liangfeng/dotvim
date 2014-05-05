@@ -113,11 +113,7 @@ if s:is_windows && s:is_gui_running
 endif
 
 " XXX: Change it. It's just for my environment.
-if &term ==# 'win32'
-    language messages en_US.utf-8
-else
-    language messages zh_CN.utf-8
-endif
+language messages zh_CN.utf-8
 
 " XXX: Change it. It's just for my environment.
 if !isdirectory($HOME . '/tmp')
@@ -140,12 +136,9 @@ autocmd BufReadPost *
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let &termencoding = &encoding
 let legacy_encoding = &encoding
-
-if &term !=# 'win32'
-    set encoding=utf-8
-    set ambiwidth=double
-    scriptencoding utf-8
-endif
+set encoding=utf-8
+set ambiwidth=double
+scriptencoding utf-8
 
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
 if legacy_encoding != 'latin1'
