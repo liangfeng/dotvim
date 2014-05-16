@@ -303,7 +303,7 @@ set incsearch
 set hlsearch
 
 " Simulate 'autochdir' option to avoid side-effect of this option.
-autocmd BufEnter * exec 'chdir ' . escape(expand("%:p:h"), ' ')
+autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
 
 " Use external grep command for performance
 " XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
