@@ -120,6 +120,8 @@ if !isdirectory($HOME . '/tmp')
     call mkdir($HOME . '/tmp')
 endif
 
+let $TMP = expand('~/tmp')
+
 set viminfo+=n$HOME/tmp/.viminfo
 
 " Locate the cursor at the last edited location when open a file
@@ -247,6 +249,7 @@ nnoremap <silent> ZZ :confirm qa<CR>
 nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
 " Use pipe instead of temp file for shell.
+" TOOD: use 'shelltemp' instead to fix encoding issue in fugutive window?
 set noshelltemp
 
 if s:is_windows
@@ -814,14 +817,6 @@ NeoBundleLazy 'Raimondi/delimitMate', {
 
 let s:bundle = neobundle#get('delimitMate')
 function! s:bundle.hooks.on_source(bundle)
-    let g:delimitMate_excluded_ft = 'mail,txt,text'
-    let execluded_ft_list = split(g:delimitMate_excluded_ft, ',')
-    for ft in execluded_ft_list
-        if ft ==# &filetype
-            return
-        endif
-    endfor
-    imap <silent> <C-g> <Plug>delimitMateJumpMany
     let g:delimitMate_expand_cr = 1
     let g:delimitMate_balance_matchpairs = 1
     autocmd FileType vim let b:delimitMate_matchpairs = '(:),[:],{:},<:>'
@@ -829,6 +824,13 @@ function! s:bundle.hooks.on_source(bundle)
     autocmd FileType xml,html let b:delimitMate_matchpairs = '(:),[:],{:}'
     autocmd FileType html let b:delimitMate_quotes = '\" ''
     autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+endfunction
+
+function! s:bundle.hooks.on_post_source(bundle)
+    imap <silent> <C-g> <Plug>delimitMateJumpMany
+    let g:delimitMate_excluded_ft = 'mail,txt,text'
+    " To work with 'NeoBundleLazy', must call the following cmd.
+    silent! exec 'doautocmd Filetype' &filetype
 endfunction
 
 " End of delimitMate }}}
@@ -1422,7 +1424,7 @@ NeoBundle 'tpope/vim-fugitive'
 
 let s:bundle = neobundle#get('vim-fugitive')
 function! s:bundle.hooks.on_source(bundle)
-    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
+autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
 endfunction
 
 " End of vim-fugitive }}}
