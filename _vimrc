@@ -824,11 +824,12 @@ function! s:bundle.hooks.on_source(bundle)
     autocmd FileType xml,html let b:delimitMate_matchpairs = '(:),[:],{:}'
     autocmd FileType html let b:delimitMate_quotes = '\" ''
     autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+    autocmd FileType,BufNewFile,BufRead,BufEnter
+                \ * imap <buffer> <silent> <C-g> <Plug>delimitMateJumpMany
 endfunction
 
 function! s:bundle.hooks.on_post_source(bundle)
-    imap <silent> <C-g> <Plug>delimitMateJumpMany
-    let g:delimitMate_excluded_ft = 'mail,txt,text'
+    let g:delimitMate_excluded_ft = 'mail,txt,text,,'
     " To work with 'NeoBundleLazy', must call the following cmd.
     silent! exec 'doautocmd Filetype' &filetype
 endfunction
