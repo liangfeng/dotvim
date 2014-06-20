@@ -112,8 +112,7 @@ if s:is_windows && s:is_gui_running
     nnoremap <silent> <Leader>W :call <SID>ToggleWindowSize()<CR>
 endif
 
-" XXX: Change it. It's just for my environment.
-language messages zh_CN.utf-8
+language messages en_US.utf-8
 
 " XXX: Change it. It's just for my environment.
 if !isdirectory($HOME . '/tmp')
