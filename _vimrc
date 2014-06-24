@@ -249,7 +249,7 @@ nnoremap <silent> <Leader><Tab> :tabnew<CR>
 
 " Use pipe instead of temp file for shell.
 " TOOD: use 'shelltemp' instead to fix encoding issue in fugutive window?
-set noshelltemp
+set shelltemp
 
 if s:is_windows
     set shellslash
@@ -1362,16 +1362,17 @@ autocmd FileType unite call s:unite_ui_settings()
 " Plugin - vim-altercmd {{{
 " https://github.com/tyru/vim-altercmd.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'tyru/vim-altercmd'
+" Only source this plugin on Windows GUI version.
+if s:is_windows && s:is_gui_running
+    NeoBundle 'tyru/vim-altercmd'
 
-let s:bundle = neobundle#get('vim-altercmd')
-function! s:bundle.hooks.on_source(bundle)
-    command! Shell call s:Shell()
-    AlterCommand sh[ell] Shell
-endfunction
+    let s:bundle = neobundle#get('vim-altercmd')
+    function! s:bundle.hooks.on_source(bundle)
+        command! Shell call s:Shell()
+        AlterCommand sh[ell] Shell
+    endfunction
 
-" TODO: Need fix issue in :exec 'shell'
-if s:is_windows
+    " TODO: Need fix issue in :exec 'shell'
     function! s:Shell()
         exec 'set shelltemp | shell | set noshelltemp'
     endfunction
