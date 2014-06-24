@@ -64,10 +64,10 @@ endif
 " Setup neobundle plugin.
 " Must be called before filetype on.
 if s:is_unix
-    set runtimepath=$VIMRUNTIME,$HOME/.vim/bundle/neobundle.vim
+    set runtimepath=$HOME/.vim/bundle/neobundle.vim,$VIMRUNTIME
     call neobundle#begin()
 else
-    set runtimepath=$VIMRUNTIME,$VIM/bundle/neobundle.vim
+    set runtimepath=$VIM/bundle/neobundle.vim,$VIMRUNTIME
     call neobundle#begin('$VIM/bundle')
 endif
 
@@ -1424,7 +1424,7 @@ NeoBundle 'tpope/vim-fugitive'
 
 let s:bundle = neobundle#get('vim-fugitive')
 function! s:bundle.hooks.on_source(bundle)
-autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
+    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
 endfunction
 
 " End of vim-fugitive }}}
@@ -1580,9 +1580,9 @@ NeoBundleLazy 'Shougo/vimshell', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xmledit {{{
-" https://github.com/liangfeng/xmledit.git
+" https://github.com/sukima/xmledit.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'liangfeng/xmledit', {
+NeoBundleLazy 'suikima/xmledit', {
                 \ 'autoload' : {
                     \ 'filetypes' : ['xml', 'html'],
                     \ },
