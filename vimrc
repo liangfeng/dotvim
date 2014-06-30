@@ -67,8 +67,8 @@ if s:is_unix
     set runtimepath=$HOME/.vim/bundle/neobundle.vim,$VIMRUNTIME
     call neobundle#begin()
 else
-    set runtimepath=$VIM/bundle/neobundle.vim,$VIMRUNTIME
-    call neobundle#begin('$VIM/bundle')
+    set runtimepath=$HOME/vimfiles/bundle/neobundle.vim,$VIMRUNTIME
+    call neobundle#begin('$HOME/vimfiles/bundle')
 endif
 
 " Do not load system menu, before ':syntax on' and ':filetype on'.
@@ -150,7 +150,7 @@ else
                 \&fileencodings, ',default,', ',', '')
 endif
 
-" This function is revised from Wu yongwei's _vimrc.
+" This function is revised from Wu yongwei's vimrc.
 " Function to display the current character code in its 'file encoding'
 function! s:EchoCharCode()
     let char_enc = matchstr(getline('.'), '.', col('.') - 1)
@@ -198,7 +198,7 @@ if s:is_mac && s:is_gui_running
 endif
 
 " Switch on syntax highlighting.
-" Delete colors_name for _vimrc re-sourcing.
+" Delete colors_name for vimrc re-sourcing.
 if exists('g:colors_name')
     unlet g:colors_name
 endif
@@ -762,9 +762,9 @@ endfunction
 " Fast editing of vimrc
 function! s:OpenVimrc()
     if s:is_unix
-        call s:OpenFileWithProperBuffer('$HOME/.vim/_vimrc')
+        call s:OpenFileWithProperBuffer('$HOME/.vim/vimrc')
     elseif s:is_windows
-        call s:OpenFileWithProperBuffer('$VIM/_vimrc')
+        call s:OpenFileWithProperBuffer('$HOME/vimfiles/vimrc')
     endif
 endfunction
 
