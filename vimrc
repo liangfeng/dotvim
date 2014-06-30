@@ -1556,7 +1556,7 @@ NeoBundleLazy 'Shougo/vimshell', {
 " Plugin - xmledit {{{
 " https://github.com/sukima/xmledit.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'suikima/xmledit', {
+NeoBundleLazy 'sukima/xmledit', {
                 \ 'autoload' : {
                     \ 'filetypes' : ['xml', 'html'],
                     \ },
