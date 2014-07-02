@@ -304,9 +304,8 @@ set hlsearch
 autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
 
 " Use external grep command for performance
-" XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
-" http://sourceforge.net/projects/unxutils/
-" Need prepend installed directory to PATH env var on Windows.
+" XXX: On Windows, use cmds from 'git for Windows'.
+" Need prepend installed 'bin' directory to PATH env var on Windows.
 set grepprg=grep\ -Hni
 
 " TODO: Since vim-multiple-cursors use <C-n> mapping, change the followings.
@@ -1191,9 +1190,8 @@ endfunction
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" XXX: On Windows, cmds from gnuwin32 doesn't work, must install from:
-" http://sourceforge.net/projects/unxutils/
-" Need prepend installed directory to PATH env var on Windows.
+" XXX: On Windows, use cmds from 'git for Windows'.
+" Need prepend installed 'bin' directory to PATH env var on Windows.
 NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'external_commands' : ['find', 'grep'],
                 \ 'autoload' : {
@@ -1352,6 +1350,33 @@ endfunction
 autocmd FileType unite call s:unite_ui_settings()
 
 " End of unite.vim }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-altercmd {{{
+" https://github.com/tyru/vim-altercmd.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Only source this plugin on Windows GUI version.
+if s:is_windows && s:is_gui_running
+
+    " Use pipe instead of temp file for shell to avoid popup dos window.
+    set noshelltemp
+
+    NeoBundle 'tyru/vim-altercmd'
+
+    let s:bundle = neobundle#get('vim-altercmd')
+    function! s:bundle.hooks.on_source(bundle)
+        command! Shell call s:Shell()
+        AlterCommand sh[ell] Shell
+    endfunction
+
+    " TODO: Need fix issue in :exec 'shell'
+    function! s:Shell()
+        exec 'set shelltemp | shell | set noshelltemp'
+    endfunction
+endif
+
+" End of vim-altercmd }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
