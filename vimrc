@@ -413,8 +413,9 @@ endfunction
 vnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>//<CR>
 vnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
-" Search highlighted text, when press slash in visual mode.
-vmap / y/<C-R>"<CR>
+" Open another tabpage to view help.
+" TODO: should support virtual mode.
+nnoremap <silent> K :tab h <C-r><C-w><CR>
 
 " End of Searching/Matching }}}
 
@@ -698,7 +699,7 @@ autocmd FileType python call s:MapJoinWithLeaders('#\\|\\')
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"  Language - VimL {{{
+" Language - VimL {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run the current buffer as VimL
 function! s:EvalVimL(s, e)
@@ -742,7 +743,7 @@ let g:vimsyn_noerror = 1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"  Language - xml {{{
+" Language - xml {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
@@ -750,8 +751,15 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"  vimrc {{{
+" vimrc {{{
+" https://github.com/liangfeng/dotvim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Also manage vimrc by Neobundle.
+NeoBundleFetch 'liangfeng/dotvim', {
+                 \ 'name' : 'vimfiles',
+                 \ 'base' : '~',
+                 \ }
+
 " If current buffer is noname and empty, use current buffer.
 " Otherwise use new tab
 function! s:OpenFileWithProperBuffer(file)
@@ -1524,7 +1532,7 @@ function! s:bundle.hooks.on_source(bundle)
     if s:is_unix
         let $PYTHONPATH .= $HOME . '/.vim/bundle/vimprj/ftplugin/vimprj/:'
     elseif s:is_windows
-        let $PYTHONPATH .= $VIM . '/bundle/vimprj/ftplugin/vimprj/;'
+        let $PYTHONPATH .= $HOME . '/vimfiles/bundle/vimprj/ftplugin/vimprj/;'
     endif
 
     " XXX: Change it. It's just for my environment.
@@ -1537,7 +1545,7 @@ endfunction
 if s:is_unix
     nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/.vim/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 elseif s:is_windows
-    nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$VIM/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
+    nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/vimfiles/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
 endif
 
 " End of vimprj }}}
