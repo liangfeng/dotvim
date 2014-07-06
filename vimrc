@@ -1427,12 +1427,7 @@ endif
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'tpope/vim-fugitive'
-
-let s:bundle = neobundle#get('vim-fugitive')
-function! s:bundle.hooks.on_source(bundle)
-    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
-endfunction
+NeoBundle 'tpope/vim-fugitive', {'external_commands' : 'git'}
 
 " End of vim-fugitive }}}
 
