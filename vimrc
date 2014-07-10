@@ -14,18 +14,21 @@
 " Check Prerequisite {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if v:version < 704
-    echoerr 'Requires Vim 7.4 or later. The current version of Vim is "' . v:version . '".'
-    quit
+    echohl WarningMsg
+        \ | echomsg 'Requires Vim 7.4 or later. The current version of Vim is "' . v:version . '".'
+        \ | echohl None
 endif
 
 if !has('python')
-    echoerr 'Requires Vim compiled with +python/dyn.'
-    quit
+    echohl WarningMsg
+        \ | echomsg 'Requires Vim compiled with +python/dyn.'
+        \ | echohl None
 endif
 
 if !has('lua')
-    echoerr 'Requires Vim compiled with +lua/dyn.'
-    quit
+    echohl WarningMsg
+        \ | echomsg 'Requires Vim compiled with +lua/dyn.'
+        \ | echohl None
 endif
 
 " End of Check Prerequisite }}}
