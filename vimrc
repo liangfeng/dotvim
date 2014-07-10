@@ -15,20 +15,20 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if v:version < 704
     echohl WarningMsg
-        \ | echomsg 'Requires Vim 7.4 or later. The current version of Vim is "' . v:version . '".'
-        \ | echohl None
+    echomsg 'Requires Vim 7.4 or later. The current version of Vim is "' . v:version . '".'
+    echohl None
 endif
 
 if !has('python')
     echohl WarningMsg
-        \ | echomsg 'Requires Vim compiled with +python/dyn.'
-        \ | echohl None
+    echomsg 'Requires Vim compiled with +python/dyn.'
+    echohl None
 endif
 
 if !has('lua')
     echohl WarningMsg
-        \ | echomsg 'Requires Vim compiled with +lua/dyn.'
-        \ | echohl None
+    echomsg 'Requires Vim compiled with +lua/dyn.'
+    echohl None
 endif
 
 " End of Check Prerequisite }}}
