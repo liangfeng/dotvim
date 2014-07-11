@@ -307,8 +307,8 @@ set hlsearch
 autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
 
 " Use external grep command for performance
-" XXX: On Windows, use cmds from 'git for Windows'.
-" Need prepend installed 'bin' directory to PATH env var on Windows.
+" XXX: In Windows, use cmds from 'git for Windows'.
+" Need prepend installed 'bin' directory to PATH env var in Windows.
 set grepprg=grep\ -Hni
 
 " TODO: Since vim-multiple-cursors use <C-n> mapping, change the followings.
@@ -1026,10 +1026,10 @@ endfunction
 " Plugin - neobundle.vim {{{
 " https://github.com/Shougo/neobundle.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleFetch 'Shougo/neobundle.vim', {'external_commands' : 'rm'}
+NeoBundleFetch 'Shougo/neobundle.vim'
 
-" Since unix style 'rmdir' is installed and can not handle directory properly,
-" must setup rm_command explicitly on Windows to use internal 'rmdir' cmd.
+" If unix style 'rmdir' is installed , it can not handle directory properly,
+" must setup rm_command explicitly in Windows to use builtin 'rmdir' cmd.
 if s:is_windows
     let g:neobundle#rm_command = 'cmd.exe /C rmdir /S /Q'
 endif
@@ -1201,8 +1201,8 @@ endfunction
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" XXX: On Windows, use cmds from 'git for Windows'.
-" Need prepend installed 'bin' directory to PATH env var on Windows.
+" XXX: In Windows, use cmds from 'git for Windows'.
+" Need prepend installed 'bin' directory to PATH env var in Windows.
 NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'external_commands' : ['find', 'grep'],
                 \ 'autoload' : {
@@ -1237,9 +1237,6 @@ function! s:unite_variables()
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_rec_max_cache_files = 0
     let g:unite_prompt = '» '
-    if s:is_windows
-        let g:unite_source_rec_async_command = 'find'
-    endif
     " Setup variables for 'grep' source.
     let g:unite_source_grep_encoding = 'utf-8'
     let g:unite_source_grep_max_candidates = 200
@@ -1250,25 +1247,44 @@ function! s:unite_mappings()
     nnoremap [unite] <Nop>
 
     " Frequent shortcuts.
-    " When searching buffer enter normal mode by default.
+    " When searching buffer switch to normal mode by default.
     nnoremap <silent> [unite]b :Unite -toggle -auto-resize
                                 \ -buffer-name=buffers -profile-name=files
                                 \ buffer<CR>
 
-    " Shortcut for searching mru file.
+    " Shortcut for searching MRU file.
     nnoremap <silent> [unite]r :Unite -start-insert -toggle -auto-resize
                                 \ -buffer-name=recent -profile-name=files
                                 \ file_mru<CR>
 
     " Shortcut for searching files in current directory recursively.
-    nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
-                                \ -buffer-name=files -profile-name=files
-                                \ file_rec/async:!<CR>
+    if s:is_windows
+        " In Windows, 'file_rec/async' source is too slow and not easy to use.
+        " Should use 'file_rec' source instead.
+        nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
+                                    \ -buffer-name=files -profile-name=files
+                                    \ file_rec:!<CR>
+    elseif s:is_unix
+        " Use 'file_rec/async' in unix-like OS.
+        nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
+                                    \ -buffer-name=files -profile-name=files
+                                    \ file_rec/async:!<CR>
+    endif
 
-    " Shortcut for searching (buffers, mru files, file in curr dir).
-    nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
-                                      \ -buffer-name=mixed -profile-name=files
-                                      \ buffer file_mru file_rec/async:!<CR>
+    " Shortcut for searching (buffers, mru files, file in current dir recursively).
+    if s:is_windows
+        " In Windows, 'file_rec/async' source is too slow and not easy to use.
+        " Should use 'file_rec' source instead.
+        nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
+                                          \ -buffer-name=mixed -profile-name=files
+                                          \ buffer file_mru file_rec/async:!<CR>
+
+    elseif s:is_unix
+        " Use file_rec/async in unix-like OS.
+        nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
+                                          \ -buffer-name=mixed -profile-name=files
+                                          \ buffer file_mru file_rec:!<CR>
+    endif
 
     " Unfrequent shortcuts.
     " Shortcut for mappings searching.
@@ -1367,7 +1383,7 @@ autocmd FileType unite call s:unite_ui_settings()
 " Plugin - vim-altercmd {{{
 " https://github.com/tyru/vim-altercmd.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Only source this plugin on Windows GUI version.
+" Only source this plugin in Windows GUI version.
 if s:is_windows && s:is_gui_running
 
     " Use pipe instead of temp file for shell to avoid popup dos window.
