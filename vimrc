@@ -1366,7 +1366,6 @@ function! s:unite_ui_settings()
     else
         noremap <silent> <buffer> <expr> t unite#do_action('my_tabdrop')
         imap <silent> <buffer> <expr> <C-t> unite#do_action('my_tabdrop')
-        inoremap <silent> <buffer> <expr> <C-o> '<C-o>'
     endif
     " Do not exit unite buffer when call '<Plug>(unite_delete_backward_char)'.
     inoremap <silent> <expr> <buffer> <Plug>(unite_delete_backward_char)
