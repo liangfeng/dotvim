@@ -214,7 +214,7 @@ syntax on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editting {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set directory=$HOME/tmp
+set directory=$TMP
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -581,12 +581,7 @@ endfunction
 function! s:SetSysTags()
     " XXX: change it. It's just for my environment.
     " include system tags, :help ft-c-omni
-    if s:is_unix
-        set tags+=$HOME/.vim/systags
-    elseif s:is_windows
-        " XXX: change it. It's just for my environment.
-        set tags+=$TMP/systags
-    endif
+    set tags+=$TMP/systags
 endfunction
 
 function! s:HighlightSpaceErrors()
@@ -621,7 +616,7 @@ if s:is_unix
     autocmd BufEnter /usr/include/* call s:GNUIndent()
 elseif s:is_windows
     " XXX: change it. It's just for my environment.
-    autocmd BufEnter e:/project/g++/* call s:GNUIndent()
+    autocmd BufEnter ~/projects/g++/* call s:GNUIndent()
     set makeprg=nmake
 endif
 
@@ -1195,6 +1190,17 @@ function! s:bundle.hooks.on_source(bundle)
 endfunction
 
 " End of TaskList.vim }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - tmuxline.vim {{{
+" https://github.com/edkolev/tmuxline.vim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if s:is_unix
+    NeoBundle 'edkolev/tmuxline.vim'
+endif
+
+" End of tmuxline.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
