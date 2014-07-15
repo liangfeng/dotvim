@@ -1461,6 +1461,16 @@ endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-ctrlspace {{{
+" https://github.com/szw/vim-ctrlspace.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need a try?
+" NeoBundle 'szw/vim-ctrlspace'
+
+" End of vim-ctrlspace }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1535,6 +1545,16 @@ NeoBundle 'tpope/vim-surround'
 let g:surround_no_insert_mappings = 1
 
 " End of vim-surround }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-visualstar {{{
+" https://github.com/thinca/vim-visualstar.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need a try?
+" NeoBundle 'thinca/vim-visualstar'
+
+" End of vim-visualstar }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
