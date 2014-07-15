@@ -1196,6 +1196,7 @@ endfunction
 " Plugin - tmuxline.vim {{{
 " https://github.com/edkolev/tmuxline.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FIXME: Is a bash plugin better instead of a vim plugn?
 if s:is_unix
     NeoBundle 'edkolev/tmuxline.vim'
 endif
@@ -1243,6 +1244,8 @@ function! s:unite_variables()
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_rec_max_cache_files = 0
     let g:unite_prompt = '» '
+    let g:unite_source_rec_async_command = 'find'
+    let g:unite_source_file_async_command = 'find'
     " Setup variables for 'grep' source.
     let g:unite_source_grep_encoding = 'utf-8'
     let g:unite_source_grep_max_candidates = 200
@@ -1448,6 +1451,15 @@ endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-easymotion {{{
+" https://github.com/Lokaltog/vim-easymotion.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'Lokaltog/vim-easymotion'
+
+" End of vim-easymotion }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1574,6 +1586,8 @@ endif
 " Plugin - vimproc.vim {{{
 " https://github.com/Shougo/vimproc.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FIXME: should make vimproc use GNU find instead of internal find in Windows.
+"        Send a issue report to Shougo?
 NeoBundleLazy 'Shougo/vimproc.vim', {
                 \ 'build' : {
                     \ 'windows' : 'echo "You need compile vimproc manually on Windows."',
