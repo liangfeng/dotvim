@@ -54,13 +54,11 @@ let s:is_gui_running = has('gui_running')
 let g:maplocalleader = ' '
 let g:mapleader = ' '
 
-" If vim starts without opening file(s),
-" change working directory to $HOME(Mac, Linux, Unix) or $VIM (Windows).
-if expand('%') == ''
-    if s:is_unix
-        cd $HOME
-    elseif s:is_windows
-        cd $VIM
+" In Windows, If vim starts without opening file(s),
+" change working directory to '$HOME/vimfiles'
+if s:is_windows
+    if expand('%') == ''
+        cd $HOME/vimfiles
     endif
 endif
 
@@ -141,7 +139,6 @@ autocmd BufReadPost *
 let &termencoding = &encoding
 let legacy_encoding = &encoding
 set encoding=utf-8
-set ambiwidth=double
 scriptencoding utf-8
 
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
@@ -806,9 +803,9 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
-" https://github.com/Raimondi/delimitMate.git
+" https://github.com/liangfeng/delimitMate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Raimondi/delimitMate', {
+NeoBundleLazy 'liangfeng/delimitMate', {
                 \ 'autoload': {
                     \ 'insert' : 1,
                     \ 'on_source' : ['neocomplete.vim', 'xptemplate'],
@@ -884,6 +881,16 @@ function! s:bundle.hooks.on_source(bundle)
 endfunction
 
 " End of emmet-vim }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - EnchantedVim {{{
+" https://github.com/coot/EnchantedVim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need try this?
+" NeoBundle 'coot/EnchantedVim'
+
+" End of EnchantedVim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -981,15 +988,6 @@ function! s:bundle.hooks.on_source(bundle)
     endif
     let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-    " if use delimitMate Plugin, remap <CR> with it.
-    if neobundle#is_installed('delimitMate') &&
-        \ neobundle#is_sourced('delimitMate')
-        " <CR>: close popup and save indent.
-        inoremap <silent> <expr> <CR> neocomplete#close_popup()
-                    \ . '<C-r>=delimitMate#ExpandReturn()<CR>'
-
-    endif
-
     " <Tab>: completion.
     inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
     inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
@@ -1047,6 +1045,7 @@ NeoBundle 'Shougo/neomru.vim'
 " Plugin - tcomment_vim {{{
 " https://github.com/tomtom/tcomment_vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need try 'vim-commentary'?
 NeoBundleLazy 'tomtom/tcomment_vim', {
                 \ 'autoload' : {
                     \ 'commands' : ['TComment'],
@@ -1205,9 +1204,20 @@ endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - undotree {{{
+" https://github.com/mbbill/undotree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need a try.
+" NeoBundle 'mbbill/undotree'
+
+" End of undotree }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need compare 'vim-ctrlspace'?
 " XXX: In Windows, use cmds from 'git for Windows'.
 " Need prepend installed 'bin' directory to PATH env var in Windows.
 NeoBundleLazy 'Shougo/unite.vim', {
@@ -1454,7 +1464,8 @@ endif
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Lokaltog/vim-easymotion'
+" TODO: Need a try.
+" NeoBundle 'Lokaltog/vim-easymotion'
 
 " End of vim-easymotion }}}
 
@@ -1469,6 +1480,16 @@ NeoBundle 'tpope/vim-fugitive', {'external_commands' : 'git'}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-move {{{
+" https://github.com/matze/vim-move.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need try this?
+" NeoBundle 'matze/vim-move'
+
+" End of vim-move }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-multiple-cursors {{{
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1480,6 +1501,16 @@ function! s:bundle.hooks.on_source(bundle)
 endfunction
 
 " End of vim-multiple-cursors }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-polyglot {{{
+" https://github.com/sheerun/vim-polyglot.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need a try
+" NeoBundle 'sheerun/vim-polyglot'
+
+" End of vim-polyglot }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1636,6 +1667,7 @@ NeoBundleLazy 'sukima/xmledit', {
 " https://github.com/drmingdrmer/xptemplate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
+" FIXME: NeoBundle do not copy subdir in doc to .neobundle/doc
 NeoBundleLazy 'drmingdrmer/xptemplate', {
                 \ 'autoload' : {
                     \ 'insert' : 1,
@@ -1672,10 +1704,21 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - YankRing {{{
+" https://github.com/vim-scripts/YankRing.vim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Need a try.
+" NeoBundle 'YankRing.vim'
+
+" End of YankRing }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - YouCompleteMe {{{
 " https://github.com/Valloric/YouCompleteMe.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
+" NeoBundle 'Valloric/YouCompleteMe'
 
 " End of YouCompleteMe }}}
 
