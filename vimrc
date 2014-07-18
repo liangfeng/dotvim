@@ -776,19 +776,6 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - c-syntax {{{
-" https://github.com/liangfeng/c-syntax.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'liangfeng/c-syntax', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['c', 'cpp'],
-                    \ },
-                \ }
-
-" End of c-syntax }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - context_filetype {{{
 " https://github.com/Shougo/context_filetype.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -884,16 +871,6 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - EnchantedVim {{{
-" https://github.com/coot/EnchantedVim.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need try this?
-" NeoBundle 'coot/EnchantedVim'
-
-" End of EnchantedVim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FencView.vim {{{
 " https://github.com/mbbill/fencview.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -925,6 +902,19 @@ function! s:bundle.hooks.on_source(bundle)
 endfunction
 
 " End of FSwitch }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - jedi-vim {{{
+" https://github.com/davidhalter/jedi-vim.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'davidhalter/jedi-vim', {
+            \ 'autoload' : {
+                \ 'filetypes' : ['python'],
+                \ },
+            \ }
+
+" End of jedi-vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1517,8 +1507,7 @@ endfunction
 " Plugin - vim-polyglot {{{
 " https://github.com/sheerun/vim-polyglot.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need a try
-" NeoBundle 'sheerun/vim-polyglot'
+NeoBundle 'sheerun/vim-polyglot'
 
 " End of vim-polyglot }}}
 
@@ -1638,7 +1627,6 @@ endif
 " https://github.com/Shougo/vimproc.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FIXME: should make vimproc use GNU find instead of internal find in Windows.
-"        Send a issue report to Shougo?
 NeoBundleLazy 'Shougo/vimproc.vim', {
                 \ 'build' : {
                     \ 'windows' : 'echo "You need compile vimproc manually on Windows."',
