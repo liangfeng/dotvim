@@ -790,7 +790,8 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
-" https://github.com/liangfeng/delimitMate.git
+" Origin: https://github.com/Raimondi/delimitMate.git
+" Forked: https://github.com/liangfeng/delimitMate.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/delimitMate', {
                 \ 'autoload': {
@@ -919,8 +920,8 @@ NeoBundleLazy 'davidhalter/jedi-vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
-" http://www.drchip.org/astronaut/vim/#LARGEFILE
-" https://github.com/liangfeng/LargeFile.git
+" Origin: http://www.drchip.org/astronaut/vim/#LARGEFILE
+" Forked: https://github.com/liangfeng/LargeFile.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'liangfeng/LargeFile'
 
@@ -1007,7 +1008,8 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neobundle.vim {{{
-" https://github.com/Shougo/neobundle.vim.git
+" Origin: https://github.com/Shougo/neobundle.vim.git
+" Forked: https://github.com/liangfeng/neobundle.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -1162,9 +1164,9 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList.vim {{{
-" https://github.com/vim-scripts/TaskList.vim.git
 " http://juan.boxfi.com/vim-plugins/
-" https://github.com/liangfeng/TaskList.vim.git
+" Origin: https://github.com/vim-scripts/TaskList.vim.git
+" Forked: https://github.com/liangfeng/TaskList.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/TaskList.vim', {
                 \ 'autoload' : {
@@ -1548,8 +1550,9 @@ let g:surround_no_insert_mappings = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimcdoc {{{
-" https://github.com/vim-scripts/vimcdoc.git
 " http://vimcdoc.sourceforge.net/
+" Origin: https://github.com/vim-scripts/vimcdoc.git
+" Forked: https://github.com/liangfeng/vimcdoc.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup 'keywordprg' for linux?
 NeoBundle 'liangfeng/vimcdoc'
