@@ -1011,7 +1011,7 @@ endfunction
 " Origin: https://github.com/Shougo/neobundle.vim.git
 " Forked: https://github.com/liangfeng/neobundle.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundleFetch 'liangfeng/neobundle.vim'
 
 " If unix style 'rmdir' is installed , it can not handle directory properly,
 " must setup rm_command explicitly in Windows to use builtin 'rmdir' cmd.
