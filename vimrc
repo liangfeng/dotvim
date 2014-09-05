@@ -271,7 +271,10 @@ endfunction
 " Remove trailing spaces for all files
 autocmd BufWritePre * call s:RemoveTrailingSpaces()
 
-function! s:Tabdrop(...)
+" When buffer exists, go to the buffer.
+" When buffer does NOT exists,
+"   if current buffer is noname and empty, use current buffer. Otherwise use new tab
+function! s:TabSwitch(...)
     for file in a:000
         let file_expanded = expand(file)
         if bufexists(file_expanded)
@@ -286,7 +289,7 @@ function! s:Tabdrop(...)
     endfor
 endfunction
 
-command! -complete=file -nargs=+ Tabdrop call s:Tabdrop(<q-args>)
+command! -complete=file -nargs=+ TabSwitch call s:TabSwitch(<q-args>)
 
 " End of Editting }}}
 
@@ -755,18 +758,12 @@ NeoBundleFetch 'liangfeng/dotvim', {
                  \ 'base' : '~',
                  \ }
 
-" If current buffer is noname and empty, use current buffer.
-" Otherwise use new tab
-function! s:OpenFileWithProperBuffer(file)
-    call s:Tabdrop(a:file)
-endfunction
-
-" Fast editing of vimrc
+" For the fast editing of vimrc
 function! s:OpenVimrc()
     if s:is_unix
-        call s:OpenFileWithProperBuffer('$HOME/.vim/vimrc')
+        call s:TabSwitch('$HOME/.vim/vimrc')
     elseif s:is_windows
-        call s:OpenFileWithProperBuffer('$HOME/vimfiles/vimrc')
+        call s:TabSwitch('$HOME/vimfiles/vimrc')
     endif
 endfunction
 
@@ -1209,7 +1206,7 @@ endif
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need compare 'vim-ctrlspace'?
+" TODO: 1. Need to compare 'vim-ctrlspace'?. 2. Need to read through help docs.
 " XXX: In Windows, use cmds from 'git for Windows'.
 " Need prepend installed 'bin' directory to PATH env var in Windows.
 NeoBundleLazy 'Shougo/unite.vim', {
@@ -1233,11 +1230,6 @@ function! s:bundle.hooks.on_source(bundle)
 
     " Enable 'smartcase' for the following profiles.
     call unite#custom#profile('files, source/mapping, source/history/yank', 'smartcase', 1)
-
-    " Use 'my_tabdrop', since 'tabdrop' not supported in terminal mode.
-    if !s:is_gui_running
-        call unite#custom#action('file, buffer', 'my_tabdrop', s:my_tabdrop)
-    endif
 
     call s:unite_mappings()
 endfunction
@@ -1269,33 +1261,14 @@ function! s:unite_mappings()
                                 \ file_mru<CR>
 
     " Shortcut for searching files in current directory recursively.
-    if s:is_windows
-        " In Windows, 'file_rec/async' source is too slow and not easy to use.
-        " Should use 'file_rec' source instead.
-        nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
-                                    \ -buffer-name=files -profile-name=files
-                                    \ file_rec:!<CR>
-    elseif s:is_unix
-        " Use 'file_rec/async' in unix-like OS.
-        nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
-                                    \ -buffer-name=files -profile-name=files
-                                    \ file_rec/async:!<CR>
-    endif
+    nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
+                                \ -buffer-name=files -profile-name=files
+                                \ file_rec/async:!<CR>
 
     " Shortcut for searching (buffers, mru files, file in current dir recursively).
-    if s:is_windows
-        " In Windows, 'file_rec/async' source is too slow and not easy to use.
-        " Should use 'file_rec' source instead.
-        nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
-                                          \ -buffer-name=mixed -profile-name=files
-                                          \ buffer file_mru file_rec/async:!<CR>
-
-    elseif s:is_unix
-        " Use file_rec/async in unix-like OS.
-        nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
-                                          \ -buffer-name=mixed -profile-name=files
-                                          \ buffer file_mru file_rec:!<CR>
-    endif
+    nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
+                                      \ -buffer-name=mixed -profile-name=files
+                                      \ buffer file_mru file_rec/async:!<CR>
 
     " Unfrequent shortcuts.
     " Shortcut for mappings searching.
@@ -1338,28 +1311,6 @@ function! s:fire_grep_cmd(...)
 endfunction
 command! -nargs=* Grep call s:fire_grep_cmd(<f-args>)
 
-" To fix the issue of 'tabdrop' can not work on console.
-if !s:is_gui_running
-    let s:my_tabdrop = {
-                \ 'description' : 'my tab drop',
-                \ 'is_selectable' : 1,
-                \ }
-    function! s:my_tabdrop.func(candidates)
-        let bufpath = unite#util#substitute_path_separator(expand('%:p'))
-
-        for candidate in a:candidates
-            if bufpath !=# candidate.action__path
-                call unite#util#smart_execute_command('Tabdrop',
-                            \ candidate.action__path)
-
-                call unite#remove_previewed_buffer_list(
-                            \ bufnr(unite#util#escape_file_searching(
-                            \       candidate.action__path)))
-            endif
-        endfor
-    endfunction
-endif
-
 " Setup UI actions.
 function! s:unite_ui_settings()
     setlocal number
@@ -1371,13 +1322,8 @@ function! s:unite_ui_settings()
     imap <silent> <buffer> <S-Tab> <Plug>(unite_select_previous_line)
     imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
     imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
-    if s:is_gui_running
-        noremap <silent> <buffer> <expr> t unite#do_action('tabdrop')
-        imap <silent> <buffer> <expr> <C-t> unite#do_action('tabdrop')
-    else
-        noremap <silent> <buffer> <expr> t unite#do_action('my_tabdrop')
-        imap <silent> <buffer> <expr> <C-t> unite#do_action('my_tabdrop')
-    endif
+    noremap <silent> <buffer> <expr> t unite#do_action('tabswitch')
+    imap <silent> <buffer> <expr> <C-t> unite#do_action('tabswitch')
     " Do not exit unite buffer when call '<Plug>(unite_delete_backward_char)'.
     inoremap <silent> <expr> <buffer> <Plug>(unite_delete_backward_char)
                                       \ unite#helper#get_input() == '' ?
@@ -1615,12 +1561,16 @@ function! s:bundle.hooks.on_source(bundle)
     endif
 endfunction
 
-" Fast editing of my plugin
-if s:is_unix
-    nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/.vim/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
-elseif s:is_windows
-    nnoremap <silent> <Leader>p :call <SID>OpenFileWithProperBuffer('$HOME/vimfiles/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')<CR>
-endif
+" For the fast editing of vimprj plugin
+function! s:OpenVimprj()
+    if s:is_unix
+        call s:TabSwitch('$HOME/.vim/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')
+    elseif s:is_windows
+        call s:TabSwitch('$HOME/vimfiles/bundle/vimprj/ftplugin/vimprj/projectmgr.vim')
+    endif
+endfunction
+
+nnoremap <silent> <Leader>p :call <SID>OpenVimprj()<CR>
 
 " End of vimprj }}}
 
