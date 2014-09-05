@@ -51,8 +51,8 @@ let s:is_unix = has('unix')
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_gui_running = has('gui_running')
 
-let g:maplocalleader = ' '
-let g:mapleader = ' '
+let g:maplocalleader = "\<Space>"
+let g:mapleader = "\<Space>"
 
 " In Windows, If vim starts without opening file(s),
 " change working directory to '$HOME/vimfiles'
@@ -1212,7 +1212,7 @@ endif
 NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'external_commands' : ['find', 'grep'],
                 \ 'autoload' : {
-                    \ 'mappings' : ['<Space>'],
+                    \ 'mappings' : ['<Leader>'],
                     \ 'commands' : ['Unite', 'Grep'],
                     \ 'on_source' : ['vimfiler.vim'],
                     \ },
@@ -1246,8 +1246,8 @@ function! s:unite_variables()
 endfunction
 
 function! s:unite_mappings()
-    nmap <Space> [unite]
     nnoremap [unite] <Nop>
+    nmap <Leader> [unite]
 
     " Frequent shortcuts.
     " When searching buffer switch to normal mode by default.
