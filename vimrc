@@ -753,8 +753,14 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " https://github.com/liangfeng/dotvim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Also manage vimrc by Neobundle.
+if s:is_unix
+    let g:vim_cfg_dir = '.vim'
+elseif s:is_windows
+    let g:vim_cfg_dir = 'vimfiles'
+endif
+
 NeoBundleFetch 'liangfeng/dotvim', {
-                 \ 'name' : 'vimfiles',
+                 \ 'name' : g:vim_cfg_dir,
                  \ 'base' : '~',
                  \ }
 
