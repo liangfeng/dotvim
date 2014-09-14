@@ -1187,18 +1187,6 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - tmuxline.vim {{{
-" https://github.com/edkolev/tmuxline.vim.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" FIXME: Is a bash plugin better instead of a vim plugn?
-if s:is_unix
-    NeoBundle 'edkolev/tmuxline.vim'
-endif
-
-" End of tmuxline.vim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - undotree {{{
 " https://github.com/mbbill/undotree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
