@@ -1216,14 +1216,17 @@ let s:bundle = neobundle#get('unite.vim')
 function! s:bundle.hooks.on_source(bundle)
     call s:unite_variables()
 
+	" Prompt choices.
+	call unite#custom#profile('default', 'context', { 'prompt': '» ', })
+
     " Use the rank sorter for everything.
     call unite#filters#sorter_default#use(['sorter_rank'])
 
     " Enable 'ignorecase' for the following profiles.
-    call unite#custom#profile('source/mapping, source/history/yank', 'ignorecase', 1)
+    call unite#custom#profile('source/mapping, source/history/yank', 'context.ignorecase', 1)
 
     " Enable 'smartcase' for the following profiles.
-    call unite#custom#profile('files, source/mapping, source/history/yank', 'smartcase', 1)
+    call unite#custom#profile('files, source/mapping, source/history/yank', 'context.smartcase', 1)
 
     call s:unite_mappings()
 endfunction
@@ -1231,8 +1234,6 @@ endfunction
 function! s:unite_variables()
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_rec_max_cache_files = 0
-    let g:unite_prompt = '» '
-    let g:unite_source_rec_async_command = 'find'
     let g:unite_source_file_async_command = 'find'
     " Setup variables for 'grep' source.
     let g:unite_source_grep_encoding = 'utf-8'
@@ -1244,7 +1245,7 @@ function! s:unite_mappings()
     nmap <Leader> [unite]
 
     " Frequent shortcuts.
-    " When searching buffer switch to normal mode by default.
+    " Searching buffer in normal mode by default.
     nnoremap <silent> [unite]b :Unite -toggle -auto-resize
                                 \ -buffer-name=buffers -profile-name=files
                                 \ buffer<CR>
@@ -1265,14 +1266,22 @@ function! s:unite_mappings()
                                       \ buffer file_mru file_rec/async:!<CR>
 
     " Unfrequent shortcuts.
-    " Shortcut for mappings searching.
+    " Shortcut for yank history searching.
     nnoremap <silent> [unite]y :Unite -toggle -auto-resize
                                 \ -buffer-name=yanks
                                 \ history/yank<CR>
-    nnoremap <silent> [unite]m :Unite -toggle -auto-resize
+
+    " Shortcut for mappings searching.
+    nnoremap <silent> [unite]ma :Unite -toggle -auto-resize
                                 \ -buffer-name=mappings
                                 \ mapping<CR>
 
+    " Shortcut for messages searching.
+	nnoremap <silent> [unite]me :Unite -toggle -auto-resize
+                                \ -buffer-name=messages
+                                \ output:message<CR>
+
+    " Shortcut for grep.
     nnoremap <silent> [unite]g :Grep<CR>
 endfunction
 
@@ -1316,7 +1325,7 @@ function! s:unite_ui_settings()
     imap <silent> <buffer> <S-Tab> <Plug>(unite_select_previous_line)
     imap <silent> <buffer> <expr> <C-x> unite#do_action('split')
     imap <silent> <buffer> <expr> <C-v> unite#do_action('vsplit')
-    noremap <silent> <buffer> <expr> t unite#do_action('tabswitch')
+    nmap <silent> <buffer> <expr> t unite#do_action('tabswitch')
     imap <silent> <buffer> <expr> <C-t> unite#do_action('tabswitch')
     " Do not exit unite buffer when call '<Plug>(unite_delete_backward_char)'.
     inoremap <silent> <expr> <buffer> <Plug>(unite_delete_backward_char)
