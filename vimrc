@@ -1431,6 +1431,20 @@ NeoBundle 'tpope/vim-fugitive', {'external_commands' : 'git'}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-go {{{
+" https://github.com/fatih/vim-go.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'fatih/vim-go.git', {
+                \ 'external_commands' : 'go',
+                \ 'autoload' : {
+                    \ 'filetypes' : ['go'],
+                    \ },
+                \ }
+
+" End of vim-go }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-move {{{
 " https://github.com/matze/vim-move.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
