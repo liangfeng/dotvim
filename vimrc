@@ -308,7 +308,7 @@ autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
 
 " Use external grep command for performance
 " XXX: In Windows, use cmds from 'git for Windows'.
-" Need prepend installed 'bin' directory to PATH env var in Windows.
+"      Need prepend installed 'bin' directory to PATH env var in Windows.
 set grepprg=grep\ -Hni
 
 " TODO: Since vim-multiple-cursors use <C-n> mapping, change the followings.
@@ -935,7 +935,6 @@ NeoBundle 'liangfeng/LargeFile'
 " Plugin - matchit {{{
 " https://github.com/vim-scripts/matchit.zip.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to figure out the method of source macro by lazy loading.
 NeoBundleLazy 'matchit.zip', {
                 \ 'autoload' : {
                     \ 'mappings' : ['%', 'g%'],
@@ -1200,9 +1199,8 @@ endfunction
 " Plugin - unite.vim {{{
 " https://github.com/Shougo/unite.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: 1. Need to compare 'vim-ctrlspace'?. 2. Need to read through help docs.
 " XXX: In Windows, use cmds from 'git for Windows'.
-" Need prepend installed 'bin' directory to PATH env var in Windows.
+"      Need prepend installed 'bin' directory to PATH env var in Windows.
 NeoBundleLazy 'Shougo/unite.vim', {
                 \ 'external_commands' : ['find', 'grep'],
                 \ 'autoload' : {
@@ -1402,16 +1400,6 @@ endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-ctrlspace {{{
-" https://github.com/szw/vim-ctrlspace.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need a try?
-" NeoBundle 'szw/vim-ctrlspace'
-
-" End of vim-ctrlspace }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1517,7 +1505,7 @@ let g:surround_no_insert_mappings = 1
 " Origin: https://github.com/vim-scripts/vimcdoc.git
 " Forked: https://github.com/liangfeng/vimcdoc.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: setup 'keywordprg' for linux?
+" TODO: setup 'keywordprg' for linux terminal?
 NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
@@ -1596,7 +1584,6 @@ nnoremap <silent> <Leader>p :call <SID>OpenVimprj()<CR>
 " Plugin - vimproc.vim {{{
 " https://github.com/Shougo/vimproc.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" FIXME: should make vimproc use GNU find instead of internal find in Windows.
 NeoBundleLazy 'Shougo/vimproc.vim', {
                 \ 'build' : {
                     \ 'windows' : 'echo "You need compile vimproc manually on Windows."',
