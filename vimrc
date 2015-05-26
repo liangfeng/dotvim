@@ -177,12 +177,12 @@ nnoremap <silent> gn :call <SID>EchoCharCode()<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:is_gui_running
     if s:is_mac
-        set guifont=Monaco:h14
+        set guifont=Monaco:h12
     elseif s:is_windows
-        set guifont=Powerline_Consolas:h14:cANSI
-        set guifontwide=YaHei_Consolas_Hybrid:h14
+        set guifont=Powerline_Consolas:h12:cANSI
+        set guifontwide=YaHei_Consolas_Hybrid:h12
     else
-        set guifont=Monospace:h14
+        set guifont=Monospace:h12
     endif
 endif
 
