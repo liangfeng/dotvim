@@ -1021,6 +1021,8 @@ if s:is_windows
     let g:neobundle#rm_command = 'cmd.exe /C rmdir /S /Q'
 endif
 
+let g:neobundle#types#git#default_protocol = 'git'
+
 let g:neobundle#install_max_processes = 15
 
 " End of neobundle.vim }}}
