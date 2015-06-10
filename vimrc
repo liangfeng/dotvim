@@ -93,11 +93,11 @@ set shortmess+=I
 if s:is_gui_running
     if s:is_unix
         " Install wmctrl first, 'sudo apt-get install wmctrl'
-        function! s:MaxWindowsSize()
+        function! s:MaxWindowSize()
             call system('wmctrl -ir ' . v:windowid . ' -b add,maximized_vert,maximized_horz')
         endfunction
 
-        function! s:RestoreWindowsSize()
+        function! s:RestoreWindowSize()
             call system('wmctrl -ir ' . v:windowid . ' -b remove,maximized_vert,maximized_horz')
         endfunction
 
@@ -106,11 +106,11 @@ if s:is_gui_running
         endfunction
 
     elseif s:is_windows
-        function! s:MaxWindowsSize()
+        function! s:MaxWindowSize()
             simalt ~x
         endfunction
 
-        function! s:RestoreWindowsSize()
+        function! s:RestoreWindowSize()
             simalt ~r
         endfunction
 
@@ -123,16 +123,16 @@ if s:is_gui_running
             endif
             if g:does_windows_need_max == 1
                 " Use call-style for using in mappings.
-                :call s:MaxWindowsSize()
+                :call s:MaxWindowSize()
             else
                 " Use call-style for using in mappings.
-                :call s:RestoreWindowsSize()
+                :call s:RestoreWindowSize()
             endif
         endfunction
     endif
 
-    command! Max call s:MaxWindowsSize()
-    command! Res call s:RestoreWindowsSize()
+    command! Max call s:MaxWindowSize()
+    command! Res call s:RestoreWindowSize()
 
     " Run gvim with max mode by default.
     autocmd GUIEnter * Max
@@ -460,7 +460,7 @@ set smarttab
 set autoindent
 set smartindent
 set display=lastline
-set clipboard=unnamed
+set clipboard=unnamed,unnamedplus
 
 vnoremap <silent> <Tab> >gv
 vnoremap <silent> <S-Tab> <gv
