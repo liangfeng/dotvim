@@ -92,6 +92,7 @@ set shortmess+=I
 
 if s:is_gui_running
     if s:is_unix
+        " Install wmctrl first, 'sudo apt-get install wmctrl'
         function! s:MaxWindowsSize()
             call system('wmctrl -ir ' . v:windowid . ' -b add,maximized_vert,maximized_horz')
         endfunction
@@ -202,7 +203,6 @@ nnoremap <silent> gn :call <SID>EchoCharCode()<CR>
 " UI {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:is_gui_running
-    set linespace=1
     if s:is_mac
         set guifont=Monaco:h12
     elseif s:is_windows
