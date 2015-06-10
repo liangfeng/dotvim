@@ -183,7 +183,7 @@ if s:is_gui_running
         set guifont=Powerline_Consolas:h12:cANSI
         set guifontwide=YaHei_Consolas_Hybrid:h12
     else
-        set guifont=Ubuntu\ Mono\ 15
+        set guifont=Ubuntu\ Mono\ for\ Powerline\ 15
     endif
 endif
 
