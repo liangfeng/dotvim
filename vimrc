@@ -1,5 +1,5 @@
 " Author:   Liang Feng <liang.feng98 AT gmail DOT com>
-" Brief:    This vimrc supports Mac OS, Linux and Windows(both GUI & console version).
+" Brief:    This vimrc supports Mac OS, Linux(Ubuntu) and Windows(both GUI & console version).
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
 " HomePage: https://github.com/liangfeng/dotvim.git
@@ -90,25 +90,51 @@ filetype plugin indent on
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set shortmess+=I
 
-if s:is_windows && s:is_gui_running
-    command! Res simalt ~r
-    command! Max simalt ~x
+if s:is_gui_running
+    if s:is_unix
+        function! s:MaxWindowsSize()
+            call system('wmctrl -ir ' . v:windowid . ' -b add,maximized_vert,maximized_horz')
+        endfunction
+
+        function! s:RestoreWindowsSize()
+            call system('wmctrl -ir ' . v:windowid . ' -b remove,maximized_vert,maximized_horz')
+        endfunction
+
+        function! s:ToggleWindowSize()
+            call system('wmctrl -ir ' . v:windowid . ' -b toggle,maximized_vert,maximized_horz')
+        endfunction
+
+    elseif s:is_windows
+        function! s:MaxWindowsSize()
+            simalt ~x
+        endfunction
+
+        function! s:RestoreWindowsSize()
+            simalt ~r
+        endfunction
+
+        function! s:ToggleWindowSize()
+            if exists('g:does_windows_need_max')
+                let g:does_windows_need_max = !g:does_windows_need_max
+            else
+                " Need to restore window, since gvim run into max mode by default.
+                let g:does_windows_need_max = 0
+            endif
+            if g:does_windows_need_max == 1
+                " Use call-style for using in mappings.
+                :call s:MaxWindowsSize()
+            else
+                " Use call-style for using in mappings.
+                :call s:RestoreWindowsSize()
+            endif
+        endfunction
+    endif
+
+    command! Max call s:MaxWindowsSize()
+    command! Res call s:RestoreWindowsSize()
+
     " Run gvim with max mode by default.
     autocmd GUIEnter * Max
-
-    function! s:ToggleWindowSize()
-        if exists('g:does_windows_need_max')
-            let g:does_windows_need_max = !g:does_windows_need_max
-        else
-            " Need to restore window, since gvim run into max mode by default.
-            let g:does_windows_need_max = 0
-        endif
-        if g:does_windows_need_max == 1
-            Max
-        else
-            Res
-        endif
-    endfunction
 
     nnoremap <silent> <Leader>W :call <SID>ToggleWindowSize()<CR>
 endif
