@@ -1038,10 +1038,9 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neobundle.vim {{{
-" Origin: https://github.com/Shougo/neobundle.vim.git
-" Forked: https://github.com/liangfeng/neobundle.vim.git
+" https://github.com/Shougo/neobundle.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleFetch 'liangfeng/neobundle.vim'
+NeoBundleFetch 'Shougo/neobundle.vim'
 
 " If unix style 'rmdir' is installed , it can not handle directory properly,
 " must setup rm_command explicitly in Windows to use builtin 'rmdir' cmd.
