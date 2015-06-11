@@ -42,7 +42,7 @@ endif
 autocmd!
 
 " Use Vim settings, rather then Vi settings.
-" This option must be set first, since it changes other options.
+" This option must be set first, since it changes other option's behavior.
 set nocompatible
 
 " Check OS and env.
@@ -1367,33 +1367,6 @@ endfunction
 autocmd FileType unite call s:unite_ui_settings()
 
 " End of unite.vim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - vim-altercmd {{{
-" https://github.com/tyru/vim-altercmd.git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Only source this plugin in Windows GUI version.
-if s:is_windows && s:is_gui_running
-
-    " Use pipe instead of temp file for shell to avoid popup dos window.
-    set noshelltemp
-
-    NeoBundle 'tyru/vim-altercmd'
-
-    let s:bundle = neobundle#get('vim-altercmd')
-    function! s:bundle.hooks.on_source(bundle)
-        command! Shell call s:Shell()
-        AlterCommand sh[ell] Shell
-    endfunction
-
-    " TODO: Need fix issue in :exec 'shell'
-    function! s:Shell()
-        exec 'set shelltemp | shell | set noshelltemp'
-    endfunction
-endif
-
-" End of vim-altercmd }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
