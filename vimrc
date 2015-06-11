@@ -133,11 +133,12 @@ if s:is_gui_running
 
     command! Max call s:MaxWindowSize()
     command! Res call s:RestoreWindowSize()
+    command! Tog call s:ToggleWindowSize()
 
     " Run gvim with max mode by default.
     autocmd GUIEnter * Max
 
-    nnoremap <silent> <Leader>W :call <SID>ToggleWindowSize()<CR>
+    nnoremap <silent> <Leader>W :Tog<CR>
 endif
 
 language messages en_US.utf-8
