@@ -941,10 +941,10 @@ endfunction
 " https://github.com/davidhalter/jedi-vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'davidhalter/jedi-vim', {
-            \ 'autoload' : {
-                \ 'filetypes' : ['python'],
-                \ },
-            \ }
+                \ 'autoload' : {
+                    \ 'filetypes' : ['python'],
+                    \ },
+                \ }
 
 " End of jedi-vim }}}
 
@@ -954,7 +954,7 @@ NeoBundleLazy 'davidhalter/jedi-vim', {
 " Origin: http://www.drchip.org/astronaut/vim/#LARGEFILE
 " Forked: https://github.com/liangfeng/LargeFile.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'liangfeng/LargeFile'
+autocmd VimEnter * NeoBundle 'liangfeng/LargeFile'
 
 " End of LargeFile }}}
 
@@ -1060,7 +1060,11 @@ let g:neobundle#install_max_processes = 15
 " Plugin - neomru.vim {{{
 " https://github.com/Shougo/neomru.vim.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Shougo/neomru.vim'
+NeoBundleLazy 'Shougo/neomru.vim', {
+                \ 'autoload' : {
+                    \ 'on_source' : ['unite.vim'],
+                    \ },
+                \ }
 
 " End of neomru.vim }}}
 
@@ -1397,7 +1401,7 @@ endif
 " Plugin - vim-airline {{{
 " https://github.com/bling/vim-airline.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'bling/vim-airline'
+autocmd VimEnter * NeoBundle 'bling/vim-airline'
 
 if !s:is_gui_running
     let g:airline#extensions#tabline#enabled = 1
@@ -1415,16 +1419,17 @@ let g:airline_theme = 'powerlineish'
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'altercation/vim-colors-solarized'
+NeoBundleLazy 'altercation/vim-colors-solarized', {
+                \ 'autoload' : {'on_source' : ['vim-airline']},
+                \ }
 
-let g:solarized_italic = 0
-let g:solarized_hitrail = 1
-set background=dark
-
-if neobundle#is_installed('vim-colors-solarized') &&
-    \ neobundle#is_sourced('vim-colors-solarized')
+let s:bundle = neobundle#get('vim-colors-solarized')
+function! s:bundle.hooks.on_source(bundle)
+    let g:solarized_italic = 0
+    let g:solarized_hitrail = 1
+    set background=dark
     colorscheme solarized
-endif
+endfunction
 
 " End of vim-colors-solarized }}}
 
@@ -1443,7 +1448,12 @@ endif
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'tpope/vim-fugitive', {'external_commands' : 'git'}
+NeoBundleLazy 'tpope/vim-fugitive.git', {
+                \ 'external_commands' : 'git',
+                \ 'autoload' : {
+                    \ 'on_source' : ['vim-airline'],
+                    \ },
+                \ }
 
 " End of vim-fugitive }}}
 
@@ -1477,11 +1487,16 @@ NeoBundleLazy 'fatih/vim-go.git', {
 " https://github.com/terryma/vim-multiple-cursors.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need to check whether be lazy loaded or not ?
-NeoBundle 'terryma/vim-multiple-cursors'
+" NeoBundleLazy 'terryma/vim-multiple-cursors'
+" NeoBundleSource 'vim-multiple-cursors'
 
-let s:bundle = neobundle#get('vim-multiple-cursors')
-function! s:bundle.hooks.on_source(bundle)
-endfunction
+
+
+" let s:bundle = neobundle#get('vim-multiple-cursors')
+" function! s:bundle.hooks.on_source(bundle)
+" endfunction
+
+autocmd VimEnter * NeoBundle 'terryma/vim-multiple-cursors'
 
 " End of vim-multiple-cursors }}}
 
@@ -1490,7 +1505,7 @@ endfunction
 " Plugin - vim-polyglot {{{
 " https://github.com/sheerun/vim-polyglot.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'sheerun/vim-polyglot'
+autocmd VimEnter * NeoBundle 'sheerun/vim-polyglot'
 
 " End of vim-polyglot }}}
 
@@ -1512,7 +1527,7 @@ NeoBundleLazy 'tpope/vim-repeat', {
 " Plugin - vim-surround {{{
 " https://github.com/tpope/vim-surround.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'tpope/vim-surround'
+autocmd VimEnter * NeoBundle 'tpope/vim-surround'
 
 let g:surround_no_insert_mappings = 1
 
@@ -1536,7 +1551,7 @@ let g:surround_no_insert_mappings = 1
 " Forked: https://github.com/liangfeng/vimcdoc.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup 'keywordprg' for linux terminal?
-NeoBundle 'liangfeng/vimcdoc'
+autocmd VimEnter * NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
 
