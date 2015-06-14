@@ -1370,6 +1370,29 @@ autocmd FileType unite call s:unite_ui_settings()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-altercmd {{{
+" https://github.com/tyru/vim-altercmd.git
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Only source this plugin in Windows GUI version.
+if s:is_windows && s:is_gui_running
+
+    " Use pipe instead of temp file for shell to avoid popup dos window.
+    set noshelltemp
+
+    autocmd VimEnter * NeoBundle 'tyru/vim-altercmd'
+    autocmd VimEnter * command! Shell call s:Shell()
+    autocmd VimEnter * AlterCommand sh[ell] Shell
+
+    " TODO: Need fix issue in :exec 'shell'
+    function! s:Shell()
+        exec 'set shelltemp | shell | set noshelltemp'
+    endfunction
+endif
+
+" End of vim-altercmd }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-airline {{{
 " https://github.com/bling/vim-airline.git
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
