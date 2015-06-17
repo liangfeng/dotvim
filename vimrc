@@ -21,13 +21,13 @@ endif
 
 if !has('python')
     echohl WarningMsg
-    echomsg 'Requires Vim compiled with +python/dyn.'
+    echomsg 'Requires Vim compiled with "+python" to use enhanced feature.'
     echohl None
 endif
 
 if !has('lua')
     echohl WarningMsg
-    echomsg 'Requires Vim compiled with +lua/dyn.'
+    echomsg 'Requires Vim compiled with "+lua" to use enhanced feature.'
     echohl None
 endif
 
@@ -696,7 +696,7 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language - Lua {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd FileType lua call s:SetupAutoCmdForEvalCodes('lua52')
+autocmd FileType lua call s:SetupAutoCmdForEvalCodes('luajit')
 autocmd FileType lua call s:MapJoinWithLeaders('--\\|\\')
 
 " End of Lua }}}
