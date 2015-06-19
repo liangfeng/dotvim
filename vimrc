@@ -818,7 +818,7 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
                 \ 'autoload' : {
                     \ 'on_source': ['neocomplete.vim'],
                     \ },
-                \}
+                \ }
 
 " End of context_filetype }}}
 
@@ -940,19 +940,6 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - jedi-vim {{{
-" https://github.com/davidhalter/jedi-vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'davidhalter/jedi-vim', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['python'],
-                    \ },
-                \ }
-
-" End of jedi-vim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
 " Origin: http://www.drchip.org/astronaut/vim/#LARGEFILE
 " Forked: https://github.com/liangfeng/LargeFile
@@ -970,7 +957,7 @@ NeoBundleLazy 'matchit.zip', {
                 \ 'autoload' : {
                     \ 'mappings' : ['%', 'g%'],
                     \ },
-                \}
+                \ }
 
 let s:bundle = neobundle#get('matchit.zip')
 function! s:bundle.hooks.on_post_source(bundle)
@@ -1055,6 +1042,9 @@ let g:neobundle#types#git#default_protocol = 'git'
 
 let g:neobundle#install_max_processes = 15
 
+" YouCompleteMe plugin is too large
+let g:neobundle#install_process_timeout = 1800
+
 " End of neobundle.vim }}}
 
 
@@ -1101,7 +1091,7 @@ NeoBundleLazy 'scrooloose/nerdtree', {
                     \ 'commands' : ['NERDTreeToggle','NERDTree','NERDTreeFind'],
                     \ 'mappings' : ['<Leader>n','<Leader>N'],
                     \ }
-                \}
+                \ }
 
 let s:bundle = neobundle#get('nerdtree')
 function! s:bundle.hooks.on_source(bundle)
@@ -1729,16 +1719,19 @@ endfunction
 " https://github.com/Valloric/YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:is_unix
-    " YouCompleteMe is so slow
-    let g:neobundle#install_process_timeout = 1800
+    NeoBundleLazy 'Valloric/YouCompleteMe', {
+                    \ 'build' : {
+                        \ 'mac'  : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+                        \ 'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+                        \ },
+                    \ 'autoload' : {
+                        \ 'filetypes' : ['c', 'cpp', 'python', 'cs'],
+                        \ },
+                    \ 'augroup': 'youcompletemeStart'
+                    \ }
 
-    autocmd VimEnter * NeoBundle 'Valloric/YouCompleteMe', {
-                \ 'build' : {
-                    \ 'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
-                    \ },
-                \ }
-
-    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1 }
+    let g:ycm_confirm_extra_conf = 0
+    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1, 'cs' : 1 }
 endif
 
 " End of YouCompleteMe }}}
