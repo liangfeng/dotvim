@@ -72,6 +72,22 @@ else
     call neobundle#begin('$HOME/vimfiles/bundle')
 endif
 
+" Put Neobundle.vim settings here.
+
+" If unix style 'rmdir' is installed , it can not handle directory properly,
+" must setup rm_command explicitly in Windows to use builtin 'rmdir' cmd.
+if s:is_windows
+    let g:neobundle#rm_command = 'cmd.exe /C rmdir /S /Q'
+endif
+
+let g:neobundle#types#git#default_protocol = 'git'
+
+let g:neobundle#install_max_processes = 15
+
+" YouCompleteMe plugin is too large
+let g:neobundle#install_process_timeout = 1800
+
+
 " Do not load system menu, before ':syntax on' and ':filetype on'.
 if s:is_gui_running
     set guioptions+=M
@@ -1031,19 +1047,6 @@ endfunction
 " https://github.com/Shougo/neobundle.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleFetch 'Shougo/neobundle.vim'
-
-" If unix style 'rmdir' is installed , it can not handle directory properly,
-" must setup rm_command explicitly in Windows to use builtin 'rmdir' cmd.
-if s:is_windows
-    let g:neobundle#rm_command = 'cmd.exe /C rmdir /S /Q'
-endif
-
-let g:neobundle#types#git#default_protocol = 'git'
-
-let g:neobundle#install_max_processes = 15
-
-" YouCompleteMe plugin is too large
-let g:neobundle#install_process_timeout = 1800
 
 " End of neobundle.vim }}}
 
