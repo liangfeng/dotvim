@@ -2,7 +2,7 @@
 " Brief:    This vimrc supports Mac OS, Linux(Ubuntu) and Windows(both GUI & console version).
 "           While it is well commented, just in case some commands confuse you,
 "           please RTFM by ':help WORD' or ':helpgrep WORD'.
-" HomePage: https://github.com/liangfeng/dotvim.git
+" HomePage: https://github.com/liangfeng/dotvim
 " Comments: has('mac') means Mac only.
 "           has('unix') means Mac, Linux or Unix only.
 "           has('win16') means Windows 16 only.
@@ -251,6 +251,9 @@ set history=400
 
 set completeopt-=preview
 
+" Enable mouse only in 'normal' mode for scrolling
+set mouse=n
+
 " Disable middlemouse paste
 noremap <silent> <MiddleMouse> <Nop>
 inoremap <silent> <MiddleMouse> <Nop>
@@ -456,6 +459,7 @@ nnoremap <silent> K :tab h <C-r><C-w><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set tabstop=4
 set shiftwidth=4
+set softtabstop=4
 set expandtab
 set smarttab
 set autoindent
@@ -778,7 +782,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vimrc {{{
-" https://github.com/liangfeng/dotvim.git
+" https://github.com/liangfeng/dotvim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Also manage vimrc by Neobundle.
 if s:is_unix
@@ -808,7 +812,7 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - context_filetype {{{
-" https://github.com/Shougo/context_filetype.vim.git
+" https://github.com/Shougo/context_filetype.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/context_filetype.vim', {
                 \ 'autoload' : {
@@ -821,8 +825,8 @@ NeoBundleLazy 'Shougo/context_filetype.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
-" Origin: https://github.com/Raimondi/delimitMate.git
-" Forked: https://github.com/liangfeng/delimitMate.git
+" Origin: https://github.com/Raimondi/delimitMate
+" Forked: https://github.com/liangfeng/delimitMate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/delimitMate', {
                 \ 'autoload': {
@@ -855,7 +859,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - DoxygenToolkit.vim {{{
-" https://github.com/vim-scripts/DoxygenToolkit.vim.git
+" https://github.com/vim-scripts/DoxygenToolkit.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'DoxygenToolkit.vim', {
                 \ 'autoload' : {
@@ -886,7 +890,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - emmet-vim {{{
-" https://github.com/mattn/emmet-vim.git
+" https://github.com/mattn/emmet-vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'mattn/emmet-vim', {
                 \ 'autoload' : {
@@ -904,10 +908,9 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FencView.vim {{{
-" https://github.com/mbbill/fencview.git
+" https://github.com/mbbill/fencview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'mbbill/fencview', {
-                \ 'external_commands' : 'tellenc',
                 \ 'autoload' : {
                     \ 'commands' : ['FencAutoDetect', 'FencView', 'FencManualEncoding'] },
                 \ }
@@ -917,7 +920,7 @@ NeoBundleLazy 'mbbill/fencview', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - FSwitch {{{
-" https://github.com/derekwyatt/vim-fswitch.git
+" https://github.com/derekwyatt/vim-fswitch
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need refining to catch exceptions or just rewrite one?
 NeoBundleLazy 'derekwyatt/vim-fswitch', {
@@ -938,7 +941,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - jedi-vim {{{
-" https://github.com/davidhalter/jedi-vim.git
+" https://github.com/davidhalter/jedi-vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'davidhalter/jedi-vim', {
                 \ 'autoload' : {
@@ -952,7 +955,7 @@ NeoBundleLazy 'davidhalter/jedi-vim', {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
 " Origin: http://www.drchip.org/astronaut/vim/#LARGEFILE
-" Forked: https://github.com/liangfeng/LargeFile.git
+" Forked: https://github.com/liangfeng/LargeFile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd VimEnter * NeoBundle 'liangfeng/LargeFile'
 
@@ -961,7 +964,7 @@ autocmd VimEnter * NeoBundle 'liangfeng/LargeFile'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - matchit {{{
-" https://github.com/vim-scripts/matchit.zip.git
+" https://github.com/vim-scripts/matchit.zip
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'matchit.zip', {
                 \ 'autoload' : {
@@ -979,7 +982,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neocomplete.vim {{{
-" https://github.com/Shougo/neocomplete.vim.git
+" https://github.com/Shougo/neocomplete.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
 NeoBundleLazy 'Shougo/neocomplete.vim', {
@@ -1038,7 +1041,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neobundle.vim {{{
-" https://github.com/Shougo/neobundle.vim.git
+" https://github.com/Shougo/neobundle.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -1057,7 +1060,7 @@ let g:neobundle#install_max_processes = 15
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neomru.vim {{{
-" https://github.com/Shougo/neomru.vim.git
+" https://github.com/Shougo/neomru.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/neomru.vim', {
                 \ 'autoload' : {
@@ -1070,7 +1073,7 @@ NeoBundleLazy 'Shougo/neomru.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - tcomment_vim {{{
-" https://github.com/tomtom/tcomment_vim.git
+" https://github.com/tomtom/tcomment_vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need try 'vim-commentary'?
 NeoBundleLazy 'tomtom/tcomment_vim', {
@@ -1090,7 +1093,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - nerdtree {{{
-" https://github.com/scrooloose/nerdtree.git
+" https://github.com/scrooloose/nerdtree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Replace nerdtree with vimfiler?
 NeoBundleLazy 'scrooloose/nerdtree', {
@@ -1122,7 +1125,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_match.vim {{{
-" https://github.com/vim-scripts/python_match.vim.git
+" https://github.com/vim-scripts/python_match.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'python_match.vim', {
                 \ 'autoload' : {
@@ -1135,7 +1138,7 @@ NeoBundleLazy 'python_match.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - session {{{
-" https://github.com/xolox/vim-session.git
+" https://github.com/xolox/vim-session
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need check this.
 " NeoBundle 'xolox/vim-session'
@@ -1145,7 +1148,7 @@ NeoBundleLazy 'python_match.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SimpylFold for python {{{
-" https://github.com/tmhedberg/SimpylFold.git
+" https://github.com/tmhedberg/SimpylFold
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'tmhedberg/SimpylFold', {
                 \ 'autoload' : {
@@ -1158,7 +1161,7 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - SyntaxAttr.vim {{{
-" https://github.com/vim-scripts/SyntaxAttr.vim.git
+" https://github.com/vim-scripts/SyntaxAttr.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'SyntaxAttr.vim', {
                 \ 'autoload' : {
@@ -1176,7 +1179,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - tagbar {{{
-" https://github.com/majutsushi/tagbar.git
+" https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'majutsushi/tagbar', {
@@ -1200,8 +1203,8 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - TaskList.vim {{{
 " http://juan.boxfi.com/vim-plugins/
-" Origin: https://github.com/vim-scripts/TaskList.vim.git
-" Forked: https://github.com/liangfeng/TaskList.vim.git
+" Origin: https://github.com/vim-scripts/TaskList.vim
+" Forked: https://github.com/liangfeng/TaskList.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'liangfeng/TaskList.vim', {
                 \ 'autoload' : {
@@ -1230,7 +1233,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - unite.vim {{{
-" https://github.com/Shougo/unite.vim.git
+" https://github.com/Shougo/unite.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " XXX: In Windows, use cmds from 'git for Windows'.
 "      Need prepend installed 'bin' directory to PATH env var in Windows.
@@ -1371,7 +1374,7 @@ autocmd FileType unite call s:unite_ui_settings()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-altercmd {{{
-" https://github.com/tyru/vim-altercmd.git
+" https://github.com/tyru/vim-altercmd
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Only source this plugin in Windows GUI version.
 if s:is_windows && s:is_gui_running
@@ -1394,7 +1397,7 @@ endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-airline {{{
-" https://github.com/bling/vim-airline.git
+" https://github.com/bling/vim-airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd VimEnter * NeoBundle 'bling/vim-airline'
 
@@ -1412,7 +1415,7 @@ let g:airline_theme = 'powerlineish'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-colors-solarized {{{
-" https://github.com/altercation/vim-colors-solarized.git
+" https://github.com/altercation/vim-colors-solarized
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'altercation/vim-colors-solarized', {
                 \ 'autoload' : {'on_source' : ['vim-airline']},
@@ -1431,7 +1434,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-easymotion {{{
-" https://github.com/Lokaltog/vim-easymotion.git
+" https://github.com/Lokaltog/vim-easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
 " NeoBundle 'Lokaltog/vim-easymotion'
@@ -1441,9 +1444,9 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-fugitive {{{
-" https://github.com/tpope/vim-fugitive.git
+" https://github.com/tpope/vim-fugitive
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'tpope/vim-fugitive.git', {
+NeoBundleLazy 'tpope/vim-fugitive', {
                 \ 'external_commands' : 'git',
                 \ 'autoload' : {
                     \ 'on_source' : ['vim-airline'],
@@ -1455,9 +1458,9 @@ NeoBundleLazy 'tpope/vim-fugitive.git', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-go {{{
-" https://github.com/fatih/vim-go.git
+" https://github.com/fatih/vim-go
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'fatih/vim-go.git', {
+NeoBundleLazy 'fatih/vim-go', {
                 \ 'external_commands' : 'go',
                 \ 'autoload' : {
                     \ 'filetypes' : ['go'],
@@ -1468,8 +1471,21 @@ NeoBundleLazy 'fatih/vim-go.git', {
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-gradle {{{
+" https://github.com/tfnico/vim-gradle
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'tfnico/vim-gradle', {
+                \ 'autoload' : {
+                    \ 'filetypes' : ['gradle'],
+                    \ },
+                \ }
+
+" End of vim-gradle }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-move {{{
-" https://github.com/matze/vim-move.git
+" https://github.com/matze/vim-move
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need try this?
 " NeoBundle 'matze/vim-move'
@@ -1479,18 +1495,8 @@ NeoBundleLazy 'fatih/vim-go.git', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-multiple-cursors {{{
-" https://github.com/terryma/vim-multiple-cursors.git
+" https://github.com/terryma/vim-multiple-cursors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to check whether be lazy loaded or not ?
-" NeoBundleLazy 'terryma/vim-multiple-cursors'
-" NeoBundleSource 'vim-multiple-cursors'
-
-
-
-" let s:bundle = neobundle#get('vim-multiple-cursors')
-" function! s:bundle.hooks.on_source(bundle)
-" endfunction
-
 autocmd VimEnter * NeoBundle 'terryma/vim-multiple-cursors'
 
 " End of vim-multiple-cursors }}}
@@ -1498,7 +1504,7 @@ autocmd VimEnter * NeoBundle 'terryma/vim-multiple-cursors'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-polyglot {{{
-" https://github.com/sheerun/vim-polyglot.git
+" https://github.com/sheerun/vim-polyglot
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd VimEnter * NeoBundle 'sheerun/vim-polyglot'
 
@@ -1507,7 +1513,7 @@ autocmd VimEnter * NeoBundle 'sheerun/vim-polyglot'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-repeat {{{
-" https://github.com/tpope/vim-repeat.git
+" https://github.com/tpope/vim-repeat
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'tpope/vim-repeat', {
                 \ 'autoload': {
@@ -1520,7 +1526,7 @@ NeoBundleLazy 'tpope/vim-repeat', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-surround {{{
-" https://github.com/tpope/vim-surround.git
+" https://github.com/tpope/vim-surround
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd VimEnter * NeoBundle 'tpope/vim-surround'
 
@@ -1531,7 +1537,7 @@ let g:surround_no_insert_mappings = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-visualstar {{{
-" https://github.com/thinca/vim-visualstar.git
+" https://github.com/thinca/vim-visualstar
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try?
 " NeoBundle 'thinca/vim-visualstar'
@@ -1542,8 +1548,8 @@ let g:surround_no_insert_mappings = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimcdoc {{{
 " http://vimcdoc.sourceforge.net/
-" Origin: https://github.com/vim-scripts/vimcdoc.git
-" Forked: https://github.com/liangfeng/vimcdoc.git
+" Origin: https://github.com/vim-scripts/vimcdoc
+" Forked: https://github.com/liangfeng/vimcdoc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup 'keywordprg' for linux terminal?
 autocmd VimEnter * NeoBundle 'liangfeng/vimcdoc'
@@ -1553,7 +1559,7 @@ autocmd VimEnter * NeoBundle 'liangfeng/vimcdoc'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimfiler {{{
-" https://github.com/Shougo/vimfiler.vim.git
+" https://github.com/Shougo/vimfiler.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimfiler.vim', {
                 \ 'depends' : 'Shougo/unite.vim',
@@ -1577,7 +1583,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimprj (my plugin) {{{
-" https://github.com/liangfeng/vimprj.git
+" https://github.com/liangfeng/vimprj
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Intergate with global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
@@ -1622,7 +1628,7 @@ nnoremap <silent> <Leader>p :call <SID>OpenVimprj()<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimproc.vim {{{
-" https://github.com/Shougo/vimproc.vim.git
+" https://github.com/Shougo/vimproc.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimproc.vim', {
                 \ 'build' : {
@@ -1640,7 +1646,7 @@ NeoBundleLazy 'Shougo/vimproc.vim', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vimshell {{{
-" https://github.com/Shougo/vimshell.git
+" https://github.com/Shougo/vimshell
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'Shougo/vimshell', {
                 \ 'depends' : 'Shougo/vimproc.vim',
@@ -1656,7 +1662,7 @@ NeoBundleLazy 'Shougo/vimshell', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xmledit {{{
-" https://github.com/sukima/xmledit.git
+" https://github.com/sukima/xmledit
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundleLazy 'sukima/xmledit', {
                 \ 'autoload' : {
@@ -1669,7 +1675,7 @@ NeoBundleLazy 'sukima/xmledit', {
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - xptemplate {{{
-" https://github.com/drmingdrmer/xptemplate.git
+" https://github.com/drmingdrmer/xptemplate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
 " FIXME: NeoBundle do not copy subdir in doc to .neobundle/doc
@@ -1710,7 +1716,7 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - YankRing {{{
-" https://github.com/vim-scripts/YankRing.vim.git
+" https://github.com/vim-scripts/YankRing.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
 " NeoBundle 'YankRing.vim'
@@ -1720,10 +1726,20 @@ endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - YouCompleteMe {{{
-" https://github.com/Valloric/YouCompleteMe.git
+" https://github.com/Valloric/YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need a try.
-" NeoBundle 'Valloric/YouCompleteMe'
+if s:is_unix
+    " YouCompleteMe is so slow
+    let g:neobundle#install_process_timeout = 1800
+
+    autocmd VimEnter * NeoBundle 'Valloric/YouCompleteMe', {
+                \ 'build' : {
+                    \ 'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+                    \ },
+                \ }
+
+    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1 }
+endif
 
 " End of YouCompleteMe }}}
 
