@@ -1740,4 +1740,9 @@ endif
 " End of YouCompleteMe }}}
 
 
+" Plugins Need A Try:
+" vim-gitgutter
+" color_coded
+" YCM-Generator
+
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
