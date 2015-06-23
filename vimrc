@@ -184,6 +184,7 @@ let &termencoding = &encoding
 let legacy_encoding = &encoding
 set encoding=utf-8
 scriptencoding utf-8
+set term=xterm
 
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
 if legacy_encoding != 'latin1'
@@ -372,7 +373,7 @@ nnoremap <silent> g# g#zz
 nnoremap <silent> <C-o> <C-o>zz
 nnoremap <silent> <C-i> <C-i>zz
 
-" Replace all matched items in the line.
+" Replace all matched items in the same line.
 set gdefault
 
 " Find buffer more friendly
@@ -393,34 +394,28 @@ nnoremap <silent> <Leader>w <C-w>w
 set ttyfast
 
 " Remap <Esc> to stop highlighting searching result.
-nnoremap <silent> <Esc> :nohls<CR><Esc>
-imap <silent> <Esc> <C-o><Esc>
-
-" Disalbe arrow keys.
-noremap <silent> <Up> <Nop>
-noremap <silent> <Down> <Nop>
-noremap <silent> <Left> <Nop>
-noremap <silent> <Right> <Nop>
-inoremap <silent> <Up> <Nop>
-inoremap <silent> <Down> <Nop>
-inoremap <silent> <Left> <Nop>
-inoremap <silent> <Right> <Nop>
+if s:is_gui_running
+    nnoremap <silent> <Esc> :nohls<CR><Esc>
+    imap <silent> <Esc> <C-o><Esc>
+endif
 
 if !s:is_gui_running
-    " To make remapping Esc work porperly in terminal mode by disabling esckeys.
-    set noesckeys
+    " Use <nowait> to fast escape for nohls
+    autocmd BufEnter * nnoremap <silent> <nowait> <buffer> <Esc> :nohls<CR><Esc>
+    autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <C-o><Esc>
 
-    " FIXME: <Esc> slow issue on terminal.
+    " fast escape from cmd mode to normal mode
+    set ttimeoutlen=10
 
-    " Disable arrow keys for terminals.
-    nnoremap <silent> <Esc>OA <Nop>
-    nnoremap <silent> <Esc>OB <Nop>
-    nnoremap <silent> <Esc>OC <Nop>
-    nnoremap <silent> <Esc>OD <Nop>
-    inoremap <silent> <Esc>OA <Nop>
-    inoremap <silent> <Esc>OB <Nop>
-    inoremap <silent> <Esc>OC <Nop>
-    inoremap <silent> <Esc>OD <Nop>
+    " Enable arrow keys for terminals.
+    nnoremap <silent> <Esc>OA <Up>
+    nnoremap <silent> <Esc>OB <Down>
+    nnoremap <silent> <Esc>OC <Right>
+    nnoremap <silent> <Esc>OD <Left>
+    inoremap <silent> <Esc>OA <Up>
+    inoremap <silent> <Esc>OB <Down>
+    inoremap <silent> <Esc>OC <Right>
+    inoremap <silent> <Esc>OD <Left>
 endif
 
 " move around the visual lines
@@ -1218,8 +1213,7 @@ endfunction
 " Plugin - undotree {{{
 " https://github.com/mbbill/undotree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need a try.
-" NeoBundle 'mbbill/undotree'
+autocmd VimEnter * NeoBundle 'mbbill/undotree'
 
 " End of undotree }}}
 
@@ -1429,8 +1423,8 @@ endfunction
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need a try.
-" NeoBundle 'Lokaltog/vim-easymotion'
+" TODO: Need to config
+autocmd VimEnter * NeoBundle 'Lokaltog/vim-easymotion'
 
 " End of vim-easymotion }}}
 
@@ -1746,3 +1740,4 @@ endif
 " YCM-Generator
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
+
