@@ -184,7 +184,6 @@ let &termencoding = &encoding
 let legacy_encoding = &encoding
 set encoding=utf-8
 scriptencoding utf-8
-set term=xterm
 
 set fileencodings=ucs-bom,utf-8,default,gb18030,big5,latin1
 if legacy_encoding != 'latin1'
