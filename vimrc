@@ -312,7 +312,9 @@ function! s:Preserve(command)
 endfunction
 
 function! s:RemoveTrailingSpaces()
-    call s:Preserve('%s/\s\+$//e')
+    if &filetype != 'markdown'
+        call s:Preserve('%s/\s\+$//e')
+    endif
 endfunction
 
 " Remove trailing spaces for all files
