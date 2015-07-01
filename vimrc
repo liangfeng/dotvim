@@ -25,10 +25,12 @@ if !has('python')
     echohl None
 endif
 
-if !has('lua')
-    echohl WarningMsg
-    echomsg 'Requires Vim compiled with "+lua" to use enhanced feature.'
-    echohl None
+if v:progname != 'nvim'
+    if !has('lua')
+        echohl WarningMsg
+        echomsg 'Requires Vim compiled with "+lua" to use enhanced feature.'
+        echohl None
+    endif
 endif
 
 " End of Check Prerequisite }}}
@@ -50,6 +52,10 @@ let s:is_mac = has('mac')
 let s:is_unix = has('unix')
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_gui_running = has('gui_running')
+let s:is_nvim = 0
+if v:progname == 'nvim'
+    let s:is_nvim = 1
+endif
 
 let g:maplocalleader = "\<Space>"
 let g:mapleader = "\<Space>"
@@ -395,28 +401,28 @@ nnoremap <silent> <Leader>w <C-w>w
 set ttyfast
 
 " Remap <Esc> to stop highlighting searching result.
-if s:is_gui_running
+if s:is_nvim || s:is_gui_running
     nnoremap <silent> <Esc> :nohls<CR><Esc>
     imap <silent> <Esc> <C-o><Esc>
 endif
 
-if !s:is_gui_running
-    " Use <nowait> to fast escape for nohls
-    autocmd BufEnter * nnoremap <silent> <nowait> <buffer> <Esc> :nohls<CR><Esc>
-    autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <C-o><Esc>
+if !s:is_nvim && !s:is_gui_running
+        " Use <nowait> to fast escape for nohls
+        autocmd BufEnter * nnoremap <silent> <nowait> <buffer> <Esc> :nohls<CR><Esc>
+        autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <C-o><Esc>
 
-    " fast escape from cmd mode to normal mode
-    set ttimeoutlen=10
+        " fast escape from cmd mode to normal mode
+        set ttimeoutlen=10
 
-    " Enable arrow keys for terminals.
-    nnoremap <silent> <Esc>OA <Up>
-    nnoremap <silent> <Esc>OB <Down>
-    nnoremap <silent> <Esc>OC <Right>
-    nnoremap <silent> <Esc>OD <Left>
-    inoremap <silent> <Esc>OA <Up>
-    inoremap <silent> <Esc>OB <Down>
-    inoremap <silent> <Esc>OC <Right>
-    inoremap <silent> <Esc>OD <Left>
+        " Enable arrow keys for terminals.
+        nnoremap <silent> <Esc>OA <Up>
+        nnoremap <silent> <Esc>OB <Down>
+        nnoremap <silent> <Esc>OC <Right>
+        nnoremap <silent> <Esc>OD <Left>
+        inoremap <silent> <Esc>OA <Up>
+        inoremap <silent> <Esc>OB <Down>
+        inoremap <silent> <Esc>OC <Right>
+        inoremap <silent> <Esc>OD <Left>
 endif
 
 " move around the visual lines
@@ -870,6 +876,39 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - deoplete.nvim {{{
+" https://github.com/Shougo/deoplete.nvim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if s:is_nvim
+    NeoBundleLazy 'Shougo/deoplete.nvim', {
+                    \ 'autoload': {
+                        \ 'insert' : 1,
+                        \ },
+                    \ }
+
+    let s:bundle = neobundle#get('deoplete.nvim')
+    function! s:bundle.hooks.on_source(bundle)
+        let g:deoplete#enable_at_startup = 1
+        let g:deoplete#enable_smart_case = 1
+
+        " <Tab>: completion.
+        inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
+        inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
+
+        " Do NOT popup when enter <C-y> and <C-e>
+        inoremap <silent> <expr> <C-y>  deoplete#mappings#close_popup() . '<C-y>'
+        inoremap <silent> <expr> <C-e>  deoplete#mappings#cancel_popup() . '<C-e>'
+
+        " <C-h>, <BS>: close popup and delete backword char.
+        inoremap <silent> <expr> <C-h> deolete#mappings#smart_close_popup() . '<C-h>'
+        inoremap <silent> <expr> <BS> deoplete#mappings#smart_close_popup() . '<C-h>'
+    endfunction
+endif
+
+" End of deoplete.nvim }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - DoxygenToolkit.vim {{{
 " https://github.com/vim-scripts/DoxygenToolkit.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -984,56 +1023,58 @@ endfunction
 " https://github.com/Shougo/neocomplete.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: add function param complete by TAB (like Vim script #1764)
-NeoBundleLazy 'Shougo/neocomplete.vim', {
-                \ 'depends' : 'Shougo/context_filetype.vim',
-                \ 'autoload' : {
-                    \ 'insert' : 1,
-                    \ },
-                \ }
+if !s:is_nvim
+    NeoBundleLazy 'Shougo/neocomplete.vim', {
+                    \ 'depends' : 'Shougo/context_filetype.vim',
+                    \ 'autoload' : {
+                        \ 'insert' : 1,
+                        \ },
+                    \ }
 
-let s:bundle = neobundle#get('neocomplete.vim')
-function! s:bundle.hooks.on_source(bundle)
-    set showfulltag
-    " TODO: The following two settings must be checked during vimprj overhaul.
-    " Disable header files searching to improve performance.
-    set complete-=i
-    " Only scan current buffer
-    set complete=.
+    let s:bundle = neobundle#get('neocomplete.vim')
+    function! s:bundle.hooks.on_source(bundle)
+        set showfulltag
+        " TODO: The following two settings must be checked during vimprj overhaul.
+        " Disable header files searching to improve performance.
+        set complete-=i
+        " Only scan current buffer
+        set complete=.
 
-    let g:neocomplete#enable_at_startup = 1
-    let g:neocomplete#enable_smart_case = 1
-    " Set minimum syntax keyword length.
-    let g:neocomplete#sources#syntax#min_keyword_length = 2
+        let g:neocomplete#enable_at_startup = 1
+        let g:neocomplete#enable_smart_case = 1
+        " Set minimum syntax keyword length.
+        let g:neocomplete#sources#syntax#min_keyword_length = 2
 
-    " Define keyword.
-    if !exists('g:neocomplete#keyword_patterns')
-        let g:neocomplete#keyword_patterns = {}
-    endif
-    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+        " Define keyword.
+        if !exists('g:neocomplete#keyword_patterns')
+            let g:neocomplete#keyword_patterns = {}
+        endif
+        let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-    " <Tab>: completion.
-    inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
-    inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
+        " <Tab>: completion.
+        inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
+        inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
 
-    " <C-h>, <BS>: close popup and delete backword char.
-    inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup() . '<C-h>'
-    inoremap <silent> <expr> <BS> neocomplete#smart_close_popup() . '<C-h>'
-    " Do NOT popup when enter <C-y> and <C-e>
-    inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
-    inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
+        " <C-h>, <BS>: close popup and delete backword char.
+        inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup() . '<C-h>'
+        inoremap <silent> <expr> <BS> neocomplete#smart_close_popup() . '<C-h>'
+        " Do NOT popup when enter <C-y> and <C-e>
+        inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
+        inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
 
-    " Enable heavy omni completion.
-    if !exists('g:neocomplete#sources#omni#input_patterns')
-        let g:neocomplete#sources#omni#input_patterns = {}
-    endif
-    let g:neocomplete#sources#omni#input_patterns.php =
-                \ '[^. \t]->\h\w*\|\h\w*::'
-    let g:neocomplete#sources#omni#input_patterns.c =
-                \ '[^.[:digit:] *\t]\%(\.\|->\)'
-    let g:neocomplete#sources#omni#input_patterns.cpp =
-                \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+        " Enable heavy omni completion.
+        if !exists('g:neocomplete#sources#omni#input_patterns')
+            let g:neocomplete#sources#omni#input_patterns = {}
+        endif
+        let g:neocomplete#sources#omni#input_patterns.php =
+                    \ '[^. \t]->\h\w*\|\h\w*::'
+        let g:neocomplete#sources#omni#input_patterns.c =
+                    \ '[^.[:digit:] *\t]\%(\.\|->\)'
+        let g:neocomplete#sources#omni#input_patterns.cpp =
+                    \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-endfunction
+    endfunction
+endif
 
 " End of neocomplete.vim }}}
 
@@ -1415,6 +1456,8 @@ function! s:bundle.hooks.on_source(bundle)
     let g:solarized_hitrail = 1
     set background=dark
     colorscheme solarized
+    " for vim-gitgutter
+    highlight clear SignColumn
 endfunction
 
 " End of vim-colors-solarized }}}
@@ -1442,6 +1485,22 @@ NeoBundleLazy 'tpope/vim-fugitive', {
                 \ }
 
 " End of vim-fugitive }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-gitgutter {{{
+" https://github.com/airblade/vim-gitgutter
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundle 'airblade/vim-gitgutter', {
+                \ 'external_commands' : 'git',
+                \ 'autoload' : {
+                    \ 'on_source' : ['vim-airline'],
+                    \ },
+                \ }
+
+let g:gitgutter_sign_modified = '*'
+
+" End of vim-gitgutter }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1736,9 +1795,7 @@ endif
 
 
 " Plugins Need A Try:
-" vim-gitgutter
 " color_coded
 " YCM-Generator
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
-
