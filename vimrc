@@ -25,7 +25,7 @@ if !has('python')
     echohl None
 endif
 
-if v:progname != 'nvim'
+if !has('nvim')
     if !has('lua')
         echohl WarningMsg
         echomsg 'Requires Vim compiled with "+lua" to use enhanced feature.'
@@ -52,10 +52,7 @@ let s:is_mac = has('mac')
 let s:is_unix = has('unix')
 let s:is_windows = has('win16') || has('win32') || has('win64')
 let s:is_gui_running = has('gui_running')
-let s:is_nvim = 0
-if v:progname == 'nvim'
-    let s:is_nvim = 1
-endif
+let s:is_nvim = has('nvim')
 
 let g:maplocalleader = "\<Space>"
 let g:mapleader = "\<Space>"
@@ -366,10 +363,6 @@ autocmd BufEnter * if expand('%:p') !~ '://' | cd %:p:h | endif
 "      Need prepend installed 'bin' directory to PATH env var in Windows.
 set grepprg=grep\ -Hni
 
-" TODO: Since vim-multiple-cursors use <C-n> mapping, change the followings.
-nnoremap <silent> <C-n> :cnext<CR>
-nnoremap <silent> <C-p> :cprevious<CR>
-
 " auto center
 nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
@@ -403,26 +396,27 @@ set ttyfast
 " Remap <Esc> to stop highlighting searching result.
 if s:is_nvim || s:is_gui_running
     nnoremap <silent> <Esc> :nohls<CR><Esc>
-    imap <silent> <Esc> <C-o><Esc>
+    " Since some plugin mapping <C-o>, use <C-\><C-o> instead. :help 'i_CTRL-\_CTRL-O'
+    imap <silent> <Esc> <C-\><C-o><Esc>
 endif
 
 if !s:is_nvim && !s:is_gui_running
-        " Use <nowait> to fast escape for nohls
-        autocmd BufEnter * nnoremap <silent> <nowait> <buffer> <Esc> :nohls<CR><Esc>
-        autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <C-o><Esc>
+    " Use <nowait> to fast escape for nohls
+    autocmd BufEnter * nnoremap <silent> <nowait> <buffer> <Esc> :nohls<CR><Esc>
+    autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <C-o><Esc>
 
-        " fast escape from cmd mode to normal mode
-        set ttimeoutlen=10
+    " fast escape from cmd mode to normal mode
+    set ttimeoutlen=10
 
-        " Enable arrow keys for terminals.
-        nnoremap <silent> <Esc>OA <Up>
-        nnoremap <silent> <Esc>OB <Down>
-        nnoremap <silent> <Esc>OC <Right>
-        nnoremap <silent> <Esc>OD <Left>
-        inoremap <silent> <Esc>OA <Up>
-        inoremap <silent> <Esc>OB <Down>
-        inoremap <silent> <Esc>OC <Right>
-        inoremap <silent> <Esc>OD <Left>
+    " Enable arrow keys for terminals.
+    nnoremap <silent> <Esc>OA <Up>
+    nnoremap <silent> <Esc>OB <Down>
+    nnoremap <silent> <Esc>OC <Right>
+    nnoremap <silent> <Esc>OD <Left>
+    inoremap <silent> <Esc>OA <Up>
+    inoremap <silent> <Esc>OB <Down>
+    inoremap <silent> <Esc>OC <Right>
+    inoremap <silent> <Esc>OD <Left>
 endif
 
 " move around the visual lines
@@ -468,6 +462,7 @@ vnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 " Open another tabpage to view help.
 " TODO: should support virtual mode.
 nnoremap <silent> K :tab h <C-r><C-w><CR>
+vnoremap <silent> K ""y:<C-u>tab h <C-r>"<CR>
 
 " End of Searching/Matching }}}
 
@@ -1129,7 +1124,7 @@ endfunction
 NeoBundleLazy 'scrooloose/nerdtree', {
                 \ 'autoload' : {
                     \ 'commands' : ['NERDTreeToggle','NERDTree','NERDTreeFind'],
-                    \ 'mappings' : ['<Leader>n','<Leader>N'],
+                    \ 'mappings' : ['<Leader>l','<Leader>L'],
                     \ }
                 \ }
 
@@ -1144,9 +1139,9 @@ function! s:bundle.hooks.on_source(bundle)
     let g:NERDTreeShowHidden = 1
     let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
 
-    nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
+    nnoremap <silent> <Leader>l :NERDTreeToggle<CR>
     " command 'NERDTree' will refresh current directory.
-    nnoremap <silent> <Leader>N :NERDTree<CR>
+    nnoremap <silent> <Leader>L :NERDTree<CR>
 
 endfunction
 
@@ -1215,13 +1210,13 @@ endfunction
 NeoBundleLazy 'majutsushi/tagbar', {
                 \ 'external_commands' : 'ctags',
                 \ 'autoload' : {
-                    \ 'mappings' : '<Leader>a',
+                    \ 'mappings' : '<Leader>b',
                     \ },
                 \ }
 
 let s:bundle = neobundle#get('tagbar')
 function! s:bundle.hooks.on_source(bundle)
-    nnoremap <silent> <Leader>a :TagbarToggle<CR>
+    nnoremap <silent> <Leader>b :TagbarToggle<CR>
     let g:tagbar_left = 1
     let g:tagbar_width = 30
     let g:tagbar_compact = 1
@@ -1285,9 +1280,6 @@ function! s:bundle.hooks.on_source(bundle)
     " Use the rank sorter for everything.
     call unite#filters#sorter_default#use(['sorter_rank'])
 
-    " Enable 'ignorecase' for the following profiles.
-    call unite#custom#profile('source/mapping, source/history/yank', 'context.ignorecase', 1)
-
     " Enable 'smartcase' for the following profiles.
     call unite#custom#profile('files, source/mapping, source/history/yank', 'context.smartcase', 1)
 
@@ -1298,9 +1290,15 @@ function! s:unite_variables()
     let g:unite_source_history_yank_enable = 1
     let g:unite_source_rec_max_cache_files = 0
     let g:unite_source_file_async_command = 'find'
-    " Setup variables for 'grep' source.
+
     let g:unite_source_grep_encoding = 'utf-8'
     let g:unite_source_grep_max_candidates = 200
+    " Use ag in unite grep source.
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts =
+        \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
+        \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+    let g:unite_source_grep_recursive_opt = ''
 endfunction
 
 function! s:unite_mappings()
@@ -1309,38 +1307,38 @@ function! s:unite_mappings()
 
     " Frequent shortcuts.
     " Searching buffer in normal mode by default.
-    nnoremap <silent> [unite]b :Unite -toggle -auto-resize
+    nnoremap <silent> [unite]fb :Unite -toggle -auto-resize
                                 \ -buffer-name=buffers -profile-name=files
                                 \ buffer<CR>
 
     " Shortcut for searching MRU file.
-    nnoremap <silent> [unite]r :Unite -start-insert -toggle -auto-resize
+    nnoremap <silent> [unite]fr :Unite -start-insert -toggle -auto-resize
                                 \ -buffer-name=recent -profile-name=files
                                 \ file_mru<CR>
 
     " Shortcut for searching files in current directory recursively.
-    nnoremap <silent> [unite]f :Unite -start-insert -toggle -auto-resize
+    nnoremap <silent> [unite]f. :Unite -start-insert -toggle -auto-resize
                                 \ -buffer-name=files -profile-name=files
                                 \ file_rec/async:!<CR>
 
     " Shortcut for searching (buffers, mru files, file in current dir recursively).
-    nnoremap <silent> [unite]<Space> :Unite -start-insert -toggle -auto-resize
+    nnoremap <silent> [unite]ff :Unite -start-insert -toggle -auto-resize
                                       \ -buffer-name=mixed -profile-name=files
                                       \ buffer file_mru file_rec/async:!<CR>
 
     " Unfrequent shortcuts.
     " Shortcut for yank history searching.
-    nnoremap <silent> [unite]y :Unite -toggle -auto-resize
+    nnoremap <silent> [unite]fy :Unite -toggle -auto-resize
                                 \ -buffer-name=yanks
                                 \ history/yank<CR>
 
     " Shortcut for mappings searching.
-    nnoremap <silent> [unite]ma :Unite -toggle -auto-resize
+    nnoremap <silent> [unite]fm :Unite -toggle -auto-resize
                                 \ -buffer-name=mappings
                                 \ mapping<CR>
 
     " Shortcut for messages searching.
-	nnoremap <silent> [unite]me :Unite -toggle -auto-resize
+	nnoremap <silent> [unite]fs :Unite -toggle -auto-resize
                                 \ -buffer-name=messages
                                 \ output:message<CR>
 
@@ -1432,12 +1430,14 @@ autocmd VimEnter * NeoBundle 'bling/vim-airline'
 
 if !s:is_gui_running
     let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#show_buffers = 0
     let g:airline#extensions#tabline#tab_nr_type = 1
     let g:airline#extensions#tabline#fnamemod = ':p:t'
 endif
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'powerlineish'
+let g:airline#extensions#hunks#hunk_symbols = ['+', '*', '-']
 
 " End of vim-airline }}}
 
@@ -1467,8 +1467,9 @@ endfunction
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Need to config
 autocmd VimEnter * NeoBundle 'Lokaltog/vim-easymotion'
+
+map <silent> <Leader>n <Plug>(easymotion-prefix)
 
 " End of vim-easymotion }}}
 
@@ -1491,14 +1492,18 @@ NeoBundleLazy 'tpope/vim-fugitive', {
 " Plugin - vim-gitgutter {{{
 " https://github.com/airblade/vim-gitgutter
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'airblade/vim-gitgutter', {
+NeoBundleLazy 'airblade/vim-gitgutter', {
                 \ 'external_commands' : 'git',
                 \ 'autoload' : {
                     \ 'on_source' : ['vim-airline'],
                     \ },
                 \ }
 
-let g:gitgutter_sign_modified = '*'
+let s:bundle = neobundle#get('vim-gitgutter')
+function! s:bundle.hooks.on_source(bundle)
+    let g:gitgutter_sign_modified = '*'
+    let g:gitgutter_sign_modified_removed = '*_'
+endfunction
 
 " End of vim-gitgutter }}}
 
@@ -1772,6 +1777,21 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - YCM-Generator {{{
+" https://github.com/rdnetto/YCM-Generator
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if s:is_unix
+    NeoBundleLazy 'rdnetto/YCM-Generator', {
+                    \ 'autoload' : {
+                        \ 'on_source' : ['YouCompleteMe'],
+                        \ },
+                    \ }
+endif
+
+" End of YCM-Generator }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - YouCompleteMe {{{
 " https://github.com/Valloric/YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1796,6 +1816,5 @@ endif
 
 " Plugins Need A Try:
 " color_coded
-" YCM-Generator
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
