@@ -1785,8 +1785,8 @@ endif
 if s:is_unix
     NeoBundleLazy 'Valloric/YouCompleteMe', {
                     \ 'build' : {
-                        \ 'mac'  : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-                        \ 'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+                        \ 'mac'  : './install.sh --clang-completer --system-libclang',
+                        \ 'unix' : './install.sh --clang-completer --system-libclang'
                         \ },
                     \ 'autoload' : {
                         \ 'filetypes' : ['c', 'cpp', 'python', 'cs'],
