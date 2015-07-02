@@ -283,10 +283,11 @@ inoremap <silent> <3-MiddleMouse> <Nop>
 noremap <silent> <4-MiddleMouse> <Nop>
 inoremap <silent> <4-MiddleMouse> <Nop>
 
-" Disable bell on errors
-set noerrorbells
-set novisualbell
-autocmd VimEnter * set vb t_vb=
+" Disable bell on errors except for neovim on gnome-terminal, since
+" gnone-termaterminal can not handle 'visualbell' properly.
+if !(s:is_nvim && $COLORTERM == 'gnome-terminal')
+    autocmd VimEnter * set visualbell t_vb=
+endif
 
 " remap Y to work properly
 nnoremap <silent> Y y$
