@@ -1317,14 +1317,26 @@ function! s:unite_mappings()
                                 \ file_mru<CR>
 
     " Shortcut for searching files in current directory recursively.
-    nnoremap <silent> [unite]f. :Unite -start-insert -toggle -auto-resize
-                                \ -buffer-name=files -profile-name=files
-                                \ file_rec/async:!<CR>
+    if s:is_nvim
+        nnoremap <silent> [unite]f. :Unite -start-insert -toggle -auto-resize
+                                    \ -buffer-name=files -profile-name=files
+                                    \ file_rec/neovim:!<CR>
+    else
+        nnoremap <silent> [unite]f. :Unite -start-insert -toggle -auto-resize
+                                    \ -buffer-name=files -profile-name=files
+                                    \ file_rec/async:!<CR>
+    endif
 
     " Shortcut for searching (buffers, mru files, file in current dir recursively).
-    nnoremap <silent> [unite]ff :Unite -start-insert -toggle -auto-resize
-                                      \ -buffer-name=mixed -profile-name=files
-                                      \ buffer file_mru file_rec/async:!<CR>
+    if s:is_nvim
+        nnoremap <silent> [unite]ff :Unite -start-insert -toggle -auto-resize
+                                          \ -buffer-name=mixed -profile-name=files
+                                          \ buffer file_mru file_rec/neovim:!<CR>
+    else
+        nnoremap <silent> [unite]ff :Unite -start-insert -toggle -auto-resize
+                                          \ -buffer-name=mixed -profile-name=files
+                                          \ buffer file_mru file_rec/async:!<CR>
+    endif
 
     " Unfrequent shortcuts.
     " Shortcut for yank history searching.
