@@ -1,2 +1,3 @@
 vim7*/
 bundle/
+*.pyc

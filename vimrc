@@ -799,6 +799,7 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " https://github.com/liangfeng/dotvim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Also manage vimrc by Neobundle.
+
 if s:is_unix
     let g:vim_cfg_dir = '.vim'
 elseif s:is_windows
@@ -806,8 +807,8 @@ elseif s:is_windows
 endif
 
 NeoBundleFetch 'liangfeng/dotvim', {
-                 \ 'name' : g:vim_cfg_dir,
                  \ 'base' : '~',
+                 \ 'directory' : g:vim_cfg_dir
                  \ }
 
 " For the fast editing of vimrc
@@ -1443,6 +1444,7 @@ autocmd VimEnter * NeoBundle 'bling/vim-airline'
 
 if !s:is_gui_running
     let g:airline#extensions#tabline#enabled = 1
+    " Must to disable this to keep buffer's layout OK.
     let g:airline#extensions#tabline#show_buffers = 0
     let g:airline#extensions#tabline#tab_nr_type = 1
     let g:airline#extensions#tabline#fnamemod = ':p:t'
@@ -1821,6 +1823,7 @@ if s:is_unix
                     \ }
 
     let g:ycm_confirm_extra_conf = 0
+    let g:ycm_global_ycm_extra_conf = '~/'. g:vim_cfg_dir . '/ycm.py'
     let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1, 'cs' : 1 }
 endif
 
