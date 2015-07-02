@@ -96,11 +96,6 @@ if s:is_gui_running
     set guioptions+=M
 endif
 
-" Must call this, since use neobundle#begin()
-call neobundle#end()
-
-filetype plugin indent on
-
 " End of Init }}}
 
 
@@ -826,6 +821,23 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - color_coded {{{
+" https://github.com/jeaye/color_coded
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+NeoBundleLazy 'jeaye/color_coded', {
+                \ 'build': {
+                    \ 'unix': 'cmake . && make && make install',
+                    \ },
+                \ 'autoload' : {
+                    \ 'filetypes' : ['c', 'cpp', 'objc', 'objcpp']
+                    \ },
+                \ 'build_commands' : ['cmake', 'make']
+                \ }
+
+" End of color_coded }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - context_filetype {{{
 " https://github.com/Shougo/context_filetype.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -992,7 +1004,7 @@ endfunction
 " Origin: http://www.drchip.org/astronaut/vim/#LARGEFILE
 " Forked: https://github.com/liangfeng/LargeFile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'liangfeng/LargeFile'
+NeoBundle 'liangfeng/LargeFile'
 
 " End of LargeFile }}}
 
@@ -1119,38 +1131,6 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - nerdtree {{{
-" https://github.com/scrooloose/nerdtree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Replace nerdtree with vimfiler?
-NeoBundleLazy 'scrooloose/nerdtree', {
-                \ 'autoload' : {
-                    \ 'commands' : ['NERDTreeToggle','NERDTree','NERDTreeFind'],
-                    \ 'mappings' : ['<Leader>l','<Leader>L'],
-                    \ }
-                \ }
-
-let s:bundle = neobundle#get('nerdtree')
-function! s:bundle.hooks.on_source(bundle)
-    " Set the window position
-    let g:NERDTreeWinPos = "right"
-    let g:NERDTreeQuitOnOpen = 1
-    let g:NERDTreeWinSize = 50
-    let g:NERDTreeDirArrows = 1
-    let g:NERDTreeMinimalUI = 1
-    let g:NERDTreeShowHidden = 1
-    let g:NERDTreeIgnore=['^\.git', '^\.hg', '^\.svn', '\~$']
-
-    nnoremap <silent> <Leader>l :NERDTreeToggle<CR>
-    " command 'NERDTree' will refresh current directory.
-    nnoremap <silent> <Leader>L :NERDTree<CR>
-
-endfunction
-
-" End of nerdtree }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - python_match.vim {{{
 " https://github.com/vim-scripts/python_match.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1252,7 +1232,7 @@ endfunction
 " Plugin - undotree {{{
 " https://github.com/mbbill/undotree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'mbbill/undotree'
+NeoBundle 'mbbill/undotree'
 
 " End of undotree }}}
 
@@ -1423,9 +1403,10 @@ if s:is_windows && s:is_gui_running
     " Use pipe instead of temp file for shell to avoid popup dos window.
     set noshelltemp
 
-    autocmd VimEnter * NeoBundle 'tyru/vim-altercmd'
-    autocmd VimEnter * command! Shell call s:Shell()
-    autocmd VimEnter * AlterCommand sh[ell] Shell
+    " TODO: use lazy mode
+    NeoBundle 'tyru/vim-altercmd'
+    command! Shell call s:Shell()
+    AlterCommand sh[ell] Shell
 
     " TODO: Need fix issue in :exec 'shell'
     function! s:Shell()
@@ -1440,7 +1421,7 @@ endif
 " Plugin - vim-airline {{{
 " https://github.com/bling/vim-airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'bling/vim-airline'
+NeoBundle 'bling/vim-airline'
 
 if !s:is_gui_running
     let g:airline#extensions#tabline#enabled = 1
@@ -1461,19 +1442,12 @@ let g:airline#extensions#hunks#hunk_symbols = ['+', '*', '-']
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'altercation/vim-colors-solarized', {
-                \ 'autoload' : {'on_source' : ['vim-airline']},
-                \ }
+NeoBundle 'altercation/vim-colors-solarized', {'force' : 1}
 
-let s:bundle = neobundle#get('vim-colors-solarized')
-function! s:bundle.hooks.on_source(bundle)
-    let g:solarized_italic = 0
-    let g:solarized_hitrail = 1
-    set background=dark
-    colorscheme solarized
-    " for vim-gitgutter
-    highlight clear SignColumn
-endfunction
+let g:solarized_italic = 0
+let g:solarized_hitrail = 1
+set background=dark
+colorscheme solarized
 
 " End of vim-colors-solarized }}}
 
@@ -1482,7 +1456,7 @@ endfunction
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'Lokaltog/vim-easymotion'
 
 map <silent> <Leader>n <Plug>(easymotion-prefix)
 
@@ -1493,12 +1467,10 @@ map <silent> <Leader>n <Plug>(easymotion-prefix)
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'tpope/vim-fugitive', {
-                \ 'external_commands' : 'git',
-                \ 'autoload' : {
-                    \ 'on_source' : ['vim-airline'],
-                    \ },
-                \ }
+NeoBundle 'tpope/vim-fugitive', {
+            \ 'external_commands' : 'git',
+            \ 'augroup' : 'fugitive'
+            \ }
 
 " End of vim-fugitive }}}
 
@@ -1507,18 +1479,10 @@ NeoBundleLazy 'tpope/vim-fugitive', {
 " Plugin - vim-gitgutter {{{
 " https://github.com/airblade/vim-gitgutter
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'airblade/vim-gitgutter', {
-                \ 'external_commands' : 'git',
-                \ 'autoload' : {
-                    \ 'on_source' : ['vim-airline'],
-                    \ },
-                \ }
+NeoBundle 'airblade/vim-gitgutter', {'external_commands' : 'git'}
 
-let s:bundle = neobundle#get('vim-gitgutter')
-function! s:bundle.hooks.on_source(bundle)
-    let g:gitgutter_sign_modified = '*'
-    let g:gitgutter_sign_modified_removed = '*_'
-endfunction
+let g:gitgutter_sign_modified = '*'
+let g:gitgutter_sign_modified_removed = '*_'
 
 " End of vim-gitgutter }}}
 
@@ -1564,7 +1528,11 @@ NeoBundleLazy 'tfnico/vim-gradle', {
 " Plugin - vim-multiple-cursors {{{
 " https://github.com/terryma/vim-multiple-cursors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundleLazy 'terryma/vim-multiple-cursors', {
+                \ 'autoload' : {
+                    \ 'mappings' : ['n', '<C-n>'],
+                    \ },
+                \ }
 
 " End of vim-multiple-cursors }}}
 
@@ -1573,7 +1541,7 @@ autocmd VimEnter * NeoBundle 'terryma/vim-multiple-cursors'
 " Plugin - vim-polyglot {{{
 " https://github.com/sheerun/vim-polyglot
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'sheerun/vim-polyglot'
+NeoBundle 'sheerun/vim-polyglot'
 
 " End of vim-polyglot }}}
 
@@ -1595,7 +1563,7 @@ NeoBundleLazy 'tpope/vim-repeat', {
 " Plugin - vim-surround {{{
 " https://github.com/tpope/vim-surround
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd VimEnter * NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-surround'
 
 let g:surround_no_insert_mappings = 1
 
@@ -1618,8 +1586,7 @@ let g:surround_no_insert_mappings = 1
 " Origin: https://github.com/vim-scripts/vimcdoc
 " Forked: https://github.com/liangfeng/vimcdoc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: setup 'keywordprg' for linux terminal?
-autocmd VimEnter * NeoBundle 'liangfeng/vimcdoc'
+NeoBundle 'liangfeng/vimcdoc'
 
 " End of vimcdoc }}}
 
@@ -1628,12 +1595,13 @@ autocmd VimEnter * NeoBundle 'liangfeng/vimcdoc'
 " Plugin - vimfiler {{{
 " https://github.com/Shougo/vimfiler.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: polish it!
 NeoBundleLazy 'Shougo/vimfiler.vim', {
                 \ 'depends' : 'Shougo/unite.vim',
                 \ 'autoload' : {
                     \ 'commands' : [{ 'name' : 'VimFiler', 'complete' : 'customlist,vimfiler#complete' },
                                     \ 'VimFilerExplorer', 'Edit', 'Read', 'Source', 'Write'],
-                    \ 'mappings' : ['<Plug>(vimfiler_'],
+                    \ 'mappings' : ['<Plug>(vimfiler_', '<Leader>l', '<Leader>L'],
                     \ 'explorer' : 1,
                   \ }
                 \ }
@@ -1643,6 +1611,8 @@ function! s:bundle.hooks.on_source(bundle)
     let g:vimfiler_as_default_explorer = 1
     let g:vimfiler_split_rule = 'botright'
     let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
+
+    nnoremap <silent> <Leader>l :VimFilerExplorer<CR>
 endfunction
 
 " End of vimfiler }}}
@@ -1795,6 +1765,7 @@ endfunction
 " Plugin - YCM-Generator {{{
 " https://github.com/rdnetto/YCM-Generator
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Android C/C++ support?
 if s:is_unix
     NeoBundleLazy 'rdnetto/YCM-Generator', {
                     \ 'autoload' : {
@@ -1810,6 +1781,7 @@ endif
 " Plugin - YouCompleteMe {{{
 " https://github.com/Valloric/YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: Android C/C++ support?
 if s:is_unix
     NeoBundleLazy 'Valloric/YouCompleteMe', {
                     \ 'build' : {
@@ -1830,7 +1802,9 @@ endif
 " End of YouCompleteMe }}}
 
 
-" Plugins Need A Try:
-" color_coded
+" Must call this lastly, since use neobundle#begin()
+call neobundle#end()
+
+filetype plugin indent on
 
 " vim: set et sw=4 ts=4 fdm=marker ff=unix:
