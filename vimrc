@@ -824,15 +824,17 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 " Plugin - color_coded {{{
 " https://github.com/jeaye/color_coded
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'jeaye/color_coded', {
-                \ 'build': {
-                    \ 'unix': 'cmake . && make && make install',
-                    \ },
-                \ 'autoload' : {
-                    \ 'filetypes' : ['c', 'cpp', 'objc', 'objcpp']
-                    \ },
-                \ 'build_commands' : ['cmake', 'make']
-                \ }
+if !s:is_nvim
+    NeoBundleLazy 'jeaye/color_coded', {
+                    \ 'build': {
+                        \ 'unix': 'cmake . && make && make install',
+                        \ },
+                    \ 'autoload' : {
+                        \ 'filetypes' : ['c', 'cpp', 'objc', 'objcpp']
+                        \ },
+                    \ 'build_commands' : ['cmake', 'make']
+                    \ }
+endif
 
 " End of color_coded }}}
 
@@ -1458,7 +1460,7 @@ colorscheme solarized
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Lokaltog/vim-easymotion'
 
-map <silent> <Leader>n <Plug>(easymotion-prefix)
+nmap <silent> <Leader>n <Plug>(easymotion-prefix)
 
 " End of vim-easymotion }}}
 
@@ -1483,6 +1485,9 @@ NeoBundle 'airblade/vim-gitgutter', {'external_commands' : 'git'}
 
 let g:gitgutter_sign_modified = '*'
 let g:gitgutter_sign_modified_removed = '*_'
+
+nmap <F7> <Plug>GitGutterPrevHunk
+nmap <F8> <Plug>GitGutterNextHunk
 
 " End of vim-gitgutter }}}
 
