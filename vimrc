@@ -1800,7 +1800,7 @@ if s:is_unix
                     \ }
 
     let g:ycm_confirm_extra_conf = 0
-    let g:ycm_global_ycm_extra_conf = '~/'. g:vim_cfg_dir . '/ycm.py'
+    let g:ycm_global_ycm_extra_conf = '~/'. g:vim_cfg_dir . '/ycm_extra_conf.py'
     let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1, 'cs' : 1 }
 endif
 
