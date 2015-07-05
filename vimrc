@@ -404,7 +404,7 @@ if !s:is_nvim && !s:is_gui_running
     " fast escape from cmd mode to normal mode
     set ttimeoutlen=10
 
-    " Enable arrow keys for terminals.
+    " Enable arrow keys for terminal.
     nnoremap <silent> <Esc>OA <Up>
     nnoremap <silent> <Esc>OB <Down>
     nnoremap <silent> <Esc>OC <Right>
@@ -413,6 +413,12 @@ if !s:is_nvim && !s:is_gui_running
     inoremap <silent> <Esc>OB <Down>
     inoremap <silent> <Esc>OC <Right>
     inoremap <silent> <Esc>OD <Left>
+
+    " Eable 'Home' and 'End' keys for terminal.
+    nnoremap <silent> <Esc>OH <Home>
+    inoremap <silent> <Esc>OH <Home>
+    nnoremap <silent> <Esc>OF <End>
+    inoremap <silent> <Esc>OF <End>
 endif
 
 " move around the visual lines
@@ -1794,20 +1800,29 @@ if s:is_unix
                         \ 'unix' : './install.sh --clang-completer --system-libclang'
                         \ },
                     \ 'autoload' : {
-                        \ 'filetypes' : ['c', 'cpp', 'python', 'cs'],
+                        \ 'filetypes' : ['c', 'cpp', 'python'],
                         \ },
                     \ 'augroup': 'youcompletemeStart'
                     \ }
 
+    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1 }
     let g:ycm_confirm_extra_conf = 0
-    let g:ycm_global_ycm_extra_conf = '~/'. g:vim_cfg_dir . '/ycm_extra_conf.py'
-    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1, 'cs' : 1 }
+    let g:ycm_global_ycm_extra_conf = '~/' . g:vim_cfg_dir . '/ycm_extra_conf.py'
+    let g:ycm_complete_in_comments_and_strings = 1
+
+    if !empty($ANDROID_BUILD_TOP)
+        if getcwd() =~ "kernel"
+            let g:ycm_global_ycm_extra_conf = '~/' . g:vim_cfg_dir . '/ycm_extra_conf_kernel.py'
+        else
+            let g:ycm_global_ycm_extra_conf = '~/' . g:vim_cfg_dir . '/ycm_extra_conf.py'
+        endif
+    endif
 endif
 
 " End of YouCompleteMe }}}
 
 
-" Must call this lastly, since use neobundle#begin()
+" Call this finally, since use neobundle#begin()
 call neobundle#end()
 
 filetype plugin indent on
