@@ -1264,8 +1264,8 @@ let s:bundle = neobundle#get('unite.vim')
 function! s:bundle.hooks.on_source(bundle)
     call s:unite_variables()
 
-	" Prompt choices.
-	call unite#custom#profile('default', 'context', { 'prompt': '» ', })
+    " Prompt choices.
+    call unite#custom#profile('default', 'context', { 'prompt': '» ', })
 
     " Use the rank sorter for everything.
     call unite#filters#sorter_default#use(['sorter_rank'])
@@ -1340,7 +1340,7 @@ function! s:unite_mappings()
                                 \ mapping<CR>
 
     " Shortcut for messages searching.
-	nnoremap <silent> [unite]fs :Unite -toggle -auto-resize
+    nnoremap <silent> [unite]fs :Unite -toggle -auto-resize
                                 \ -buffer-name=messages
                                 \ output:message<CR>
 
@@ -1623,8 +1623,22 @@ function! s:bundle.hooks.on_source(bundle)
     let g:vimfiler_split_rule = 'botright'
     let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
 
+    autocmd BufEnter * if (winnr('$') == 1 && &filetype ==# 'vimfiler') | q | endif
     nnoremap <silent> <Leader>l :VimFilerExplorer<CR>
+
+    call vimfiler#custom#profile('default', 'context', {
+         \ 'safe' : 0,
+         \ 'edit_action' : 'tabopen',
+         \ })
 endfunction
+
+" Setup vimfiler actions
+function! s:setup_vimfiler_actions()
+    nmap <silent> <buffer> <Leader>l :VimFilerExplorer<CR>
+    nmap <silent> <buffer> u <Plug>(vimfiler_switch_to_parent_directory)
+endfunction
+
+autocmd FileType vimfiler call s:setup_vimfiler_actions()
 
 " End of vimfiler }}}
 
