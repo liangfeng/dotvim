@@ -31,58 +31,80 @@
 import os
 import ycm_core
 
-# These are the compilation flags that will be used in case there's no
-# compilation database set (by default, one is not set).
-# CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
-flags = [
-'-Wall',
-'-Wextra',
-'-Werror',
-'-Wc++98-compat',
-'-Wno-long-long',
-# '-Wno-variadic-macros',
-'-fexceptions',
-'-DNDEBUG',
-# You 100% do NOT need -DUSE_CLANG_COMPLETER in your flags; only the YCM
-# source code needs it.
-# '-DUSE_CLANG_COMPLETER',
-# THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
-# language to use when compiling headers. So it will guess. Badly. So C++
-# headers will be compiled as C headers. You don't want that so ALWAYS specify
-# a "-std=<something>".
-# For a C project, you would set this to something like 'c99' instead of
-# 'c++11'.
-'-std=c++11',
-# ...and the same thing goes for the magic -x option which specifies the
-# language that the files to be compiled are written in. This is mostly
-# relevant for c++ headers.
-# For a C project, you would set this to 'c' instead of 'c++'.
-'-x',
-'c++',
-'-isystem',
-'../BoostParts',
-'-isystem',
-# This path will only work on OS X, but extra paths that don't exist are not
-# harmful
-'/System/Library/Frameworks/Python.framework/Headers',
-'-isystem',
-'../llvm/include',
-'-isystem',
-'../llvm/tools/clang/include',
-'-I',
-'.',
-'-I',
-'./ClangCompleter',
-'-isystem',
-'./tests/gmock/gtest',
-'-isystem',
-'./tests/gmock/gtest/include',
-'-isystem',
-'./tests/gmock',
-'-isystem',
-'./tests/gmock/include',
-]
+if (os.getenv('ANDROID_ROOT_DIR')
+    android_root_dir = os.getenv('ANDROID_ROOT_DIR');
+    flags = [
+        '-Wall',
+        '-Wextra',
+        '-Wc++98-compat',
+        '-Wno-long-long',
+        '-Wno-variadic-macros',
+        '-fexceptions',
+        '-fno-rtti',
+        '-fno-strict-aliasing',
+        '-fPIE',
+        '-fpic',
+        '-DNDEBUG',
+        '-DANDROID',
+        '-std=c++11',
+        '-x', 'c++',
+        '-I', '.'
+        '-isystem', os.path.join(android_root_dir, 'system/core/include'),
+        '-isystem', os.path.join(android_root_dir, 'hardware/libhardware/include'),
+        '-isystem', os.path.join(android_root_dir, 'hardware/libhardware_legacy/include'),
+        '-isystem', os.path.join(android_root_dir, 'hardware/ril/include'),
+        '-isystem', os.path.join(android_root_dir, 'libnativehelper/include'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libc/arch-arm/include'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libc/include'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libc/kernel/common'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libc/kernel/arch-arm'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libstdc++/include'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libstdc++/include'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libm/include'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libm/include/arm'),
+        '-isystem', os.path.join(android_root_dir, 'bionic/libthread_db/include/'),
+        '-isystem', os.path.join(android_root_dir, 'frameworks/native/include'),
+        '-isystem', os.path.join(android_root_dir, 'frameworks/native/opengl/include'),
+        '-isystem', os.path.join(android_root_dir, 'frameworks/av/include'),
+        '-isystem', os.path.join(android_root_dir, 'frameworks/base/include'),
+        #You can add the paths to the HAL or other native code you're working on here
+        '-I', os.path.join(android_root_dir, 'hardware/qcom/display/libgralloc'),
+        '-I', os.path.join(android_root_dir, 'hardware/qcom/display/libhwcomposer'),
+    ]
 
+elif (os.getenv('KERNEL_ROOT_DIR')
+    kernel_root_dir = os.getenv('KERNEL_ROOT_DIR')
+    flags = [
+    '-Wall',
+    '-Wextra',
+    '-Wc++98-compat',
+    '-D__KERNEL__',
+    '-nostdinc',
+    '-DUSE_CLANG_COMPLETER',
+    '-std=c99',
+    '-x', 'c',
+    '-I', '.'
+    '-isystem', os.path.join(KERNEL_ROOT_DIR, '/kernel/include'),
+    '-isystem', os.path.join(kernel_root_DIR, '/kernel/include/linux'),
+    '-isystem', os.path.join(kernel_root_DIR, '/kernel/include/asm-generic'),
+    '-isystem', os.path.join(kernel_root_DIR, '/kernel/arch/arm/include'),
+    '-isystem', os.path.join(kernel_root_DIR, '/kernel/arch/arm64/include'),
+    ]
+
+else
+    flags = [
+    '-Wall',
+    '-Wextra',
+    '-Werror',
+    '-Wc++98-compat',
+    '-Wno-long-long',
+    '-Wno-variadic-macros',
+    '-fexceptions',
+    '-DNDEBUG',
+    '-std=c++11',
+    '-x', 'c++',
+    '-I', '.',
+    ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
 # compile_commands.json file to use that instead of 'flags'. See here for
