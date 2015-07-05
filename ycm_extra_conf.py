@@ -31,8 +31,8 @@
 import os
 import ycm_core
 
-if (os.getenv('ANDROID_ROOT_DIR')
-    android_root_dir = os.getenv('ANDROID_ROOT_DIR');
+if (os.getenv('ANDROID_ROOT_DIR')):
+    android_root_dir = os.getenv('ANDROID_ROOT_DIR')
     flags = [
         '-Wall',
         '-Wextra',
@@ -72,7 +72,7 @@ if (os.getenv('ANDROID_ROOT_DIR')
         '-I', os.path.join(android_root_dir, 'hardware/qcom/display/libhwcomposer'),
     ]
 
-elif (os.getenv('KERNEL_ROOT_DIR')
+elif (os.getenv('KERNEL_ROOT_DIR')):
     kernel_root_dir = os.getenv('KERNEL_ROOT_DIR')
     flags = [
     '-Wall',
@@ -91,7 +91,7 @@ elif (os.getenv('KERNEL_ROOT_DIR')
     '-isystem', os.path.join(kernel_root_DIR, '/kernel/arch/arm64/include'),
     ]
 
-else
+else:
     flags = [
     '-Wall',
     '-Wextra',
