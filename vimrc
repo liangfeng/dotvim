@@ -1405,20 +1405,23 @@ autocmd FileType unite call s:unite_ui_settings()
 " Plugin - vim-altercmd {{{
 " https://github.com/tyru/vim-altercmd
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Only source this plugin in Windows GUI version.
-if s:is_windows && s:is_gui_running
-
+" Only source this plugin in VIM Windows GUI version.
+if !s:is_nvim && s:is_windows && s:is_gui_running
     " Use pipe instead of temp file for shell to avoid popup dos window.
     set noshelltemp
 
     " TODO: use lazy mode
     NeoBundle 'tyru/vim-altercmd'
-    command! Shell call s:Shell()
-    AlterCommand sh[ell] Shell
 
-    " TODO: Need fix issue in :exec 'shell'
-    function! s:Shell()
-        exec 'set shelltemp | shell | set noshelltemp'
+    let s:bundle = neobundle#get('vim-altercmd')
+    function! s:bundle.hooks.on_post_source(bundle)
+        command! Shell call s:Shell()
+        AlterCommand sh[ell] Shell
+
+        " TODO: Need fix issue in :exec 'shell'
+        function! s:Shell()
+            exec 'set shelltemp | shell | set noshelltemp'
+        endfunction
     endfunction
 endif
 
