@@ -1615,7 +1615,7 @@ NeoBundleLazy 'Shougo/vimfiler.vim', {
                 \ 'autoload' : {
                     \ 'commands' : [{ 'name' : 'VimFiler', 'complete' : 'customlist,vimfiler#complete' },
                                     \ 'VimFilerExplorer', 'Edit', 'Read', 'Source', 'Write'],
-                    \ 'mappings' : ['<Plug>(vimfiler_', '<Leader>l', '<Leader>L'],
+                    \ 'mappings' : ['<Plug>(vimfiler_', '<Leader>l'],
                     \ 'explorer' : 1,
                   \ }
                 \ }
@@ -1628,17 +1628,18 @@ function! s:bundle.hooks.on_source(bundle)
 
     autocmd BufEnter * if (winnr('$') == 1 && &filetype ==# 'vimfiler') | q | endif
     nnoremap <silent> <Leader>l :VimFilerExplorer<CR>
-
-    call vimfiler#custom#profile('default', 'context', {
-         \ 'safe' : 0,
-         \ 'edit_action' : 'tabopen',
-         \ })
 endfunction
 
 " Setup vimfiler actions
 function! s:setup_vimfiler_actions()
     nmap <silent> <buffer> <Leader>l :VimFilerExplorer<CR>
+    nmap <silent> <buffer> <nowait> c <Plug>(vimfiler_cd_or_edit)
     nmap <silent> <buffer> u <Plug>(vimfiler_switch_to_parent_directory)
+    nmap <silent> <buffer> <expr> t vimfiler#do_action('tabswitch')
+    unmap <silent> <buffer> h
+    unmap <silent> <buffer> l
+    unmap <silent> <buffer> v
+    unmap <silent> <buffer> <C-v>
 endfunction
 
 autocmd FileType vimfiler call s:setup_vimfiler_actions()
