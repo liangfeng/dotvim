@@ -392,14 +392,13 @@ set ttyfast
 " Remap <Esc> to stop highlighting searching result.
 if s:is_nvim || s:is_gui_running
     nnoremap <silent> <Esc> :nohls<CR><Esc>
-    " Since some plugin mapping <C-o>, use <C-\><C-o> instead. :help 'i_CTRL-\_CTRL-O'
-    imap <silent> <Esc> <C-\><C-o><Esc>
+    imap <silent> <Esc> <Esc><Esc>
 endif
 
 if !s:is_nvim && !s:is_gui_running
     " Use <nowait> to fast escape for nohls
     autocmd BufEnter * nnoremap <silent> <nowait> <buffer> <Esc> :nohls<CR><Esc>
-    autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <C-o><Esc>
+    autocmd BufEnter * imap <silent> <nowait> <buffer> <Esc> <Esc><Esc>
 
     " fast escape from cmd mode to normal mode
     set ttimeoutlen=10
@@ -462,9 +461,8 @@ vnoremap <silent> * :<C-u>call <SID>VSetSearch()<CR>//<CR>
 vnoremap <silent> # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
 " Open another tabpage to view help.
-" TODO: should support virtual mode.
 nnoremap <silent> K :tab h <C-r><C-w><CR>
-vnoremap <silent> K ""y:<C-u>tab h <C-r>"<CR>
+vnoremap <silent> K "ay:<C-u>tab h <C-r>a<CR>
 
 " End of Searching/Matching }}}
 
@@ -1794,7 +1792,6 @@ endfunction
 " Plugin - YCM-Generator {{{
 " https://github.com/rdnetto/YCM-Generator
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Android C/C++ support?
 if s:is_unix
     NeoBundleLazy 'rdnetto/YCM-Generator', {
                     \ 'autoload' : {
@@ -1810,7 +1807,6 @@ endif
 " Plugin - YouCompleteMe {{{
 " https://github.com/Valloric/YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Android C/C++ support?
 if s:is_unix
     NeoBundleLazy 'Valloric/YouCompleteMe', {
                     \ 'build' : {
