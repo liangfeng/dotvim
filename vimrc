@@ -828,7 +828,7 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 " Plugin - color_coded {{{
 " https://github.com/jeaye/color_coded
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if !s:is_nvim
+if !s:is_nvim && !s:is_windows
     NeoBundleLazy 'jeaye/color_coded', {
                     \ 'build': {
                         \ 'unix': 'cmake . && make && make install',
