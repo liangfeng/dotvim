@@ -1492,6 +1492,7 @@ NeoBundle 'airblade/vim-gitgutter', {'external_commands' : 'git'}
 
 let g:gitgutter_sign_modified = '*'
 let g:gitgutter_sign_modified_removed = '*_'
+let g:gitgutter_max_signs = 10000
 
 nmap <F7> <Plug>GitGutterPrevHunk
 nmap <F8> <Plug>GitGutterNextHunk
@@ -1810,8 +1811,8 @@ endif
 if s:is_unix
     NeoBundleLazy 'Valloric/YouCompleteMe', {
                     \ 'build' : {
-                        \ 'mac'  : './install.sh --clang-completer --system-libclang',
-                        \ 'unix' : './install.sh --clang-completer --system-libclang'
+                        \ 'mac'  : './install.py --clang-completer --system-libclang',
+                        \ 'unix' : './install.py --clang-completer --system-libclang'
                         \ },
                     \ 'autoload' : {
                         \ 'filetypes' : ['c', 'cpp', 'python'],
