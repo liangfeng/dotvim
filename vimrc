@@ -15,13 +15,13 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if v:version < 704
     echohl WarningMsg
-    echomsg 'Requires Vim 7.4 or later. The current version of Vim is "' . v:version . '".'
+    echomsg 'Requires Vim 7.4 or above or Neovim. The current version of Vim is "' . v:version . '".'
     echohl None
 endif
 
 if !has('python')
     echohl WarningMsg
-    echomsg 'Requires Vim compiled with "+python" to use enhanced feature.'
+    echomsg 'Requires Vim/Neovim compiled with "+python" to use enhanced feature.'
     echohl None
 endif
 
@@ -65,31 +65,28 @@ if s:is_windows
     endif
 endif
 
-" Setup neobundle plugin.
+" Setup dein plugin.
 " Must be called before filetype on.
 if s:is_unix
-    set runtimepath=$HOME/.vim/bundle/neobundle.vim,$VIMRUNTIME
-    call neobundle#begin()
+    set runtimepath+=$HOME/.vim/bundle/repos/github.com/Shougo/dein.vim
+    call dein#begin('$HOME/.vim/bundle')
 else
-    set runtimepath=$HOME/vimfiles/bundle/neobundle.vim,$VIMRUNTIME
-    call neobundle#begin('$HOME/vimfiles/bundle')
+    " TODO: Support dein.vim on Windows
+    set runtimepath=$HOME/vimfiles/bundle/repos/github.com/Shougo/dein.vim,$VIMRUNTIME
+    call dein#begin('$HOME/vimfiles/bundle')
 endif
 
-" Put Neobundle.vim settings here.
+" Let dein manage dein
+call dein#add('Shougo/dein.vim')
 
 " If unix style 'rmdir' is installed , it can not handle directory properly,
 " must setup rm_command explicitly in Windows to use builtin 'rmdir' cmd.
 if s:is_windows
     let g:neobundle#rm_command = 'cmd.exe /C rmdir /S /Q'
+    let g:neobundle#install_max_processes = 15
+    " YouCompleteMe plugin is too large
+    let g:neobundle#install_process_timeout = 1800
 endif
-
-let g:neobundle#types#git#default_protocol = 'git'
-
-let g:neobundle#install_max_processes = 15
-
-" YouCompleteMe plugin is too large
-let g:neobundle#install_process_timeout = 1800
-
 
 " Do not load system menu, before ':syntax on' and ':filetype on'.
 if s:is_gui_running
@@ -105,7 +102,7 @@ endif
 set shortmess+=I
 
 if s:is_gui_running
-    if s:is_unix
+    if s:is_unix && !s:is_mac
         " Install wmctrl first, 'sudo apt-get install wmctrl'
         function! s:MaxWindowSize()
             call system('wmctrl -ir ' . v:windowid . ' -b add,maximized_vert,maximized_horz')
@@ -228,18 +225,13 @@ if s:is_gui_running
     endif
 endif
 
-" Activate 256 colors independently of terminal, except Mac console mode
-if !(!s:is_gui_running && s:is_mac)
-    set t_Co=256
-endif
-
 if s:is_mac && s:is_gui_running
     set fuoptions+=maxhorz
     nnoremap <silent> <D-f> :set invfullscreen<CR>
     inoremap <silent> <D-f> <C-o>:set invfullscreen<CR>
 endif
 
-" Switch on syntax highlighting.
+" Turn on syntax highlighting.
 " Delete colors_name for vimrc re-sourcing.
 if exists('g:colors_name')
     unlet g:colors_name
@@ -279,7 +271,7 @@ noremap <silent> <4-MiddleMouse> <Nop>
 inoremap <silent> <4-MiddleMouse> <Nop>
 
 " Disable bell on errors except for neovim on gnome-terminal, since
-" gnone-termaterminal can not handle 'visualbell' properly.
+" gnone-terminal can not handle 'visualbell' properly.
 if !(s:is_nvim && $COLORTERM == 'gnome-terminal')
     autocmd VimEnter * set visualbell t_vb=
 endif
@@ -441,6 +433,7 @@ set wildignore+=*.swp
 set wildignore+=*.pyc
 
 nmap <silent> <Tab> %
+nmap <silent> <S-Tab> g%
 
 " Enable very magic mode for searching.
 noremap / /\v
@@ -797,20 +790,16 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " vimrc {{{
 " https://github.com/liangfeng/dotvim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Also manage vimrc by Neobundle.
-
 if s:is_unix
     let g:vim_cfg_dir = '.vim'
 elseif s:is_windows
     let g:vim_cfg_dir = 'vimfiles'
 endif
 
-NeoBundleFetch 'liangfeng/dotvim', {
-                 \ 'base' : '~',
-                 \ 'directory' : g:vim_cfg_dir
-                 \ }
+" TODO: dein needs to support different base path.
+" call dein#add('liangfeng/dotvim', {'rtp' : ''})
 
-" For the fast editing of vimrc
+" For the fast editing
 function! s:OpenVimrc()
     if s:is_unix
         call s:TabSwitch('$HOME/.vim/vimrc')
@@ -829,15 +818,11 @@ nnoremap <silent> <Leader>v :call <SID>OpenVimrc()<CR>
 " https://github.com/jeaye/color_coded
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !s:is_nvim && !s:is_windows
-    NeoBundleLazy 'jeaye/color_coded', {
-                    \ 'build': {
-                        \ 'unix': 'cmake . && make && make install',
-                        \ },
-                    \ 'autoload' : {
-                        \ 'filetypes' : ['c', 'cpp', 'objc', 'objcpp']
-                        \ },
-                    \ 'build_commands' : ['cmake', 'make']
-                    \ }
+    call dein#add('jeaye/color_coded', {
+                \ 'lazy' : 1,
+                \ 'on_ft' : ['c', 'cpp', 'objc', 'objcpp'],
+                \ 'build' : 'make',
+                \ })
 endif
 
 " End of color_coded }}}
@@ -847,29 +832,29 @@ endif
 " Plugin - context_filetype {{{
 " https://github.com/Shougo/context_filetype.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Shougo/context_filetype.vim', {
-                \ 'autoload' : {
-                    \ 'on_source': ['neocomplete.vim'],
-                    \ },
-                \ }
+call dein#add('Shougo/context_filetype.vim', {
+            \ 'lazy' : 1,
+            \ 'on_source' : ['deoplete.nvim']
+            \ })
 
 " End of context_filetype }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - delimitMate {{{
-" Origin: https://github.com/Raimondi/delimitMate
-" Forked: https://github.com/liangfeng/delimitMate
+" https://github.com/Raimondi/delimitMate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'liangfeng/delimitMate', {
-                \ 'autoload': {
-                    \ 'insert' : 1,
-                    \ 'on_source' : ['neocomplete.vim', 'xptemplate'],
-                    \ },
-                \ }
+call dein#add('Raimondi/delimitMate', {
+            \ 'lazy' : 1,
+            \ 'on_event' : 'InsertEnter',
+            \ 'on_source' : ['deoplete.nvim', 'xptemplate']
+            \ })
 
-let s:bundle = neobundle#get('delimitMate')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'delimitMate'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
+    let g:delimitMate_excluded_ft = 'mail,txt,text,,'
     let g:delimitMate_expand_cr = 1
     let g:delimitMate_balance_matchpairs = 1
     autocmd FileType vim let b:delimitMate_matchpairs = '(:),[:],{:},<:>'
@@ -877,15 +862,9 @@ function! s:bundle.hooks.on_source(bundle)
     autocmd FileType xml,html let b:delimitMate_matchpairs = '(:),[:],{:}'
     autocmd FileType html let b:delimitMate_quotes = '\" ''
     autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
-    autocmd FileType,BufNewFile,BufRead,BufEnter
-                \ * imap <buffer> <silent> <C-g> <Plug>delimitMateJumpMany
 endfunction
 
-function! s:bundle.hooks.on_post_source(bundle)
-    let g:delimitMate_excluded_ft = 'mail,txt,text,,'
-    " To work with 'NeoBundleLazy', must call the following cmd.
-    silent! exec 'doautocmd Filetype' &filetype
-endfunction
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of delimitMate }}}
 
@@ -895,14 +874,15 @@ endfunction
 " https://github.com/Shougo/deoplete.nvim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:is_nvim
-    NeoBundleLazy 'Shougo/deoplete.nvim', {
-                    \ 'autoload': {
-                        \ 'insert' : 1,
-                        \ },
-                    \ }
+    call dein#add('Shougo/deoplete.nvim', {
+                \ 'lazy' : 1,
+                \ 'on_event' : 'InsertEnter'
+                \ })
 
-    let s:bundle = neobundle#get('deoplete.nvim')
-    function! s:bundle.hooks.on_source(bundle)
+    let plugin_name = 'deoplete.nvim'
+    let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+    function! s:hook_source_{normalized_plugin_name}() abort
         let g:deoplete#enable_at_startup = 1
         let g:deoplete#enable_smart_case = 1
 
@@ -914,10 +894,9 @@ if s:is_nvim
         inoremap <silent> <expr> <C-y>  deoplete#mappings#close_popup() . '<C-y>'
         inoremap <silent> <expr> <C-e>  deoplete#mappings#cancel_popup() . '<C-e>'
 
-        " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <silent> <expr> <C-h> deolete#mappings#smart_close_popup() . '<C-h>'
-        inoremap <silent> <expr> <BS> deoplete#mappings#smart_close_popup() . '<C-h>'
     endfunction
+
+    call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 endif
 
 " End of deoplete.nvim }}}
@@ -927,29 +906,32 @@ endif
 " Plugin - DoxygenToolkit.vim {{{
 " https://github.com/vim-scripts/DoxygenToolkit.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'DoxygenToolkit.vim', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['c', 'cpp', 'python'],
-                    \ },
-                \ }
+call dein#add('DoxygenToolkit.vim', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : ['c', 'cpp', 'objc', 'objcpp', 'python']
+            \ })
 
-let s:bundle = neobundle#get('DoxygenToolkit.vim')
-function! s:bundle.hooks.on_source(bundle)
-    " Load doxygen syntax file for c/cpp/idl files
-    let g:load_doxygen_syntax = 1
-    let g:DoxygenToolkit_commentType = "C++"
-    let g:DoxygenToolkit_dateTag = ""
-    let g:DoxygenToolkit_authorName = "liangfeng"
-    let g:DoxygenToolkit_versionString = ""
-    let g:DoxygenToolkit_versionTag = ""
-    let g:DoxygenToolkit_briefTag_pre = "@brief:  "
-    let g:DoxygenToolkit_fileTag = "@file:   "
-    let g:DoxygenToolkit_authorTag = "@author: "
-    let g:DoxygenToolkit_blockTag = "@name: "
-    let g:DoxygenToolkit_paramTag_pre = "@param:  "
-    let g:DoxygenToolkit_returnTag = "@return:  "
-    let g:DoxygenToolkit_classTag = "@class: "
+let plugin_name = 'DoxygenToolkit.vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
+     " Load doxygen syntax file for c/cpp/idl files
+     let g:load_doxygen_syntax = 1
+     let g:DoxygenToolkit_commentType = "C++"
+     let g:DoxygenToolkit_dateTag = ""
+     let g:DoxygenToolkit_authorName = "liangfeng"
+     let g:DoxygenToolkit_versionString = ""
+     let g:DoxygenToolkit_versionTag = ""
+     let g:DoxygenToolkit_briefTag_pre = "@brief:  "
+     let g:DoxygenToolkit_fileTag = "@file:   "
+     let g:DoxygenToolkit_authorTag = "@author: "
+     let g:DoxygenToolkit_blockTag = "@name: "
+     let g:DoxygenToolkit_paramTag_pre = "@param:  "
+     let g:DoxygenToolkit_returnTag = "@return:  "
+     let g:DoxygenToolkit_classTag = "@class: "
 endfunction
+
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of DoxygenToolkit.vim }}}
 
@@ -958,16 +940,19 @@ endfunction
 " Plugin - emmet-vim {{{
 " https://github.com/mattn/emmet-vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'mattn/emmet-vim', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['xml', 'html'],
-                    \ },
-                \ }
+call dein#add('mattn/emmet-vim', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : ['xml', 'html']
+            \ })
 
-let s:bundle = neobundle#get('emmet-vim')
-function! s:bundle.hooks.on_source(bundle)
-    let g:use_emmet_complete_tag = 1
+let plugin_name = 'emmet-vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
+     let g:use_emmet_complete_tag = 1
 endfunction
+
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of emmet-vim }}}
 
@@ -976,10 +961,10 @@ endfunction
 " Plugin - FencView.vim {{{
 " https://github.com/mbbill/fencview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'mbbill/fencview', {
-                \ 'autoload' : {
-                    \ 'commands' : ['FencAutoDetect', 'FencView', 'FencManualEncoding'] },
-                \ }
+call dein#add('mbbill/fencview', {
+            \ 'lazy' : 1,
+            \ 'on_cmd' : ['FencAutoDetect', 'FencView', 'FencManualEncoding']
+            \ })
 
 " End of FencView.vim }}}
 
@@ -989,28 +974,30 @@ NeoBundleLazy 'mbbill/fencview', {
 " https://github.com/derekwyatt/vim-fswitch
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need refining to catch exceptions or just rewrite one?
-NeoBundleLazy 'derekwyatt/vim-fswitch', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['c', 'cpp'],
-                    \ 'commands' : ['FS'],
-                    \ },
-                \ }
+call dein#add('derekwyatt/vim-fswitch', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : ['c', 'cpp'],
+            \ 'on_cmd' : ['FS']
+            \ })
 
-let s:bundle = neobundle#get('vim-fswitch')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'vim-fswitch'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     command! FS :FSSplitAbove
     let g:fsnonewfiles = 1
 endfunction
 
-" End of FSwitch }}}
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
+" End of FSwitch }}}
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - LargeFile {{{
 " Origin: http://www.drchip.org/astronaut/vim/#LARGEFILE
 " Forked: https://github.com/liangfeng/LargeFile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'liangfeng/LargeFile'
+call dein#add('liangfeng/LargeFile')
 
 " End of LargeFile }}}
 
@@ -1019,99 +1006,30 @@ NeoBundle 'liangfeng/LargeFile'
 " Plugin - matchit {{{
 " https://github.com/vim-scripts/matchit.zip
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'matchit.zip', {
-                \ 'autoload' : {
-                    \ 'mappings' : ['%', 'g%'],
-                    \ },
-                \ }
-
-let s:bundle = neobundle#get('matchit.zip')
-function! s:bundle.hooks.on_post_source(bundle)
-    silent! exec 'doautocmd Filetype' &filetype
-endfunction
+"call dein#add('matchit.zip', {
+"            \ 'lazy' : 1,
+"            \ 'on_map' : ['%', 'g%']
+"            \ })
+"
+"let plugin_name = 'matchit.zip'
+"let normalized_plugin_name = dein#get(plugin_name).normalized_name
+"
+"function! s:hook_post_source_{normalized_plugin_name}() abort
+"    silent! exec 'doautocmd Filetype' &filetype
+"endfunction
+"call dein#set_hook(plugin_name, 'hook_post_source', function('s:hook_post_source_' . normalized_plugin_name))
 
 " End of matchit }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - neocomplete.vim {{{
-" https://github.com/Shougo/neocomplete.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: add function param complete by TAB (like Vim script #1764)
-if !s:is_nvim
-    NeoBundleLazy 'Shougo/neocomplete.vim', {
-                    \ 'depends' : 'Shougo/context_filetype.vim',
-                    \ 'autoload' : {
-                        \ 'insert' : 1,
-                        \ },
-                    \ }
-
-    let s:bundle = neobundle#get('neocomplete.vim')
-    function! s:bundle.hooks.on_source(bundle)
-        set showfulltag
-        " TODO: The following two settings must be checked during vimprj overhaul.
-        " Disable header files searching to improve performance.
-        set complete-=i
-        " Only scan current buffer
-        set complete=.
-
-        let g:neocomplete#enable_at_startup = 1
-        let g:neocomplete#enable_smart_case = 1
-        " Set minimum syntax keyword length.
-        let g:neocomplete#sources#syntax#min_keyword_length = 2
-
-        " Define keyword.
-        if !exists('g:neocomplete#keyword_patterns')
-            let g:neocomplete#keyword_patterns = {}
-        endif
-        let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-        " <Tab>: completion.
-        inoremap <silent> <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
-        inoremap <silent> <expr> <S-Tab> pumvisible() ? '<C-p>' : '<S-Tab>'
-
-        " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <silent> <expr> <C-h> neocomplete#smart_close_popup() . '<C-h>'
-        inoremap <silent> <expr> <BS> neocomplete#smart_close_popup() . '<C-h>'
-        " Do NOT popup when enter <C-y> and <C-e>
-        inoremap <silent> <expr> <C-y> neocomplete#close_popup() . '<C-y>'
-        inoremap <silent> <expr> <C-e> neocomplete#cancel_popup() . '<C-e>'
-
-        " Enable heavy omni completion.
-        if !exists('g:neocomplete#sources#omni#input_patterns')
-            let g:neocomplete#sources#omni#input_patterns = {}
-        endif
-        let g:neocomplete#sources#omni#input_patterns.php =
-                    \ '[^. \t]->\h\w*\|\h\w*::'
-        let g:neocomplete#sources#omni#input_patterns.c =
-                    \ '[^.[:digit:] *\t]\%(\.\|->\)'
-        let g:neocomplete#sources#omni#input_patterns.cpp =
-                    \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-    endfunction
-endif
-
-" End of neocomplete.vim }}}
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin - neobundle.vim {{{
-" https://github.com/Shougo/neobundle.vim
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" End of neobundle.vim }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - neomru.vim {{{
 " https://github.com/Shougo/neomru.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Shougo/neomru.vim', {
-                \ 'autoload' : {
-                    \ 'on_source' : ['unite.vim'],
-                    \ },
-                \ }
+call dein#add('Shougo/neomru.vim', {
+            \ 'lazy' : 1,
+            \ 'on_source' : ['unite.vim']
+            \ })
 
 " End of neomru.vim }}}
 
@@ -1121,17 +1039,19 @@ NeoBundleLazy 'Shougo/neomru.vim', {
 " https://github.com/tomtom/tcomment_vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need try 'vim-commentary'?
-NeoBundleLazy 'tomtom/tcomment_vim', {
-                \ 'autoload' : {
-                    \ 'commands' : ['TComment'],
-                    \ 'mappings' : ['<Leader>cc'],
-                    \ },
-                \ }
+call dein#add('tomtom/tcomment_vim', {
+            \ 'lazy' : 1,
+            \ 'on_cmd' : 'TComment',
+            \ 'on_map' : '<Leader>cc'
+            \ })
 
-let s:bundle = neobundle#get('tcomment_vim')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'tcomment_vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     map <silent> <Leader>cc :TComment<CR>
 endfunction
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of tcomment_vim }}}
 
@@ -1140,11 +1060,10 @@ endfunction
 " Plugin - python_match.vim {{{
 " https://github.com/vim-scripts/python_match.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'python_match.vim', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['python'],
-                    \ },
-                \ }
+call dein#add('python_match.vim', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : ['python']
+            \ })
 
 " End of python_match.vim }}}
 
@@ -1154,7 +1073,7 @@ NeoBundleLazy 'python_match.vim', {
 " https://github.com/xolox/vim-session
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need check this.
-" NeoBundle 'xolox/vim-session'
+" call dein#add('xolox/vim-session')
 
 " End of session }}}
 
@@ -1163,11 +1082,10 @@ NeoBundleLazy 'python_match.vim', {
 " Plugin - SimpylFold for python {{{
 " https://github.com/tmhedberg/SimpylFold
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'tmhedberg/SimpylFold', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['python'],
-                    \ },
-                \ }
+call dein#add('tmhedberg/SimpylFold', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : 'python'
+            \ })
 
 " End of SimpylFold for python }}}
 
@@ -1176,16 +1094,19 @@ NeoBundleLazy 'tmhedberg/SimpylFold', {
 " Plugin - SyntaxAttr.vim {{{
 " https://github.com/vim-scripts/SyntaxAttr.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'SyntaxAttr.vim', {
-                \ 'autoload' : {
-                    \ 'mappings' : '<Leader>S',
-                    \ },
-                \ }
+call dein#add('SyntaxAttr.vim', {
+            \ 'lazy' : 1,
+            \ 'on_map' : '<Leader>S',
+            \ })
 
-let s:bundle = neobundle#get('SyntaxAttr.vim')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'SyntaxAttr.vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     nnoremap <silent> <Leader>S :call SyntaxAttr()<CR>
 endfunction
+
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of SyntaxAttr.vim }}}
 
@@ -1195,20 +1116,23 @@ endfunction
 " https://github.com/majutsushi/tagbar
 " http://ctags.sourceforge.net/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'majutsushi/tagbar', {
-                \ 'external_commands' : 'ctags',
-                \ 'autoload' : {
-                    \ 'mappings' : '<Leader>b',
-                    \ },
-                \ }
+" XXX: Need 'brew install ctags' on Mac OS.
+call dein#add('majutsushi/tagbar', {
+            \ 'lazy' : 1,
+            \ 'on_map' : '<Leader>b'
+            \ })
 
-let s:bundle = neobundle#get('tagbar')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'tagbar'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     nnoremap <silent> <Leader>b :TagbarToggle<CR>
     let g:tagbar_left = 1
     let g:tagbar_width = 30
     let g:tagbar_compact = 1
 endfunction
+
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of tagbar }}}
 
@@ -1219,17 +1143,19 @@ endfunction
 " Origin: https://github.com/vim-scripts/TaskList.vim
 " Forked: https://github.com/liangfeng/TaskList.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'liangfeng/TaskList.vim', {
-                \ 'autoload' : {
-                    \ 'mappings' : '<Leader>t',
-                    \ },
-                \ }
+call dein#add('liangfeng/TaskList.vim', {
+            \ 'lazy' : 1,
+            \ 'on_map' : '<Leader>t',
+            \ })
 
-let s:bundle = neobundle#get('TaskList.vim')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'TaskList.vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     let g:tlRememberPosition = 1
     nmap <silent> <Leader>t <Plug>ToggleTaskList
 endfunction
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of TaskList.vim }}}
 
@@ -1238,7 +1164,7 @@ endfunction
 " Plugin - undotree {{{
 " https://github.com/mbbill/undotree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'mbbill/undotree'
+call dein#add('mbbill/undotree')
 
 " End of undotree }}}
 
@@ -1249,17 +1175,16 @@ NeoBundle 'mbbill/undotree'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " XXX: In Windows, use cmds from 'git for Windows'.
 "      Need prepend installed 'bin' directory to PATH env var in Windows.
-NeoBundleLazy 'Shougo/unite.vim', {
-                \ 'external_commands' : ['find', 'grep'],
-                \ 'autoload' : {
-                    \ 'mappings' : ['<Leader>'],
-                    \ 'commands' : ['Unite', 'Grep'],
-                    \ 'on_source' : ['vimfiler.vim'],
-                    \ },
-                \ }
+call dein#add('Shougo/unite.vim', {
+            \ 'lazy' : 1,
+            \ 'on_map' : '<Leader>',
+            \ 'on_cmd' : ['Unite', 'Grep'],
+            \ 'on_source' : 'vimfiler.vim',
+            \ })
 
-let s:bundle = neobundle#get('unite.vim')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'unite.vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+function! s:hook_source_{normalized_plugin_name}() abort
     call s:unite_variables()
 
     " Prompt choices.
@@ -1396,6 +1321,8 @@ endfunction
 
 autocmd FileType unite call s:unite_ui_settings()
 
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
+
 " End of unite.vim }}}
 
 
@@ -1409,10 +1336,14 @@ if !s:is_nvim && s:is_windows && s:is_gui_running
     set noshelltemp
 
     " TODO: use lazy mode
-    NeoBundle 'tyru/vim-altercmd'
+   call dein#add('tyru/vim-altercmd', {
+               \ 'lazy' : 1,
+               \ 'on_cmd' : 'Shell'
+               \ })
 
-    let s:bundle = neobundle#get('vim-altercmd')
-    function! s:bundle.hooks.on_post_source(bundle)
+    let plugin_name = 'vim-altercmd'
+    let normalized_plugin_name = dein#get(plugin_name).normalized_name
+    function! s:hook_source_{normalized_plugin_name}() abort
         command! Shell call s:Shell()
         AlterCommand sh[ell] Shell
 
@@ -1421,6 +1352,7 @@ if !s:is_nvim && s:is_windows && s:is_gui_running
             exec 'set shelltemp | shell | set noshelltemp'
         endfunction
     endfunction
+    call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 endif
 
 " End of vim-altercmd }}}
@@ -1428,9 +1360,9 @@ endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-airline {{{
-" https://github.com/bling/vim-airline
+" https://github.com/vim-airline/vim-airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'bling/vim-airline'
+call dein#add('vim-airline/vim-airline')
 
 if !s:is_gui_running
     let g:airline#extensions#tabline#enabled = 1
@@ -1440,18 +1372,28 @@ if !s:is_gui_running
     let g:airline#extensions#tabline#fnamemod = ':p:t'
 endif
 
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'powerlineish'
 let g:airline#extensions#hunks#hunk_symbols = ['+', '*', '-']
 
 " End of vim-airline }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin - vim-airline-themes {{{
+" https://github.com/vim-airline/vim-airline-themes
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call dein#add('vim-airline/vim-airline-themes')
+
+let g:airline_theme = 'powerlineish'
+
+" End of vim-airline-themes }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin - vim-colors-solarized {{{
 " https://github.com/altercation/vim-colors-solarized
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'altercation/vim-colors-solarized', {'force' : 1}
+call dein#add('altercation/vim-colors-solarized')
+call dein#source('vim-colors-solarized')
 
 let g:solarized_italic = 0
 let g:solarized_hitrail = 1
@@ -1465,9 +1407,20 @@ colorscheme solarized
 " Plugin - vim-easymotion {{{
 " https://github.com/Lokaltog/vim-easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'Lokaltog/vim-easymotion'
+" TOOD: make it work!
+call dein#add('Lokaltog/vim-easymotion', {
+            \ 'lazy' : 1,
+            \ 'on_map' : '<Leader>n',
+            \ })
 
-nmap <silent> <Leader>n <Plug>(easymotion-prefix)
+let plugin_name = 'vim-easymotion'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
+    nmap <silent> <Leader>n <Plug>(easymotion-prefix)
+endfunction
+
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of vim-easymotion }}}
 
@@ -1476,10 +1429,10 @@ nmap <silent> <Leader>n <Plug>(easymotion-prefix)
 " Plugin - vim-fugitive {{{
 " https://github.com/tpope/vim-fugitive
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'tpope/vim-fugitive', {
-            \ 'external_commands' : 'git',
+call dein#add('tpope/vim-fugitive', {
+            \ 'lazy' : 1,
             \ 'augroup' : 'fugitive'
-            \ }
+            \ })
 
 " End of vim-fugitive }}}
 
@@ -1488,7 +1441,7 @@ NeoBundle 'tpope/vim-fugitive', {
 " Plugin - vim-gitgutter {{{
 " https://github.com/airblade/vim-gitgutter
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'airblade/vim-gitgutter', {'external_commands' : 'git'}
+call dein#add('airblade/vim-gitgutter')
 
 let g:gitgutter_sign_modified = '*'
 let g:gitgutter_sign_modified_removed = '*_'
@@ -1504,12 +1457,10 @@ nmap <F8> <Plug>GitGutterNextHunk
 " Plugin - vim-go {{{
 " https://github.com/fatih/vim-go
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'fatih/vim-go', {
-                \ 'external_commands' : 'go',
-                \ 'autoload' : {
-                    \ 'filetypes' : ['go'],
-                    \ },
-                \ }
+call dein#add('fatih/vim-go', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : 'go',
+            \ })
 
 " End of vim-go }}}
 
@@ -1518,11 +1469,10 @@ NeoBundleLazy 'fatih/vim-go', {
 " Plugin - vim-gradle {{{
 " https://github.com/tfnico/vim-gradle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'tfnico/vim-gradle', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['gradle'],
-                    \ },
-                \ }
+call dein#add('tfnico/vim-gradle', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : 'gradle',
+            \ })
 
 " End of vim-gradle }}}
 
@@ -1532,7 +1482,7 @@ NeoBundleLazy 'tfnico/vim-gradle', {
 " https://github.com/matze/vim-move
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need try this?
-" NeoBundle 'matze/vim-move'
+" call dein#add('matze/vim-move')
 
 " End of vim-move }}}
 
@@ -1541,11 +1491,10 @@ NeoBundleLazy 'tfnico/vim-gradle', {
 " Plugin - vim-multiple-cursors {{{
 " https://github.com/terryma/vim-multiple-cursors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'terryma/vim-multiple-cursors', {
-                \ 'autoload' : {
-                    \ 'mappings' : ['n', '<C-n>'],
-                    \ },
-                \ }
+call dein#add('terryma/vim-multiple-cursors', {
+            \ 'lazy' : 1,
+            \ 'on_map' : ['n', '<C-n>']
+            \ })
 
 " End of vim-multiple-cursors }}}
 
@@ -1554,7 +1503,7 @@ NeoBundleLazy 'terryma/vim-multiple-cursors', {
 " Plugin - vim-polyglot {{{
 " https://github.com/sheerun/vim-polyglot
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'sheerun/vim-polyglot'
+call dein#add('sheerun/vim-polyglot')
 
 " End of vim-polyglot }}}
 
@@ -1563,11 +1512,10 @@ NeoBundle 'sheerun/vim-polyglot'
 " Plugin - vim-repeat {{{
 " https://github.com/tpope/vim-repeat
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'tpope/vim-repeat', {
-                \ 'autoload': {
-                    \ 'mappings' : [['n', '.'], ['n','u'], ['n', 'U'], ['n', '<C-r>']],
-                    \ },
-                \ }
+call dein#add('tpope/vim-repeat', {
+            \ 'lazy': 1,
+            \ 'on_map' : [['n', '.'], ['n','u'], ['n', 'U'], ['n', '<C-r>']],
+            \ })
 
 " End of vim-repeat }}}
 
@@ -1576,7 +1524,7 @@ NeoBundleLazy 'tpope/vim-repeat', {
 " Plugin - vim-surround {{{
 " https://github.com/tpope/vim-surround
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'tpope/vim-surround'
+call dein#add('tpope/vim-surround')
 
 let g:surround_no_insert_mappings = 1
 
@@ -1599,7 +1547,7 @@ let g:surround_no_insert_mappings = 1
 " Origin: https://github.com/vim-scripts/vimcdoc
 " Forked: https://github.com/liangfeng/vimcdoc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundle 'liangfeng/vimcdoc'
+call dein#add('liangfeng/vimcdoc')
 
 " End of vimcdoc }}}
 
@@ -1609,18 +1557,16 @@ NeoBundle 'liangfeng/vimcdoc'
 " https://github.com/Shougo/vimfiler.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: polish it!
-NeoBundleLazy 'Shougo/vimfiler.vim', {
-                \ 'depends' : 'Shougo/unite.vim',
-                \ 'autoload' : {
-                    \ 'commands' : [{ 'name' : 'VimFiler', 'complete' : 'customlist,vimfiler#complete' },
-                                    \ 'VimFilerExplorer', 'Edit', 'Read', 'Source', 'Write'],
-                    \ 'mappings' : ['<Plug>(vimfiler_', '<Leader>l'],
-                    \ 'explorer' : 1,
-                  \ }
-                \ }
+call dein#add('Shougo/vimfiler.vim', {
+            \ 'lazy' : 1,
+            \ 'depends' : 'unite.vim',
+            \ 'on_cmd' : ['VimFiler', 'VimFilerExplorer', 'Edit', 'Read', 'Source', 'Write'],
+            \ 'on_map' : ['<Plug>(vimfiler_', '<Leader>l'],
+            \ })
 
-let s:bundle = neobundle#get('vimfiler.vim')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'vimfiler.vim'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+function! s:hook_source_{normalized_plugin_name}() abort
     let g:vimfiler_as_default_explorer = 1
     let g:vimfiler_split_rule = 'botright'
     let g:vimfiler_ignore_pattern = '^\%(.svn\|.git\|.DS_Store\)$'
@@ -1643,6 +1589,8 @@ endfunction
 
 autocmd FileType vimfiler call s:setup_vimfiler_actions()
 
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
+
 " End of vimfiler }}}
 
 
@@ -1653,16 +1601,16 @@ autocmd FileType vimfiler call s:setup_vimfiler_actions()
 " TODO: Intergate with global(gtags).
 " TODO: Add workspace support for projectmgr plugin. Such as, unite.vim plugin support multiple ftags.
 " TODO: Rewrite vimprj with prototype-based OO method.
-NeoBundleLazy 'liangfeng/vimprj', {
-                \ 'external_commands' : ['python', 'cscope'],
-                \ 'autoload' : {
-                    \ 'filetypes' : ['vimprj'],
-                    \ 'commands' : ['Preload', 'Pupdate', 'Pstatus', 'Punload'],
-                    \ }
-                \ }
+call dein#add('liangfeng/vimprj', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : ['vimprj'],
+            \ 'on_cmd' : ['Preload', 'Pupdate', 'Pstatus', 'Punload'],
+            \ })
 
-let s:bundle = neobundle#get('vimprj')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'vimprj'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     " Since this plugin use python script to do some text precessing jobs,
     " add python script path into 'PYTHONPATH' environment variable.
     if s:is_unix
@@ -1688,6 +1636,8 @@ endfunction
 
 nnoremap <silent> <Leader>p :call <SID>OpenVimprj()<CR>
 
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
+
 " End of vimprj }}}
 
 
@@ -1695,16 +1645,11 @@ nnoremap <silent> <Leader>p :call <SID>OpenVimprj()<CR>
 " Plugin - vimproc.vim {{{
 " https://github.com/Shougo/vimproc.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Shougo/vimproc.vim', {
-                \ 'build' : {
-                    \ 'windows' : 'echo "You need compile vimproc manually on Windows."',
-                    \ 'mac' : 'make -f make_mac.mak',
-                    \ 'unix' : 'make -f make_unix.mak',
-                    \ },
-                \ 'autoload' : {
-                    \ 'on_source' : ['unite.vim', 'vimfiler.vim', 'vimshell'],
-                    \ },
-                \ }
+call dein#add('Shougo/vimproc.vim', {
+            \ 'lazy' : 1,
+            \ 'on_source' : ['unite.vim', 'vimfiler.vim', 'vimshell'],
+            \ 'build' : 'make'
+            \ })
 
 " End of vimproc.vim }}}
 
@@ -1713,14 +1658,12 @@ NeoBundleLazy 'Shougo/vimproc.vim', {
 " Plugin - vimshell {{{
 " https://github.com/Shougo/vimshell
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'Shougo/vimshell', {
-                \ 'depends' : 'Shougo/vimproc.vim',
-                \ 'autoload' : {
-                    \ 'commands' : [{ 'name' : 'VimShell', 'complete' : 'customlist,vimshell#complete'},
-                                    \ 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop'],
-                    \ 'mappings' : ['<Plug>(vimshell_'],
-                    \ },
-                \ }
+call dein#add('Shougo/vimshell', {
+            \ 'lazy' : 1,
+            \ 'depends' : 'vimproc.vim',
+            \ 'on_cmd' : ['VimShell', 'VimShellExecute', 'VimShellInteractive', 'VimShellTerminal', 'VimShellPop'],
+            \ 'on_map' : '<Plug>(vimshell_'
+            \ })
 
 " End of vimshell }}}
 
@@ -1729,11 +1672,10 @@ NeoBundleLazy 'Shougo/vimshell', {
 " Plugin - xmledit {{{
 " https://github.com/sukima/xmledit
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-NeoBundleLazy 'sukima/xmledit', {
-                \ 'autoload' : {
-                    \ 'filetypes' : ['xml', 'html'],
-                    \ },
-                \ }
+call dein#add('sukima/xmledit', {
+            \ 'lazy' : 1,
+            \ 'on_ft' : ['xml', 'html']
+            \ })
 
 " End of xmledit }}}
 
@@ -1743,15 +1685,15 @@ NeoBundleLazy 'sukima/xmledit', {
 " https://github.com/drmingdrmer/xptemplate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: setup proper snippets for c, c++, python, java, js
-" FIXME: NeoBundle do not copy subdir in doc to .neobundle/doc
-NeoBundleLazy 'drmingdrmer/xptemplate', {
-                \ 'autoload' : {
-                    \ 'insert' : 1,
-                    \ },
-                \ }
+call dein#add('drmingdrmer/xptemplate', {
+            \ 'lazy' : 1,
+            \ 'on_event' : 'InsertEnter',
+            \ })
 
-let s:bundle = neobundle#get('xptemplate')
-function! s:bundle.hooks.on_source(bundle)
+let plugin_name = 'xptemplate'
+let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+function! s:hook_source_{normalized_plugin_name}() abort
     autocmd BufRead,BufNewFile *.xpt.vim set filetype=xpt.vim
     " trigger key
     let g:xptemplate_key = '<C-l>'
@@ -1766,8 +1708,8 @@ function! s:bundle.hooks.on_source(bundle)
     let g:xptemplate_move_even_with_pum = 1
 
     " if use delimitMate Plugin, disable it in xptemplate
-    if neobundle#is_installed('delimitMate') &&
-        \ neobundle#is_sourced('delimitMate')
+    if dein#is_sourced('delimitMate') &&
+        \ dein#tap('delimitMate')
         let g:xptemplate_brace_complete = 0
     endif
 
@@ -1775,6 +1717,8 @@ function! s:bundle.hooks.on_source(bundle)
     " Do not add space between brace
     let g:xptemplate_vars = 'SPop=&SParg='
 endfunction
+
+call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 
 " End of xptemplate }}}
 
@@ -1784,7 +1728,7 @@ endfunction
 " https://github.com/vim-scripts/YankRing.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TODO: Need a try.
-" NeoBundle 'YankRing.vim'
+call dein#add('YankRing.vim')
 
 " End of YankRing }}}
 
@@ -1794,11 +1738,10 @@ endfunction
 " https://github.com/rdnetto/YCM-Generator
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:is_unix
-    NeoBundleLazy 'rdnetto/YCM-Generator', {
-                    \ 'autoload' : {
-                        \ 'on_source' : ['YouCompleteMe'],
-                        \ },
-                    \ }
+    call dein#add('rdnetto/YCM-Generator', {
+                \ 'lazy' : 1,
+                \ 'on_source' : ['YouCompleteMe'],
+                \ })
 endif
 
 " End of YCM-Generator }}}
@@ -1809,28 +1752,31 @@ endif
 " https://github.com/Valloric/YouCompleteMe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:is_unix
-    NeoBundleLazy 'Valloric/YouCompleteMe', {
-                    \ 'build' : {
-                        \ 'mac'  : './install.py --clang-completer --system-libclang',
-                        \ 'unix' : './install.py --clang-completer --system-libclang'
-                        \ },
-                    \ 'autoload' : {
-                        \ 'filetypes' : ['c', 'cpp', 'python'],
-                        \ },
-                    \ 'augroup': 'youcompletemeStart'
-                    \ }
+    call dein#add('Valloric/YouCompleteMe', {
+                \ 'lazy' : 1,
+                \ 'build' : './install.py --clang-completer --system-libclang',
+                \ 'on_ft' : ['c', 'cpp', 'python'],
+                \ 'augroup': 'youcompletemeStart'
+                \ })
 
-    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1 }
-    let g:ycm_confirm_extra_conf = 0
-    let g:ycm_complete_in_comments_and_strings = 1
-    let g:ycm_global_ycm_extra_conf = '~/' . g:vim_cfg_dir . '/ycm_extra_conf.py'
+    let plugin_name = 'YouCompleteMe'
+    let normalized_plugin_name = dein#get(plugin_name).normalized_name
+
+    function! s:hook_source_{normalized_plugin_name}() abort
+        let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python' : 1 }
+        let g:ycm_confirm_extra_conf = 0
+        let g:ycm_complete_in_comments_and_strings = 1
+        let g:ycm_global_ycm_extra_conf = '~/' . g:vim_cfg_dir . '/ycm_extra_conf.py'
+    endfunction
+
+    call dein#set_hook(plugin_name, 'hook_source', function('s:hook_source_' . normalized_plugin_name))
 endif
 
 " End of YouCompleteMe }}}
 
 
-" Call this finally, since use neobundle#begin()
-call neobundle#end()
+" Call this finally, since use dein#begin()
+call dein#end()
 
 filetype plugin indent on
 
